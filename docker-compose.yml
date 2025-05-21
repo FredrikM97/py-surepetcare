@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  jupyter:
+    image: jupyter/datascience-notebook:latest
+    container_name: surepy-jupyter
+    volumes:
+      - .:/home/jovyan/work
+      - ./requirements.txt:/home/jovyan/requirements.txt
+      - ./.env:/home/jovyan/work/.env
+    ports:
+      - "8888:8888"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - PYTHONPATH=/home/jovyan/work
+    command: start-notebook.sh --NotebookApp.token=''
