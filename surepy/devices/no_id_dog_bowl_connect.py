@@ -1,4 +1,4 @@
-from surepy.devices.base import BaseDevice
+defrom surepy.devices.base import BaseDevice
 from surepy.enums import ProductId
 
 class NoIdDogBowlConnect(BaseDevice):

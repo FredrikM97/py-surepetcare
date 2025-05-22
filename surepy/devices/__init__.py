@@ -1,7 +1,5 @@
 
 import importlib
-import os
-import sys
 
 def load_device_class(product_id_enum):
     # Build the absolute module path

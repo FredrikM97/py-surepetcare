@@ -1,5 +1,5 @@
-from surepy.devices.base import BaseDevice
+from surepy.devices.base import SurepyDevice
 from surepy.enums import ProductId
 
-class PetDoor(BaseDevice):
+class PetDoor(SurepyDevice):
     product_id:ProductId = ProductId.PET_DOOR

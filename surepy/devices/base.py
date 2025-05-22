@@ -2,63 +2,18 @@
 from abc import ABC, abstractmethod
 import logging
 from typing import Optional
-from surepy.const import API_ENDPOINT_V2, BATT_VOLTAGE_FULL, BATT_VOLTAGE_LOW
+from surepy.const import BATT_VOLTAGE_FULL, BATT_VOLTAGE_LOW
 from surepy.enums import ProductId
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-class BaseDevice(ABC):
-    product_id: ProductId
-    
-    def __init__(self, data: int, client):
-        self._data = data
-        self.client = client
-        self._base_data: Optional[dict] = None
 
-    @property
-    def api_endpoint(self) -> str:
-        return f"{API_ENDPOINT_V2}/product/{self.product_id.value}/device/{self.device_id}/control"
-    
-    @abstractmethod
-    async def fetch(self) -> None:
-        pass
-    
-
-    @property
-    def device_id(self) -> int:
-        return self._data["id"]
-    
-    @property
-    def product_id(self) -> int:
-        return self._data["product_id"]
-    
-    @property
-    def household_id(self) -> int:
-        return self._data["household_id"]
-    
-    @property
-    def name(self) -> str:
-        return self._data["name"]
-    
-    @property
-    def last_update(self) -> str:
-        return self._data["last_new_event_at"]
-    
-    @property
-    def online(self) -> bool:
-        return self._data["status"]["online"]
+class BatteryMixin:
     @property
     def battery_level(self) -> int | None:
         """Return battery level in percent."""
         return self.calculate_battery_level()
 
-    @property
-    def raw_data(self) -> Optional[dict]:
-        return self._data
-
-    def __str__(self):
-        return f"<{self.__class__.__name__} id={self.device_id}>"
-    
 
     def calculate_battery_level(
         self,
@@ -79,3 +34,45 @@ class BaseDevice(ABC):
         except (KeyError, TypeError, ValueError) as error:
             logger.debug("error while calculating battery level: %s", error)
             return None
+        
+class SurepyDevice(ABC, BatteryMixin):
+    product_id: ProductId
+    
+    def __init__(self, client, data:dict):
+        self._data = data
+        self.client = client   
+
+        # Initialize device properties
+        self._product_id = data["product_id"]
+        self._id = data["id"]
+        self._household_id = data["household_id"]
+        self._name = data["name"]
+        self._online = data["status"]["online"]
+
+    @property
+    def id(self) -> int:
+        return self._id
+    
+    @property
+    def product_id(self) -> int:
+        return self._product_id
+    
+    @property
+    def household_id(self) -> int:
+        return self._household_id
+    
+    @property
+    def name(self) -> str:
+        return self._name
+    
+    @property
+    def online(self) -> bool:
+        return self._online
+    
+    @property
+    def raw_data(self) -> Optional[dict]:
+        return self._data
+
+    def __str__(self):
+        return f"<{self.__class__.__name__} id={self.device_id}>"
+    

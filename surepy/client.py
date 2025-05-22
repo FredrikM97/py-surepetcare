@@ -1,16 +1,10 @@
-import importlib
-import os
-import sys
 from surepy.security.auth import AuthClient
-from surepy.const import API_ENDPOINT_V2, API_ENDPOINT_V1
 from surepy.entities.household import Household
 import logging
 
 logger = logging.getLogger(__name__)
 
 class SurePetcareClient(AuthClient, Household):
-    def __init__(self):
-        super().__init__()
 
     async def get(self, endpoint: str, params: dict = None):
         await self.set_session()
@@ -29,10 +23,6 @@ class SurePetcareClient(AuthClient, Household):
             if response.status == 204:
                 return {}
             return await response.json()
-
-    async def load_household(self):
-        pass
-
 
     async def close(self):
         await self.close()
