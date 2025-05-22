@@ -36,19 +36,6 @@ await client.login(email=email, password=password)
 household_ids = [household['id'] for household in (await client.get_households())]
 await client.get_devices(household_ids)
 ```
-# Example usage
-```
-from dotenv import load_dotenv
-import os
-from surepy.client import SurePetcareClient
-
-# Running from jupyterlab
-load_dotenv(dotenv_path="/home/jovyan/work/surepy/.env")
-
-email = os.getenv("SUREPY_EMAIL")
-password = os.getenv("SUREPY_PASSWORD")
-
-client = SurePetcareClient()
 await client.login(email=email, password=password)
 household_ids = [household['id'] for household in (await client.get_households())]
 await client.get_devices(household_ids)
