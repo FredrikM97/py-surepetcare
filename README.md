@@ -36,7 +36,3 @@ await client.login(email=email, password=password)
 household_ids = [household['id'] for household in (await client.get_households())]
 await client.get_devices(household_ids)
 ```
-await client.login(email=email, password=password)
-household_ids = [household['id'] for household in (await client.get_households())]
-await client.get_devices(household_ids)
-```
