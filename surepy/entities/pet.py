@@ -17,12 +17,12 @@ class PetHistory:
     @validate_date_fields("from_date", "to_date")
     async def fetch(self, from_date: str, to_date: str) -> None:
         """Fetch pet history data from the API."""
-        (
+        self._data = (
             await self.client.get(
                 f"{API_ENDPOINT_V2}/report/household/{self.household_id}/pet/{self.pet_id}/aggregate",
                 params={"From": from_date, "To": to_date},
             )
-        )
+        )["data"]
 
     @property
     def feeding(self):
