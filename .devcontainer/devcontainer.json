@@ -2,5 +2,11 @@
   "name": "Jupyter Dev Container",
   "dockerComposeFile": "../docker-compose.yml",
   "service": "jupyter",
-  "workspaceFolder": "/home/jovyan/work"
+  "workspaceFolder": "/home/jovyan/work",
+  "extensions": [
+    "ms-python.python",
+    "charliermarsh.ruff",
+    "ms-toolsai.jupyter",
+    "GitHub.copilot"
+  ]
 }
