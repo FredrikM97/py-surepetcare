@@ -9,3 +9,6 @@ env/*
 *.pyc
 *.pyo
 *.pyd
+.vscode
+.venv
+.coverage

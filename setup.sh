@@ -8,6 +8,6 @@ else
 fi
 
 source .venv/bin/activate
-python3 -m pip install --upgrade pip
+export PATH="$(pwd)/.venv/bin:$PATH"
 python3 -m pip install -r requirements.txt
 echo "Don't forget to create your .env file!"
