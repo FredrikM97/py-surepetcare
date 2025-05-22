@@ -1,12 +1,15 @@
 import pytest
 
-# Assume validate_date_fields and _try_parse are imported from the correct module
 from surepy.helper import validate_date_fields
+
+# Assume validate_date_fields and _try_parse are imported from the correct module
+
 
 class ValidateDateFieldMock:
     @validate_date_fields("from_date", "to_date")
     async def method(self, from_date=None, to_date=None):
         return True
+
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
@@ -17,7 +20,7 @@ class ValidateDateFieldMock:
         ("2023-01-01", "2023-01-02T13:00:00+0000", False),
         ("2023/01/01", "2023-01-02", True),
         ("2023-01-01", "bad-date", True),
-    ]
+    ],
 )
 async def test_validate_date_fields(from_date, to_date, should_raise):
     dummy = ValidateDateFieldMock()

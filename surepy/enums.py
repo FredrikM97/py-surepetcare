@@ -5,18 +5,20 @@ class SureEnum(IntEnum):
     """Sure base enum."""
 
     def __str__(self) -> str:
-        return self.name.title()  
+        return self.name.title()
+
 
 class ProductId(SureEnum):
     """Sure Entity Types."""
 
-    HUB = 1 
+    HUB = 1
     PET_DOOR = 3
-    FEEDER_CONNECT = 4 
-    DUAL_SCAN_CONNECT = 6 
+    FEEDER_CONNECT = 4
+    DUAL_SCAN_CONNECT = 6
     DUAL_SCAN_PET_DOOR = 10
     POSEIDON_CONNECT = 8
     NO_ID_DOG_BOWL_CONNECT = 32
+
 
 class BowlPosition(SureEnum):
     """Feeder Bowl position."""
@@ -24,12 +26,14 @@ class BowlPosition(SureEnum):
     LEFT = 0
     RIGHT = 1
 
+
 class Location(SureEnum):
     """Locations."""
 
     INSIDE = 1
     OUTSIDE = 2
     UNKNOWN = -1
+
 
 class FoodType(SureEnum):
     """Food Types."""
