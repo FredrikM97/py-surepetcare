@@ -1,5 +1,5 @@
 
-from abc import ABC, abstractmethod
+from abc import ABC
 import logging
 from typing import Optional
 from surepy.const import BATT_VOLTAGE_FULL, BATT_VOLTAGE_LOW
@@ -9,6 +9,7 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 
 class BatteryMixin:
+    _data: dict
     @property
     def battery_level(self) -> int | None:
         """Return battery level in percent."""
@@ -43,7 +44,6 @@ class SurepyDevice(ABC, BatteryMixin):
         self.client = client   
 
         # Initialize device properties
-        self._product_id = data["product_id"]
         self._id = data["id"]
         self._household_id = data["household_id"]
         self._name = data["name"]
@@ -52,10 +52,6 @@ class SurepyDevice(ABC, BatteryMixin):
     @property
     def id(self) -> int:
         return self._id
-    
-    @property
-    def product_id(self) -> int:
-        return self._product_id
     
     @property
     def household_id(self) -> int:
@@ -74,5 +70,5 @@ class SurepyDevice(ABC, BatteryMixin):
         return self._data
 
     def __str__(self):
-        return f"<{self.__class__.__name__} id={self.device_id}>"
+        return f"<{self.__class__.__name__} id={self.id}>"
     

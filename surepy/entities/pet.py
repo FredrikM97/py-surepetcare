@@ -1,11 +1,11 @@
 from dataclasses import dataclass
+from typing import Any
 from surepy.const import API_ENDPOINT_V1, API_ENDPOINT_V2
-from surepy.devices.base import SurepyDevice
-from surepy.helper import data_exist_validation, validate_date_fields
+from surepy.helper import AbstractHasGet, validate_date_fields
 
 class PetHistory:
-    def __init__(self, client, household_id, pet_id) -> None:
-        self._data = {}
+    def __init__(self, client, household_id:int, pet_id:int) -> None:
+        self._data:dict[str,Any] = {}
         self.client = client
 
         self.household_id = household_id
@@ -62,9 +62,9 @@ class Pet:
     @validate_date_fields("from_date")
     async def get_pet_dashboard(self, from_date:str, pet_ids:list[int]) -> str:
         """Old API endpoint for fetching pet dashboard data"""
-        return await self.get(f"{API_ENDPOINT_V1}/dashboard/pet", params={"From": from_date, "PetId": pet_ids})
+        return await self.client.get(f"{API_ENDPOINT_V1}/dashboard/pet", params={"From": from_date, "PetId": pet_ids})
 
-    def history(self) -> int:
+    def history(self) -> PetHistory:
         return PetHistory(self.client, self._household_id, self._id)
     
     @property

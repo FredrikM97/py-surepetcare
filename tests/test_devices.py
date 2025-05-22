@@ -1,7 +1,5 @@
-import pytest
 from surepy.devices.feeder_connect import FeederConnect
 from surepy.devices.hub import Hub
-from surepy.entities.pet import Pet
 from surepy.enums import BowlPosition, FoodType, ProductId
 from tests.mock_helpers import MockSurePetcareClient, load_mock_data
 

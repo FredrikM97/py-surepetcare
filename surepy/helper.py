@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from datetime import datetime
 from functools import wraps
 
@@ -36,3 +37,9 @@ def _try_parse_date(date_str, fmt):
         return True
     except Exception:
         return False
+    
+
+class AbstractHasGet(ABC):
+    @abstractmethod
+    async def get(self, endpoint: str, params: dict | None = None):
+        pass

@@ -1,6 +1,6 @@
+from typing import Optional
 import aiohttp
-from typing import Tuple, Any
-from surepy.const import API_ENDPOINT_V1, LOGIN_ENDPOINT, SUREPY_USER_AGENT, HEADER_TEMPLATE
+from surepy.const import LOGIN_ENDPOINT, SUREPY_USER_AGENT, HEADER_TEMPLATE
 from surepy.security.exceptions import AuthenticationError
 from http import HTTPStatus
 from uuid import uuid1
@@ -10,10 +10,10 @@ logger = logging.getLogger(__name__)
 
 class AuthClient:
     def __init__(self):
-        self._token:str = None
-        self.session:str = None  
-        self._device_id: str = str(uuid1())
-        self._surepy_version: str | None 
+        self._token = None
+        self.session = None
+        self._device_id = str(uuid1())
+        self._surepy_version = None
 
     async def login(self, email, password) -> "AuthClient":
 
@@ -42,7 +42,7 @@ class AuthClient:
                 else:
                     raise AuthenticationError(f"Authentication error {response.status} {await response.json()}")
             
-    def _generate_headers(self, token:str=None) -> dict[str, str]:
+    def _generate_headers(self, token:Optional[str]=None) -> dict[str, str]:
         """Build a HTTP header accepted by the API"""
         user_agent = SUREPY_USER_AGENT.format(version=None)
 
@@ -56,7 +56,7 @@ class AuthClient:
         if self.session:
             await self.session.close()  # Close the session when done
 
-    async def set_session(self):
+    async def set_session(self) -> None:
         if not self.session:
             self.session = aiohttp.ClientSession()
         

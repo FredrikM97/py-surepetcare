@@ -1,3 +1,4 @@
+from aiohttp import ClientSession
 import pytest
 from surepy.security.auth import AuthClient
 

@@ -1,3 +1,4 @@
+from aiohttp import ClientSession
 import pytest
 from surepy.client import SurePetcareClient
 
@@ -27,7 +28,6 @@ async def test_post_raises_on_error(monkeypatch):
                     return "Bad request"
             return DummyResponse()
     client = SurePetcareClient()
-    client.set_session = lambda: None
     client.session = DummySession()
     with pytest.raises(Exception):
         await client.post("http://dummy/endpoint", data={})

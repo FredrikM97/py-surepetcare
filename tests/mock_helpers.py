@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Any
+from typing import Any, Optional
 
 from surepy.client import SurePetcareClient        
 
@@ -17,12 +17,12 @@ class MockSurePetcareClient(SurePetcareClient):
         super().__init__()
         self.mock_get_data = mock_get_data or {}
 
-    async def get(self, endpoint: str, params: dict[Any, Any] = None):
+    async def get(self, endpoint: str, params: Optional[dict[Any, Any]] = None):
         # If the value is a string, treat it as a filename and load JSON
         if isinstance(self.mock_get_data,str):
             return load_mock_data(self.mock_get_data)
         return self.mock_get_data.get(endpoint, {})
 
-    async def post(self, endpoint: str, data: dict = None):
+    async def post(self, endpoint: str, data: Optional[dict[Any, Any]] = None):
         # Implement as needed
         return {}

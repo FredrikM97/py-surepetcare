@@ -1,4 +1,3 @@
-import json
 import pytest
 from surepy.entities.pet import Pet
 from tests.mock_helpers import MockSurePetcareClient
@@ -9,7 +8,7 @@ async def test_pet_entity():
     client = MockSurePetcareClient("tests/mock_data/mock_entity_pet.json")
 
     pets = (await client.get_pets(household_id))
-    pet:Pet = pets[0]
+    pet = pets[0]
     assert pet.household_id == household_id
     assert pet.id == 123455
     assert pet.name == "Lilo"
