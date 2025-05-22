@@ -16,6 +16,8 @@ The project is inspired by [benleb/surepy](https://github.com/benleb/surepy), bu
 To contribute, experiment with `testing.ipynb`.  
 **Important:** Store your credentials in a `.env` file (see below) to keep them out of the repository.
 
+It is possible to run in dev-container. To do so use shift + command + p (mac) and select **Dev Containers: Reopen in Container**.
+
 ## Example Usage
 
 ```python

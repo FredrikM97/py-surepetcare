@@ -8,9 +8,10 @@ services:
       - .:/home/jovyan/work
       - ./requirements.txt:/home/jovyan/requirements.txt
       - ./.env:/home/jovyan/work/.env
+      - ./setup.sh:/home/jovyan/setup.sh   # Mount setup.sh
     ports:
       - "8888:8888"
     environment:
       - JUPYTER_ENABLE_LAB=yes
       - PYTHONPATH=/home/jovyan/work
-    command: start-notebook.sh --NotebookApp.token=''
+    command: /bin/bash -c "chmod +x /home/jovyan/setup.sh && /home/jovyan/setup.sh && start-notebook.sh --NotebookApp.token=''"
