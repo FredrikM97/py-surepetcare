@@ -12,3 +12,7 @@ env/*
 .vscode
 .venv
 .coverage
+.mypy_cache
+.pytest_cache
+CACHEDIR.TAG
+env
