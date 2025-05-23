@@ -8,7 +8,8 @@ from dotenv import load_dotenv
 
 from surepy.client import SurePetcareClient
 
-FILE_DIR="contribute/files"
+FILE_DIR = "contribute/files"
+
 
 def save_json(data, filename):
     os.makedirs(os.path.dirname(filename), exist_ok=True)

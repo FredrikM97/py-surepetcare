@@ -12,13 +12,14 @@ The project is inspired by [benleb/surepy](https://github.com/benleb/surepy), bu
 - Map API responses to entity classes for easier usage
 
 ## Contributing
+First run `pip install -r dev-requirements.txt` to install dev dependencies.
 
-To contribute, experiment with `testing.ipynb`.  
 **Important:** Store your credentials in a `.env` file (see below) to keep them out of the repository.
 
-It is possible to run in dev-container. To do so use shift + command + p (mac) and select **Dev Containers: Reopen in Container**.
+Before pushing validate the changes with: `pre-commit run --all-files`.
 
 ### Issue with missing data
+First run `pip install -r dev-requirements.txt` to add dependencies for development
 Please upload issue with data find in contribute/files with `python -m contribute.contribution`. This generates mock data that can be used to improve the library. Dont forget to add email and password in the .env file.
 
 ## Example Usage

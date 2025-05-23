@@ -46,3 +46,6 @@ traitlets==5.14.3
 typing_extensions==4.13.2
 wcwidth==0.2.13
 yarl==1.20.0
+pre-commit
+flake8
+black
