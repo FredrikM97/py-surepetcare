@@ -156,7 +156,7 @@ pre_commit==4.2.0
 prometheus-client @ file:///home/conda/feedstock_root/build_artifacts/prometheus_client_1689032443210/work
 prompt-toolkit @ file:///home/conda/feedstock_root/build_artifacts/prompt-toolkit_1688565951714/work
 propcache==0.3.1
-protobuf==4.24.3
+protobuf==6.30.2
 psutil @ file:///home/conda/feedstock_root/build_artifacts/psutil_1695367241927/work
 ptyprocess @ file:///home/conda/feedstock_root/build_artifacts/ptyprocess_1609419310487/work/dist/ptyprocess-0.7.0-py2.py3-none-any.whl
 pure-eval @ file:///home/conda/feedstock_root/build_artifacts/pure_eval_1642875951954/work
