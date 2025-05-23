@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 
 from surepy.client import SurePetcareClient
 
+FILE_DIR = "contribute/files"
+
 
 def save_json(data, filename):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
@@ -32,10 +34,10 @@ async def async_main():
     household_ids = [h["id"] for h in await client.get_households()]
     devices = await client.get_devices(household_ids)
     devices_data = [d.raw_data for d in devices]
-    save_json(devices_data, "temp/contr_mock_devices.json")
+    save_json(devices_data, f"{FILE_DIR}/contr_mock_devices.json")
     # Fetch products
     products_data = [await client.get_product(device.product_id, device.id) for device in devices]
-    save_json(products_data, "temp/contr_mock_products.json")
+    save_json(products_data, f"{FILE_DIR}/contr_mock_products.json")
 
     # Fetch pet household history
     pets = await client.get_households_pets()
@@ -46,20 +48,20 @@ async def async_main():
         (await history.fetch(from_date=yesterday.isoformat(), to_date=today.isoformat()))
         for history in pets_history
     ]
-    save_json([history._data for history in pets_history], "temp/contr_mock_pets_history.json")
+    save_json([history._data for history in pets_history], f"{FILE_DIR}/contr_mock_pets_history.json")
 
     # Fetch pets
     pets = []
     for household_id in household_ids:
         pets.extend(await client.get_pets(household_id))
     pets_data = [p._data for p in pets]
-    save_json(pets_data, "temp/contr_mock_pets.json")
+    save_json(pets_data, f"{FILE_DIR}/contr_mock_pets.json")
 
     print("\nPlease open a GitHub issue and attach the following files:")
-    print(f"- {os.path.abspath('temp/contr_mock_devices.json')}")
-    print(f"- {os.path.abspath('temp/contr_mock_products.json')}")
-    print(f"- {os.path.abspath('temp/contr_mock_pets_history.json')}")
-    print(f"- {os.path.abspath('temp/contr_mock_pets.json')}")
+    print(f"- {os.path.abspath(f'{FILE_DIR}/contr_mock_devices.json')}")
+    print(f"- {os.path.abspath(f'{FILE_DIR}/contr_mock_products.json')}")
+    print(f"- {os.path.abspath(f'{FILE_DIR}/contr_mock_pets_history.json')}")
+    print(f"- {os.path.abspath(f'{FILE_DIR}/contr_mock_pets.json')}")
     print("Thank you for contributing!")
 
     await client.close()
