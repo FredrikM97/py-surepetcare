@@ -18,6 +18,9 @@ To contribute, experiment with `testing.ipynb`.
 
 It is possible to run in dev-container. To do so use shift + command + p (mac) and select **Dev Containers: Reopen in Container**.
 
+### Issue with missing data
+Please upload issue with data find in contribute/files with `python -m contribute.contribution`. This generates mock data that can be used to improve the library. Dont forget to add email and password in the .env file.
+
 ## Example Usage
 
 ```python
@@ -26,7 +29,7 @@ import os
 from surepy.client import SurePetcareClient
 
 # Load credentials from .env file
-load_dotenv(dotenv_path="/home/jovyan/work/surepy/.env")
+load_dotenv(dotenv_path=".env")
 
 email = os.getenv("SUREPY_EMAIL")
 password = os.getenv("SUREPY_PASSWORD")

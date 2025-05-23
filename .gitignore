@@ -16,4 +16,4 @@ env/*
 .pytest_cache
 CACHEDIR.TAG
 env
-temp/
+contribute/files

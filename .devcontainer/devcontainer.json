@@ -1,12 +1,20 @@
 {
-  "name": "Jupyter Dev Container",
-  "dockerComposeFile": "../docker-compose.yml",
-  "service": "jupyter",
-  "workspaceFolder": "/home/jovyan/work",
-  "extensions": [
-    "ms-python.python",
-    "charliermarsh.ruff",
-    "ms-toolsai.jupyter",
-    "GitHub.copilot"
-  ]
+  "name": "Python Dev Container",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python"
+      },
+      "extensions": [
+        "ms-python.python",
+        "charliermarsh.ruff",
+        "GitHub.copilot"
+      ]
+    }
+  },
+  "workspaceFolder": "/workspaces/surepy",
+  "postCreateCommand": "pip install -r requirements.txt ",
+  "overrideCommand": true
 }
