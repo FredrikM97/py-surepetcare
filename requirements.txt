@@ -161,7 +161,7 @@ psutil @ file:///home/conda/feedstock_root/build_artifacts/psutil_1695367241927/
 ptyprocess @ file:///home/conda/feedstock_root/build_artifacts/ptyprocess_1609419310487/work/dist/ptyprocess-0.7.0-py2.py3-none-any.whl
 pure-eval @ file:///home/conda/feedstock_root/build_artifacts/pure_eval_1642875951954/work
 py-cpuinfo @ file:///home/conda/feedstock_root/build_artifacts/py-cpuinfo_1666774466606/work
-pyarrow==13.0.0
+pyarrow==20.0.0
 pycodestyle==2.13.0
 pycosat @ file:///home/conda/feedstock_root/build_artifacts/pycosat_1696355785893/work
 pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1636257122734/work
