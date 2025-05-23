@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 from typing import Any
 
@@ -5,8 +6,10 @@ from surepy.const import API_ENDPOINT_V1
 from surepy.const import API_ENDPOINT_V2
 from surepy.helper import validate_date_fields
 
+logger = logging.getLogger(__name__)
 
-class PetHistory:
+
+class PetHouseholdReport:
     def __init__(self, client, household_id: int, pet_id: int) -> None:
         self._data: dict[str, Any] = {}
         self.client = client
@@ -15,12 +18,24 @@ class PetHistory:
         self.pet_id = pet_id
 
     @validate_date_fields("from_date", "to_date")
-    async def fetch(self, from_date: str, to_date: str) -> None:
+    async def fetch(self, from_date: str, to_date: str, event_type: int | None = None) -> None:
         """Fetch pet history data from the API."""
+
+        params: dict[str, Any] = {"From": from_date, "To": to_date}
+
+        if event_type is not None and event_type not in [1, 2, 3]:
+            raise ValueError("event_type can only contain 1, 2, or 3")
+        if event_type is not None:
+            params["EventType"] = event_type
+
+        logger.info(
+            f"Fetching pet history data pet_id={self.pet_id},household_id={self.household_id}, \
+            **params={params}"
+        )
         self._data = (
             await self.client.get(
                 f"{API_ENDPOINT_V2}/report/household/{self.household_id}/pet/{self.pet_id}/aggregate",
-                params={"From": from_date, "To": to_date},
+                params=params,
             )
         )["data"]
 
@@ -71,8 +86,8 @@ class Pet:
             f"{API_ENDPOINT_V1}/dashboard/pet", params={"From": from_date, "PetId": pet_ids}
         )
 
-    def history(self) -> PetHistory:
-        return PetHistory(self.client, self._household_id, self._id)
+    def history(self) -> PetHouseholdReport:
+        return PetHouseholdReport(self.client, self._household_id, self._id)
 
     @property
     def id(self) -> int:

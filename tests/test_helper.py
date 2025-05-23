@@ -15,6 +15,7 @@ class ValidateDateFieldMock:
 @pytest.mark.parametrize(
     "from_date,to_date,should_raise",
     [
+        ("2025-05-22", "2025-12-12", False),
         ("2023-01-01", "2023-01-02", False),
         ("2023-01-01T12:00:00+0000", "2023-01-02T13:00:00+0000", False),
         ("2023-01-01", "2023-01-02T13:00:00+0000", False),
