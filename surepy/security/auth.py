@@ -51,7 +51,8 @@ class AuthClient:
 
     async def close(self):
         if self.session:
-            await self.session.close()  # Close the session when done
+            logger.info("Closing session")
+            await self.session.close()
 
     async def set_session(self) -> None:
         if not self.session:

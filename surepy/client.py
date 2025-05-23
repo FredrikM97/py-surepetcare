@@ -28,7 +28,3 @@ class SurePetcareClient(AuthClient, HouseholdMixin):
             if response.status == 204:
                 return {}
             return await response.json()
-
-    async def close(self):
-        await self.close()
-        await self.session.close()
