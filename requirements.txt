@@ -37,7 +37,7 @@ conda @ file:///home/conda/feedstock_root/build_artifacts/conda_1696225951001/wo
 conda-package-handling @ file:///home/conda/feedstock_root/build_artifacts/conda-package-handling_1691048088238/work
 conda_package_streaming @ file:///home/conda/feedstock_root/build_artifacts/conda-package-streaming_1691009212940/work
 contourpy @ file:///home/conda/feedstock_root/build_artifacts/contourpy_1695554250440/work
-coverage==7.8.1
+coverage==7.8.2
 cryptography @ file:///home/conda/feedstock_root/build_artifacts/cryptography-split_1695163782358/work
 cycler @ file:///home/conda/feedstock_root/build_artifacts/cycler_1696677705766/work
 Cython @ file:///home/conda/feedstock_root/build_artifacts/cython_1697605139756/work
