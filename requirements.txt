@@ -106,7 +106,7 @@ jupyterlab_server @ file:///home/conda/feedstock_root/build_artifacts/jupyterlab
 kiwisolver @ file:///home/conda/feedstock_root/build_artifacts/kiwisolver_1695380255064/work
 lazy_loader @ file:///home/conda/feedstock_root/build_artifacts/lazy_loader_1692295373316/work
 libmambapy @ file:///home/conda/feedstock_root/build_artifacts/mamba-split_1697482683612/work/libmambapy
-llvmlite==0.40.1
+llvmlite==0.41.1
 locket @ file:///home/conda/feedstock_root/build_artifacts/locket_1650660393415/work
 lz4 @ file:///home/conda/feedstock_root/build_artifacts/lz4_1695449065411/work
 Mako @ file:///home/conda/feedstock_root/build_artifacts/mako_1668568582731/work
