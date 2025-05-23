@@ -25,7 +25,7 @@ Bottleneck @ file:///home/conda/feedstock_root/build_artifacts/bottleneck_169601
 Brotli @ file:///home/conda/feedstock_root/build_artifacts/brotli-split_1695989804830/work
 cached-property @ file:///home/conda/feedstock_root/build_artifacts/cached_property_1615209429212/work
 certifi==2023.7.22
-certipy==0.1.3
+certipy==0.2.2
 cffi @ file:///home/conda/feedstock_root/build_artifacts/cffi_1696002030382/work
 cfgv==3.4.0
 charset-normalizer @ file:///home/conda/feedstock_root/build_artifacts/charset-normalizer_1696431134479/work
