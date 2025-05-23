@@ -1,5 +1,6 @@
 import logging
 from abc import ABC
+from abc import abstractmethod
 from typing import Optional
 
 from surepy.const import BATT_VOLTAGE_FULL
@@ -39,8 +40,6 @@ class BatteryMixin:
 
 
 class SurepyDevice(ABC, BatteryMixin):
-    product_id: ProductId
-
     def __init__(self, client, data: dict):
         self._data = data
         self.client = client
@@ -50,6 +49,19 @@ class SurepyDevice(ABC, BatteryMixin):
         self._household_id = data["household_id"]
         self._name = data["name"]
         self._online = data["status"]["online"]
+
+    @property
+    @abstractmethod
+    def product(self) -> ProductId:
+        raise NotImplementedError("Subclasses must implement product_id")
+
+    @property
+    def product_id(self) -> int:
+        return self.product.value
+
+    @property
+    def product_name(self) -> str:
+        return self.product.name
 
     @property
     def id(self) -> int:

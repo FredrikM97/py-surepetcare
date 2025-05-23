@@ -3,4 +3,6 @@ from surepy.enums import ProductId
 
 
 class PoseidonConnect(SurepyDevice):
-    product_id: ProductId = ProductId.POSEIDON_CONNECT
+    @property
+    def product(self) -> ProductId:
+        return ProductId.POSEIDON_CONNECT

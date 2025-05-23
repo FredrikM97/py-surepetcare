@@ -30,7 +30,9 @@ class BowlMixin:
 
 
 class FeederConnect(SurepyDevice, BowlMixin):
-    product_id: ProductId = ProductId.FEEDER_CONNECT
+    @property
+    def product(self) -> ProductId:
+        return ProductId.FEEDER_CONNECT
 
     async def fetch(self) -> None:
         self._data = (await self.client.get(f"{API_ENDPOINT_V1}/device/{self.id}"))["data"]

@@ -3,4 +3,6 @@ from surepy.enums import ProductId
 
 
 class PetDoor(SurepyDevice):
-    product_id: ProductId = ProductId.PET_DOOR
+    @property
+    def product(self) -> ProductId:
+        return ProductId.PET_DOOR
