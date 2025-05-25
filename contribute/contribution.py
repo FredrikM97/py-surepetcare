@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from dotenv import load_dotenv
 
-from surepy.client import SurePetcareClient
+from surepetcare.client import SurePetcareClient
 
 FILE_DIR = "contribute/files"
 
