@@ -1,5 +1,5 @@
-from surepy.devices.base import SurepyDevice
-from surepy.enums import ProductId
+from surepetcare.devices.base import SurepyDevice
+from surepetcare.enums import ProductId
 
 
 class DualScanConnect(SurepyDevice):

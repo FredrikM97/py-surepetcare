@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import Any
 
-from surepy.const import API_ENDPOINT_V1
-from surepy.devices.base import SurepyDevice
-from surepy.enums import BowlPosition
-from surepy.enums import FoodType
-from surepy.enums import ProductId
+from surepetcare.const import API_ENDPOINT_V1
+from surepetcare.devices.base import SurepyDevice
+from surepetcare.enums import BowlPosition
+from surepetcare.enums import FoodType
+from surepetcare.enums import ProductId
 
 
 @dataclass

@@ -1,6 +1,6 @@
 import pytest
 
-from surepy.helper import validate_date_fields
+from surepetcare.helper import validate_date_fields
 
 # Assume validate_date_fields and _try_parse are imported from the correct module
 

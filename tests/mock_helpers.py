@@ -3,7 +3,7 @@ import os
 from typing import Any
 from typing import Optional
 
-from surepy.client import SurePetcareClient
+from surepetcare.client import SurePetcareClient
 
 
 def load_mock_data(filepath):

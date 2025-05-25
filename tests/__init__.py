@@ -1,1 +1,1 @@
-"""Tests for SurePy."""
+"""Tests for SurePetCare."""

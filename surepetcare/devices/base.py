@@ -3,9 +3,9 @@ from abc import ABC
 from abc import abstractmethod
 from typing import Optional
 
-from surepy.const import BATT_VOLTAGE_FULL
-from surepy.const import BATT_VOLTAGE_LOW
-from surepy.enums import ProductId
+from surepetcare.const import BATT_VOLTAGE_FULL
+from surepetcare.const import BATT_VOLTAGE_LOW
+from surepetcare.enums import ProductId
 
 logger: logging.Logger = logging.getLogger(__name__)
 

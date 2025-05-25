@@ -1,10 +1,10 @@
-from surepy.const import API_ENDPOINT_V1
-from surepy.const import API_ENDPOINT_V2
-from surepy.devices import load_device_class
-from surepy.devices.base import SurepyDevice
-from surepy.entities.pet import Pet
-from surepy.enums import ProductId
-from surepy.helper import AbstractHasGet
+from surepetcare.const import API_ENDPOINT_V1
+from surepetcare.const import API_ENDPOINT_V2
+from surepetcare.devices import load_device_class
+from surepetcare.devices.base import SurepyDevice
+from surepetcare.entities.pet import Pet
+from surepetcare.enums import ProductId
+from surepetcare.helper import AbstractHasGet
 
 
 class HouseholdMixin(AbstractHasGet):

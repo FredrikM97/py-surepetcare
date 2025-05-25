@@ -1,8 +1,8 @@
-from surepy.devices.feeder_connect import FeederConnect
-from surepy.devices.hub import Hub
-from surepy.enums import BowlPosition
-from surepy.enums import FoodType
-from surepy.enums import ProductId
+from surepetcare.devices.feeder_connect import FeederConnect
+from surepetcare.devices.hub import Hub
+from surepetcare.enums import BowlPosition
+from surepetcare.enums import FoodType
+from surepetcare.enums import ProductId
 from tests.mock_helpers import load_mock_data
 from tests.mock_helpers import MockSurePetcareClient
 

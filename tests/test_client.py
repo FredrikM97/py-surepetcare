@@ -1,6 +1,6 @@
 import pytest
 
-from surepy.client import SurePetcareClient
+from surepetcare.client import SurePetcareClient
 
 
 @pytest.mark.asyncio

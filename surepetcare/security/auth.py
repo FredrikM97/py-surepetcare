@@ -5,10 +5,10 @@ from uuid import uuid1
 
 import aiohttp
 
-from surepy.const import HEADER_TEMPLATE
-from surepy.const import LOGIN_ENDPOINT
-from surepy.const import SUREPY_USER_AGENT
-from surepy.security.exceptions import AuthenticationError
+from surepetcare.const import HEADER_TEMPLATE
+from surepetcare.const import LOGIN_ENDPOINT
+from surepetcare.const import SUREPY_USER_AGENT
+from surepetcare.security.exceptions import AuthenticationError
 
 logger = logging.getLogger(__name__)
 

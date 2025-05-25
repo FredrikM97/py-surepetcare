@@ -1,6 +1,6 @@
 import pytest
 
-from surepy.security.auth import AuthClient
+from surepetcare.security.auth import AuthClient
 
 
 @pytest.mark.asyncio

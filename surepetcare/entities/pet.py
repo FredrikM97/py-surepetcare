@@ -2,9 +2,9 @@ import logging
 from dataclasses import dataclass
 from typing import Any
 
-from surepy.const import API_ENDPOINT_V1
-from surepy.const import API_ENDPOINT_V2
-from surepy.helper import validate_date_fields
+from surepetcare.const import API_ENDPOINT_V1
+from surepetcare.const import API_ENDPOINT_V2
+from surepetcare.helper import validate_date_fields
 
 logger = logging.getLogger(__name__)
 

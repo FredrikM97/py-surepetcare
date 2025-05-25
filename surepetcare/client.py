@@ -1,7 +1,7 @@
 import logging
 
-from surepy.entities.household import HouseholdMixin
-from surepy.security.auth import AuthClient
+from surepetcare.entities.household import HouseholdMixin
+from surepetcare.security.auth import AuthClient
 
 logger = logging.getLogger(__name__)
 

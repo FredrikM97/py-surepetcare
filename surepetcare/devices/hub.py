@@ -1,6 +1,6 @@
-from surepy.const import API_ENDPOINT_V2
-from surepy.devices.base import SurepyDevice
-from surepy.enums import ProductId
+from surepetcare.const import API_ENDPOINT_V2
+from surepetcare.devices.base import SurepyDevice
+from surepetcare.enums import ProductId
 
 
 class Hub(SurepyDevice):
