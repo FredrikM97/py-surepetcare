@@ -1,3 +1,6 @@
+import sys
+import types
+from surepetcare.devices import load_device_class
 from surepetcare.devices.feeder_connect import FeederConnect
 from surepetcare.devices.hub import Hub
 from surepetcare.enums import BowlPosition
@@ -36,3 +39,22 @@ def test_hub():
     assert hub.product_id == ProductId.HUB
     assert hub.online is True
     assert hub.battery_level is None
+
+
+def test_load_device_class(monkeypatch):
+
+    class DummyEnum:
+        name = "DUMMY_DEVICE"
+        
+    dummy_module = types.ModuleType("surepetcare.devices.dummy_device")
+    class DummyDevice:
+        pass
+    setattr(dummy_module, "DummyDevice", DummyDevice)
+    sys.modules["surepetcare.devices.dummy_device"] = dummy_module
+
+    # Create a dummy enum with the expected name
+    class DummyEnum:
+        name = "DUMMY_DEVICE"
+
+    device_class = load_device_class(DummyEnum)
+    assert device_class is DummyDevice

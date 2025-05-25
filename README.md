@@ -27,7 +27,7 @@ Please upload issue with data find in contribute/files with `python -m contribut
 ```python
 from dotenv import load_dotenv
 import os
-from surepy.client import SurePetcareClient
+from surepetcare.client import SurePetcareClient
 
 # Load credentials from .env file
 load_dotenv(dotenv_path=".env")

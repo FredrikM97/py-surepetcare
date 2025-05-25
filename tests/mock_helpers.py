@@ -28,3 +28,4 @@ class MockSurePetcareClient(SurePetcareClient):
     async def post(self, endpoint: str, data: Optional[dict[Any, Any]] = None):
         # Implement as needed
         return {}
+
