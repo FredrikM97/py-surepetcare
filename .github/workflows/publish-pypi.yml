@@ -2,6 +2,16 @@ name: Publish to PyPI
 
 on:
   workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
 
 permissions:
   contents: read
@@ -19,6 +29,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
+
+      - name: Install bump2version
+        run: pip install bump2version
+
+      - name: Bump version
+        run: bump2version ${{ github.event.inputs.bump }} --allow-dirty
+
 
       - name: Install build dependencies
         run: python -m pip install --upgrade build twine
