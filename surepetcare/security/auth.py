@@ -17,18 +17,41 @@ class AuthClient:
     def __init__(self):
         self._token = None
         self.session = None
-        self._device_id = str(uuid1())
+        self._device_id = None
         self._surepy_version = None
 
-    async def login(self, email, password) -> "AuthClient":
+    async def login(
+        self,
+        email: str | None = None,
+        password: str | None = None,
+        token: str | None = None,
+        device_id: str | None = None,
+    ) -> "AuthClient":
         await self.set_session()
 
-        authentication_data: dict[str, str | None] = dict(
-            email_address=email, password=password, device_id=self._device_id
-        )
+        if token and device_id:
+            # If token is provided, use it directly
+            self._token = token
+            self._device_id = device_id
+            authentication_data = {"token": token, "device_id": device_id}
+            authentication_data = {}
+            return
+        elif email and password:
+            device_id = device_id if device_id else str(uuid1())
+            self._device_id = device_id
+            authentication_data: dict[str, str | None] = dict(
+                email_address=email, password=password, device_id=device_id
+            )
+        else:
+            raise AuthenticationError(
+                "Email and password or token and device_id must be provided"
+            )
 
         async with self.session.request(
-            "POST", LOGIN_ENDPOINT, json=authentication_data, headers=self._generate_headers()
+            "POST",
+            LOGIN_ENDPOINT,
+            json=authentication_data,
+            headers=self._generate_headers(),
         ) as response:
             logger.info(f"Response status: {response.status}")
 
@@ -39,7 +62,9 @@ class AuthClient:
 
                 return self
             else:
-                raise AuthenticationError(f"Authentication error {response.status} {await response.json()}")
+                raise AuthenticationError(
+                    f"Authentication error {response.status} {await response.json()}"
+                )
 
     def _generate_headers(self, token: Optional[str] = None) -> dict[str, str]:
         """Build a HTTP header accepted by the API"""

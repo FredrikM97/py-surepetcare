@@ -32,14 +32,18 @@ class HouseholdMixin(AbstractHasGet):
     async def get_product(self, product_id: ProductId, device_id: int):
         return await self.get(f"{API_ENDPOINT_V2}/product/{product_id}/device/{device_id}/control")
 
+    async def get_households_devices(self) -> list[Pet]:
+        """Get all devices for all households."""
+
+        household_ids = [household['id'] for household in await self.get_households()]
+        return await self.get_devices(household_ids)
+       
     async def get_households_pets(self) -> list[Pet]:
         """Get all pets for all households."""
         pets = []
-        households = await self.get_households()
-        for household in households:
-            household_pets = await self.get_pets(household["id"])
-            pets.extend(household_pets)
-        return pets
+        household_ids = [household['id'] for household in await self.get_households()]
+        return await self.get_pets(household_ids)
+        
 
     async def get_pets(self, household_id: int) -> list[Pet]:
         pets = []
