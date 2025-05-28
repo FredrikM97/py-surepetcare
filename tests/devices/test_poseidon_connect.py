@@ -2,8 +2,10 @@
 from surepetcare.devices.poseidon_connect import PoseidonConnect
 from surepetcare.enums import ProductId
 
+
 class DummyClient:
     pass
+
 
 def make_data():
     return {
@@ -12,6 +14,7 @@ def make_data():
         "name": "Test Device",
         "status": {"online": True, "battery": 6.0},
     }
+
 
 def test_poseidon_connect_properties():
     device = PoseidonConnect(DummyClient(), make_data())

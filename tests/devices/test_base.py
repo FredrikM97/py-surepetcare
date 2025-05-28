@@ -1,9 +1,10 @@
-import pytest
 from surepetcare.devices.base import SurepyDevice
 from surepetcare.enums import ProductId
 
+
 class DummyClient:
     pass
+
 
 def make_data():
     return {
@@ -13,10 +14,12 @@ def make_data():
         "status": {"online": True, "battery": 6.0},
     }
 
+
 class DummyDevice(SurepyDevice):
     @property
     def product(self) -> ProductId:
         return ProductId.HUB
+
 
 def test_surepydevice_properties():
     device = DummyDevice(DummyClient(), make_data())
@@ -29,20 +32,24 @@ def test_surepydevice_properties():
     assert device.raw_data["id"] == 123
     assert str(device).startswith("<DummyDevice id=123>")
 
+
 def test_battery_level_full():
     device = DummyDevice(DummyClient(), make_data())
     device._data["status"]["battery"] = 6.4
     assert device.battery_level == 100
+
 
 def test_battery_level_low():
     device = DummyDevice(DummyClient(), make_data())
     device._data["status"]["battery"] = 0.0
     assert device.battery_level == 0
 
+
 def test_battery_level_invalid():
     device = DummyDevice(DummyClient(), make_data())
     device._data["status"]["battery"] = "not_a_number"
     assert device.battery_level is None
+
 
 def test_battery_level_missing():
     device = DummyDevice(DummyClient(), make_data())

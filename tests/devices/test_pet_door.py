@@ -2,8 +2,10 @@
 from surepetcare.devices.pet_door import PetDoor
 from surepetcare.enums import ProductId
 
+
 class DummyClient:
     pass
+
 
 def make_data():
     return {
@@ -12,6 +14,7 @@ def make_data():
         "name": "Test Device",
         "status": {"online": True, "battery": 6.0},
     }
+
 
 def test_pet_door_properties():
     device = PetDoor(DummyClient(), make_data())

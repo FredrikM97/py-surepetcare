@@ -1,12 +1,16 @@
 # Integration tests for FeederConnect device using mock data.
 from surepetcare.devices.feeder_connect import FeederConnect
-from surepetcare.enums import BowlPosition, FoodType, ProductId
-from tests.mock_helpers import load_mock_data, MockSurePetcareClient
+from surepetcare.enums import BowlPosition
+from surepetcare.enums import FoodType
+from surepetcare.enums import ProductId
+from tests.mock_helpers import load_mock_data
+from tests.mock_helpers import MockSurePetcareClient
+
 
 def test_feeder_connect_integration():
     client = MockSurePetcareClient({})
     feeder = FeederConnect(
-        client, load_mock_data("tests/mock_data/mock_device_feeder_connect.json")['data'][0]
+        client, load_mock_data("tests/mock_data/mock_device_feeder_connect.json")["data"][0]
     )
     assert feeder.battery_level == 40
     assert feeder.id == 1

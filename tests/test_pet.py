@@ -1,19 +1,26 @@
 import pytest
-from surepetcare.entities.pet import Pet, PetHouseholdReport
+
+from surepetcare.entities.pet import Pet
+from surepetcare.entities.pet import PetHouseholdReport
+
 
 class DummyClient:
     def __init__(self):
         self.last_args = None
+
     async def get(self, endpoint, params=None):
         self.last_args = (endpoint, params)
         # Simulate API response for PetHouseholdReport
-        return {"data": {
-            "feeding": "feed-data",
-            "movement": "move-data",
-            "drinking": "drink-data",
-            "consumption_habit": "habit-data",
-            "consumption_alert": "alert-data"
-        }}
+        return {
+            "data": {
+                "feeding": "feed-data",
+                "movement": "move-data",
+                "drinking": "drink-data",
+                "consumption_habit": "habit-data",
+                "consumption_alert": "alert-data",
+            }
+        }
+
 
 @pytest.mark.asyncio
 async def test_pethouseholdreport_fetch_and_properties():
@@ -30,11 +37,13 @@ async def test_pethouseholdreport_fetch_and_properties():
     assert report.consumption_habit == "habit-data"
     assert report.consumption_alert == "alert-data"
 
+
 @pytest.mark.asyncio
 async def test_pet_get_pet_dashboard():
     class DummyClient:
         async def get(self, endpoint, params=None):
             return "dashboard-data"
+
     pet = Pet(DummyClient(), {"id": 1, "household_id": 2, "name": "N", "tag": {"id": 3}})
     result = await pet.get_pet_dashboard("2024-01-01", [1])
     assert result == "dashboard-data"

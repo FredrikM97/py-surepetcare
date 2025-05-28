@@ -1,5 +1,8 @@
-import pytest
-from surepetcare.enums import ProductId, SureEnum, BowlPosition, Location, FoodType
+from surepetcare.enums import BowlPosition
+from surepetcare.enums import FoodType
+from surepetcare.enums import Location
+from surepetcare.enums import ProductId
+
 
 def test_productid_enum():
     assert ProductId.HUB == 1
@@ -9,16 +12,19 @@ def test_productid_enum():
     assert ProductId.DUAL_SCAN_CONNECT.name == "DUAL_SCAN_CONNECT"
     assert ProductId.NO_ID_DOG_BOWL_CONNECT.value == 32
 
+
 def test_bowlposition_enum():
     assert BowlPosition.LEFT == 0
     assert BowlPosition.RIGHT == 1
     assert str(BowlPosition.LEFT) == "Left"
+
 
 def test_location_enum():
     assert Location.INSIDE == 1
     assert Location.OUTSIDE == 2
     assert Location.UNKNOWN == -1
     assert str(Location.OUTSIDE) == "Outside"
+
 
 def test_foodtype_enum():
     assert FoodType.WET == 1

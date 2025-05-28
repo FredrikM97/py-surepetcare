@@ -1,5 +1,16 @@
 import pytest
-from surepetcare.const import BATT_VOLTAGE_FULL, BATT_VOLTAGE_LOW, BATT_VOLTAGE_DIFF, TIMEOUT, API_ENDPOINT_V1, API_ENDPOINT_V2, LOGIN_ENDPOINT, SUREPY_USER_AGENT, REQUEST_TYPES, HEADER_TEMPLATE
+
+from surepetcare.const import API_ENDPOINT_V1
+from surepetcare.const import API_ENDPOINT_V2
+from surepetcare.const import BATT_VOLTAGE_DIFF
+from surepetcare.const import BATT_VOLTAGE_FULL
+from surepetcare.const import BATT_VOLTAGE_LOW
+from surepetcare.const import HEADER_TEMPLATE
+from surepetcare.const import LOGIN_ENDPOINT
+from surepetcare.const import REQUEST_TYPES
+from surepetcare.const import SUREPY_USER_AGENT
+from surepetcare.const import TIMEOUT
+
 
 def test_constants():
     assert BATT_VOLTAGE_FULL == pytest.approx(1.6)
