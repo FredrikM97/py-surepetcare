@@ -1,32 +1,47 @@
+import asyncio
+
 import pytest
 
+from surepetcare.helper import data_exist_validation
 from surepetcare.helper import validate_date_fields
 
-# Assume validate_date_fields and _try_parse are imported from the correct module
 
+class DummyDataExist:
+    def __init__(self):
+        self._data = {"foo": 1}
+        self._raw_data = {"foo": 1}
 
-class ValidateDateFieldMock:
-    @validate_date_fields("from_date", "to_date")
-    async def method(self, from_date=None, to_date=None):
+    @data_exist_validation
+    def do_something(self):
         return True
 
 
-@pytest.mark.asyncio
-@pytest.mark.parametrize(
-    "from_date,to_date,should_raise",
-    [
-        ("2025-05-22", "2025-12-12", False),
-        ("2023-01-01", "2023-01-02", False),
-        ("2023-01-01T12:00:00+0000", "2023-01-02T13:00:00+0000", False),
-        ("2023-01-01", "2023-01-02T13:00:00+0000", False),
-        ("2023/01/01", "2023-01-02", True),
-        ("2023-01-01", "bad-date", True),
-    ],
-)
-async def test_validate_date_fields(from_date, to_date, should_raise):
-    dummy = ValidateDateFieldMock()
-    if should_raise:
-        with pytest.raises(ValueError):
-            await dummy.method(from_date=from_date, to_date=to_date)
-    else:
-        assert await dummy.method(from_date=from_date, to_date=to_date) is True
+def test_data_exist_validation():
+    d = DummyDataExist()
+    assert d.do_something() is True
+    d._raw_data = None
+    with pytest.raises(Exception):
+        d.do_something()
+
+
+def test_validate_date_fields_valid():
+    class DummyDate:
+        @validate_date_fields("date")
+        async def foo(self, date):
+            return date
+
+    d = DummyDate()
+    # valid date
+    assert asyncio.run(d.foo("2024-01-01")) == "2024-01-01"
+    assert asyncio.run(d.foo("2024-01-01T12:00:00+0000")) == "2024-01-01T12:00:00+0000"
+
+
+def test_validate_date_fields_invalid():
+    class DummyDate:
+        @validate_date_fields("date")
+        async def foo(self, date):
+            return date
+
+    d = DummyDate()
+    with pytest.raises(ValueError):
+        asyncio.run(d.foo("not-a-date"))

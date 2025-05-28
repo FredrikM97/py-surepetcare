@@ -1,3 +1,4 @@
+import importlib
 from abc import ABC
 from abc import abstractmethod
 from datetime import datetime
@@ -49,3 +50,15 @@ class AbstractHasGet(ABC):
     @abstractmethod
     async def get(self, endpoint: str, params: dict | None = None):
         pass
+
+
+def load_device_class(product_id_enum):
+    """Dynamically load a device class based on the product_id_enum."""
+    module_name = f"surepetcare.devices.{product_id_enum.name.lower()}"
+    class_name = "".join(word.capitalize() for word in product_id_enum.name.lower().split("_"))
+    try:
+        module = importlib.import_module(module_name)
+        device_class = getattr(module, class_name)
+        return device_class
+    except (ModuleNotFoundError, AttributeError):
+        return None

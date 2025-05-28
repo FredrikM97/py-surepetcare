@@ -1,10 +1,10 @@
 from surepetcare.const import API_ENDPOINT_V1
 from surepetcare.const import API_ENDPOINT_V2
-from surepetcare.devices import load_device_class
 from surepetcare.devices.base import SurepyDevice
 from surepetcare.entities.pet import Pet
 from surepetcare.enums import ProductId
 from surepetcare.helper import AbstractHasGet
+from surepetcare.helper import load_device_class
 
 
 class HouseholdMixin(AbstractHasGet):
@@ -32,20 +32,22 @@ class HouseholdMixin(AbstractHasGet):
     async def get_product(self, product_id: ProductId, device_id: int):
         return await self.get(f"{API_ENDPOINT_V2}/product/{product_id}/device/{device_id}/control")
 
-    async def get_households_devices(self) -> list[Pet]:
+    async def get_households_devices(self) -> list[SurepyDevice]:
         """Get all devices for all households."""
 
-        household_ids = [household['id'] for household in await self.get_households()]
+        household_ids = [household["id"] for household in await self.get_households()]
         return await self.get_devices(household_ids)
-       
+
     async def get_households_pets(self) -> list[Pet]:
         """Get all pets for all households."""
         pets = []
-        household_ids = [household['id'] for household in await self.get_households()]
-        return await self.get_pets(household_ids)
-        
+        for household in await self.get_households():
+            household_pets = await self.get_pets(household["id"])
+            pets.extend(household_pets)
+        return pets
 
     async def get_pets(self, household_id: int) -> list[Pet]:
+        """Get all pets for a specific household."""
         pets = []
         for pet in (await self.get(f"{API_ENDPOINT_V1}/pet", params={"HouseholdId": household_id}))["data"]:
             pets.append(Pet(self, pet))

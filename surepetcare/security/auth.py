@@ -33,9 +33,7 @@ class AuthClient:
             # If token is provided, use it directly
             self._token = token
             self._device_id = device_id
-            authentication_data = {"token": token, "device_id": device_id}
-            authentication_data = {}
-            return
+            return self
         elif email and password:
             device_id = device_id if device_id else str(uuid1())
             self._device_id = device_id
@@ -43,9 +41,7 @@ class AuthClient:
                 email_address=email, password=password, device_id=device_id
             )
         else:
-            raise AuthenticationError(
-                "Email and password or token and device_id must be provided"
-            )
+            raise AuthenticationError("Email and password or token and device_id must be provided")
 
         async with self.session.request(
             "POST",
@@ -62,9 +58,7 @@ class AuthClient:
 
                 return self
             else:
-                raise AuthenticationError(
-                    f"Authentication error {response.status} {await response.json()}"
-                )
+                raise AuthenticationError(f"Authentication error {response.status} {await response.json()}")
 
     def _generate_headers(self, token: Optional[str] = None) -> dict[str, str]:
         """Build a HTTP header accepted by the API"""

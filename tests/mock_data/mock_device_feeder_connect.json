@@ -1,33 +1,123 @@
 {"data": [
-    {
-        "id": 269654,
-        "parent_device_id": 123,
-        "product_id": 4,
-        "household_id": 7777,
-        "index": 0,
-        "name": "Cat feeder",
-        "serial_number": "XXX",
-        "mac_address": "54321",
-        "version": 31075,
-        "created_at": "2020-03-29T13:42:22+00:00",
-        "updated_at": "2025-05-21T08:51:15+00:00",
-        "pairing_at": "2023-10-01T13:16:15+00:00",
-        "last_new_event_at": "2025-05-21T16:47:13+00:00",
-        "control": {"bowls": {"settings": [{"food_type": 2, "target": 100000},
-            {"food_type": 2, "target": 100000}],
-        "type": 4},
-        "lid": {"close_delay": 4},
-        "tare": 2,
-        "training_mode": 0,
-        "fast_polling": false},
-        "status": {"battery": 5.568,
-        "learn_mode": false,
-        "signal": {"device_rssi": -79},
-        "version": {"device": {"hardware": "9", "firmware": "406.437"}},
-        "online": false}
+  {
+    "id": 1,
+    "parent_device_id": 555,
+    "product_id": 4,
+    "household_id": 7777,
+    "index": 0,
+    "name": "Feeder 1",
+    "serial_number": "XXX",
+    "mac_address": "YYY",
+    "version": 31076,
+    "created_at": "2019-03-29T13:42:22+00:00",
+    "updated_at": "2025-05-28T02:06:54+00:00",
+    "pairing_at": "2023-10-01T13:16:15+00:00",
+    "last_new_event_at": "2025-05-28T12:51:14+00:00",
+    "control": {
+      "bowls": {
+        "settings": [
+          {
+            "food_type": 1,
+            "target": 0
+          },
+          {
+            "food_type": 1,
+            "target": 0
+          }
+        ],
+        "type": 4
+      },
+      "lid": {
+        "close_delay": 0
+      },
+      "tare": 2,
+      "training_mode": 0,
+      "fast_polling": false
+    },
+    "status": {
+      "battery": 5.455,
+      "learn_mode": false,
+      "signal": {
+        "device_rssi": -81
+      },
+      "version": {
+        "device": {
+          "hardware": "9",
+          "firmware": "406.437"
         }
-    ],
-    "meta": {
+      },
+      "online": true
+    },
+    "tags": [
+      {
+        "id": 60978,
+        "device_id": 1,
+        "index": 1,
+        "profile": 2,
+        "version": 0,
+        "created_at": "2023-10-01T14:34:49+00:00",
+        "updated_at": "2023-10-01T14:34:49+00:00"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "parent_device_id": 555,
+    "product_id": 4,
+    "household_id": 7777,
+    "index": 1,
+    "name": "Feeder 2",
+    "serial_number": "XXX",
+    "mac_address": "YYY",
+    "version": 27274,
+    "created_at": "2019-03-29T13:44:38+00:00",
+    "updated_at": "2025-05-17T14:48:25+00:00",
+    "pairing_at": "2023-10-01T13:16:14+00:00",
+    "last_new_event_at": "2025-05-17T14:49:30+00:00",
+    "control": {
+      "bowls": {
+        "settings": [
+          {
+            "food_type": 2,
+            "target": 56
+          }
+        ],
+        "type": 1
+      },
+      "lid": {
+        "close_delay": 0
+      },
+      "training_mode": 0,
+      "fast_polling": false
+    },
+    "status": {
+      "battery": 5.414,
+      "learn_mode": false,
+      "signal": {
+        "device_rssi": -94
+      },
+      "version": {
+        "device": {
+          "hardware": "9",
+          "firmware": "406.437"
+        }
+      },
+      "online": false
+    },
+    "tags": [
+      {
+        "id": 60972,
+        "device_id": 2,
+        "index": 1,
+        "profile": 2,
+        "version": 0,
+        "created_at": "2023-10-10T17:53:35+00:00",
+        "updated_at": "2023-10-10T17:53:35+00:00"
+      }
+    ]
+}
+],
+"meta": {
     "page": 1,
     "page_size": 1000,
     "count": 2,
