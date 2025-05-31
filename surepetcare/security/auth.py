@@ -1,4 +1,5 @@
 import logging
+import warnings
 from http import HTTPStatus
 from typing import Optional
 from uuid import uuid1
@@ -77,10 +78,31 @@ class AuthClient:
         if not self.session:
             self.session = aiohttp.ClientSession()
 
-    def get_token(self):
+    @property
+    def token(self):
         if not self._token:
             raise Exception("Authentication token is missing")
         return self._token
+
+    @property
+    def device_id(self):
+        if not self._device_id:
+            raise Exception("Device ID is missing")
+        return self._device_id
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc, tb):
+        await self.close()
+
+    def __del__(self):
+        if self.session is not None and not self.session.closed:
+            warnings.warn(
+                f"{self.__class__.__name__} was deleted without closing the aiohttp session. "
+                "Call await client.close() or use 'async with' to avoid resource leaks.",
+                ResourceWarning,
+            )
 
 
 def get_formatted_header(user_agent, token, device_id):

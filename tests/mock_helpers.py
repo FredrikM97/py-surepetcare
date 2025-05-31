@@ -28,3 +28,82 @@ class MockSurePetcareClient(SurePetcareClient):
     async def post(self, endpoint: str, data: Optional[dict[Any, Any]] = None):
         # Implement as needed
         return {}
+
+
+class DummyResponse:
+    def __init__(self, ok=True, status=200, text="OK", json_data=None):
+        self.ok = ok
+        self.status = status
+        self._text = text
+        self._json_data = json_data or {"foo": "bar"}
+
+    async def text(self):
+        return self._text
+
+    async def json(self):
+        return self._json_data
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc, tb):
+        pass
+
+
+class DummySession:
+    def __init__(self, ok=True, status=200, text="OK", json_data=None, method=None):
+        self._ok = ok
+        self._status = status
+        self._text = text
+        self._json_data = json_data or {"foo": "bar"}
+        self._closed = False
+        # 'method' is accepted for compatibility but not used
+
+    @property
+    def closed(self):
+        return self._closed
+
+    def get(self, *args, response=None, **kwargs):
+        resp = response or DummyResponse(
+            ok=self._ok, status=self._status, text=self._text, json_data=self._json_data
+        )
+
+        class AsyncContextManager:
+            async def __aenter__(self_inner):
+                return resp
+
+            async def __aexit__(self_inner, exc_type, exc, tb):
+                pass
+
+        return AsyncContextManager()
+
+    def post(self, *args, response=None, **kwargs):
+        resp = response or DummyResponse(
+            ok=self._ok, status=self._status, text=self._text, json_data=self._json_data
+        )
+
+        class AsyncContextManager:
+            async def __aenter__(self_inner):
+                return resp
+
+            async def __aexit__(self_inner, exc_type, exc, tb):
+                pass
+
+        return AsyncContextManager()
+
+    def request(self, *args, response=None, **kwargs):
+        resp = response or DummyResponse(
+            ok=self._ok, status=self._status, text=self._text, json_data=self._json_data
+        )
+
+        class AsyncContextManager:
+            async def __aenter__(self_inner):
+                return resp
+
+            async def __aexit__(self_inner, exc_type, exc, tb):
+                pass
+
+        return AsyncContextManager()
+
+    async def close(self):
+        self._closed = True

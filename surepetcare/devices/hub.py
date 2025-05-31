@@ -1,5 +1,6 @@
+from .device import SurepyDevice
+from surepetcare.command import Command
 from surepetcare.const import API_ENDPOINT_V2
-from surepetcare.devices.base import SurepyDevice
 from surepetcare.enums import ProductId
 
 
@@ -8,7 +9,13 @@ class Hub(SurepyDevice):
     def product(self) -> ProductId:
         return ProductId.HUB
 
-    async def fetch(self) -> None:
-        self._raw_data = await self.client.get(
-            f"{API_ENDPOINT_V2}/product/{self.product_id}/device/{self.id}/control"
+    def refresh(self):
+        def parse(response):
+            self._raw_data = response
+            return self
+
+        return Command(
+            method="GET",
+            endpoint=f"{API_ENDPOINT_V2}/product/{self.product_id}/device/{self.id}/control",
+            callback=parse,
         )

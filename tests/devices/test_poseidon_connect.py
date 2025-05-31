@@ -3,10 +3,6 @@ from surepetcare.devices.poseidon_connect import PoseidonConnect
 from surepetcare.enums import ProductId
 
 
-class DummyClient:
-    pass
-
-
 def make_data():
     return {
         "id": 123,
@@ -17,5 +13,5 @@ def make_data():
 
 
 def test_poseidon_connect_properties():
-    device = PoseidonConnect(DummyClient(), make_data())
+    device = PoseidonConnect(make_data())
     assert device.product == ProductId.POSEIDON_CONNECT

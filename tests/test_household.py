@@ -1,162 +1,76 @@
 import pytest
 
-from surepetcare.entities.household import HouseholdMixin
+from surepetcare.client import SurePetcareClient
+from surepetcare.const import API_ENDPOINT_V1
+from surepetcare.const import API_ENDPOINT_V2
+from surepetcare.household import Household
+from tests.mock_helpers import MockSurePetcareClient
 
 
-class DummyClient(HouseholdMixin):
-    def __init__(self, get_result):
-        self._get_result = get_result
+@pytest.mark.asyncio
+async def test_get_households(monkeypatch):
+    # Mock API response
+    async def mock_get(endpoint, params=None):
+        return {"data": [{"id": 1}, {"id": 2}]}
 
-    async def get(self, endpoint, params=None):
-        return self._get_result
+    client = SurePetcareClient()
+    monkeypatch.setattr(client, "get", mock_get)
+    command = Household.get_households()
+    result = await client.api(command)
+    assert isinstance(result, list)
+    assert result[0].id == 1
+    assert result[1].id == 2
 
 
 @pytest.mark.asyncio
 async def test_get_household():
-    client = DummyClient({"id": 1, "name": "TestHouse"})
-    result = await client.get_household(1)
-    assert result["id"] == 1
-    assert result["name"] == "TestHouse"
-
-
-@pytest.mark.asyncio
-async def test_get_households():
-    client = DummyClient({"data": [{"id": 1}, {"id": 2}]})
-    result = await client.get_households()
-    assert isinstance(result, list)
-    assert result[0]["id"] == 1
-
-
-@pytest.mark.asyncio
-async def test_get_devices():
-    # Simulate two devices with valid product_ids
-    class DummyEnum:
-        name = "dummy"
-
-    class DummyDevice:
-        def __init__(self, client, device):
-            self.device = device
-
-    def fake_load_device_class(product_id):
-        return DummyDevice
-
-    import surepetcare.entities.household as hh
-
-    orig = hh.load_device_class
-    hh.load_device_class = fake_load_device_class
-    client = DummyClient({"data": [{"product_id": 1}, {"product_id": 3}]})
-    result = await client.get_devices([1])
-    assert len(result) == 2
-    hh.load_device_class = orig
-
-
-@pytest.mark.asyncio
-async def test_get_product():
-    client = DummyClient({"foo": "bar"})
-    result = await client.get_product(1, 2)
-    assert result == {"foo": "bar"}
-
-
-@pytest.mark.asyncio
-async def test_get_households_devices():
-    # Simulate two households, each with one device
-    class DummyDevice:
-        def __init__(self, client, device):
-            self.device = device
-
-    def fake_load_device_class(product_id):
-        return DummyDevice
-
-    import surepetcare.entities.household as hh
-
-    orig = hh.load_device_class
-    hh.load_device_class = fake_load_device_class
-    client = DummyClient({"data": [{"id": 1}, {"id": 2}]})
-
-    async def async_get_devices(household_ids):
-        return [DummyDevice(client, {"id": hid}) for hid in household_ids]
-
-    async def async_get_households():
-        return [{"id": 1}, {"id": 2}]
-
-    client.get_devices = async_get_devices
-    client.get_households = async_get_households
-    result = await client.get_households_devices()
-    assert len(result) == 2
-    hh.load_device_class = orig
-
-
-@pytest.mark.asyncio
-async def test_get_households_pets():
-    class DummyPet:
-        def __init__(self, client, pet):
-            self.pet = pet
-
-    client = DummyClient({})
-
-    async def async_get_households():
-        return [{"id": 1}, {"id": 2}]
-
-    async def async_get_pets(household_id):
-        return [DummyPet(client, {"id": household_id * 10})]
-
-    client.get_households = async_get_households
-    client.get_pets = async_get_pets
-    result = await client.get_households_pets()
-    assert len(result) == 2
-    assert result[0].pet["id"] == 10
-    assert result[1].pet["id"] == 20
+    mock_data = {"id": 1, "name": "TestHouse"}
+    endpoint = f"{API_ENDPOINT_V1}/household/1"
+    client = MockSurePetcareClient({endpoint: mock_data})
+    command = Household.get_household(1)
+    result = await client.api(command)
+    assert (isinstance(result, dict) and result["id"] == 1) or (hasattr(result, "id") and result.id == 1)
 
 
 @pytest.mark.asyncio
 async def test_get_pets():
-    class DummyPet:
-        def __init__(self, client, pet):
-            self.pet = pet
-            # Set attributes for all keys in the dict for compatibility
-            for k, v in pet.items():
-                setattr(self, k, v)
-
-    client = DummyClient({})
-
-    async def async_get(endpoint, params=None):
-        # Add 'household_id', 'name', and 'tag' (as dict) to each pet dict to avoid TypeError
-        return {
-            "data": [
-                {"id": 1, "household_id": 1, "name": "Pet1", "tag": {"id": "A1"}},
-                {"id": 2, "household_id": 1, "name": "Pet2", "tag": {"id": "B2"}},
-            ]
-        }
-
-    import surepetcare.entities.pet as pet_mod
-
-    orig = pet_mod.Pet
-    pet_mod.Pet = DummyPet
-    client.get = async_get
-    result = await client.get_pets(1)
-    assert len(result) == 2
-    assert result[0]._id == 1
-    assert result[1]._id == 2
-    pet_mod.Pet = orig
+    mock_data = {
+        "data": [
+            {"id": 1, "household_id": 1, "name": "Pet1", "tag": {"id": "A1"}},
+            {"id": 2, "household_id": 1, "name": "Pet2", "tag": {"id": "B2"}},
+        ]
+    }
+    client = MockSurePetcareClient({f"{API_ENDPOINT_V1}/pet": mock_data})
+    household = Household({"id": 1})
+    command = household.get_pets()
+    pets = await client.api(command)
+    assert len(pets) == 2
+    assert pets[0].id == 1
+    assert pets[1].id == 2
 
 
 @pytest.mark.asyncio
-async def test_get_devices_skips_non_matching_product_id():
-    # Simulate devices with product_ids, only one matches
-    class DummyDevice:
-        def __init__(self, client, device):
-            self.device = device
+async def test_get_devices():
+    mock_data = {
+        "data": [
+            {"id": 10, "household_id": 1, "name": "Hub1", "product_id": 1, "status": {"online": True}},
+            {"id": 11, "household_id": 1, "name": "Feeder1", "product_id": 4, "status": {"online": True}},
+        ]
+    }
+    client = MockSurePetcareClient({f"{API_ENDPOINT_V1}/device": mock_data})
+    household = Household({"id": 1})
+    command = household.get_devices()
+    devices = await client.api(command)
+    assert len(devices) == 2
+    assert devices[0].id == 10
+    assert devices[1].id == 11
 
-    def fake_load_device_class(product_id):
-        return DummyDevice
 
-    import surepetcare.entities.household as hh
-
-    orig = hh.load_device_class
-    hh.load_device_class = fake_load_device_class
-    # Only product_id=1 should match
-    client = DummyClient({"data": [{"product_id": 1}, {"product_id": 99}]})
-    result = await client.get_devices([1])
-    assert len(result) == 1
-    assert result[0].device["product_id"] == 1
-    hh.load_device_class = orig
+@pytest.mark.asyncio
+async def test_get_product():
+    mock_data = {"foo": "bar"}
+    endpoint = f"{API_ENDPOINT_V2}/product/1/device/2/control"
+    client = MockSurePetcareClient({endpoint: mock_data})
+    command = Household.get_product(1, 2)
+    result = await client.api(command)
+    assert result == {"foo": "bar"}

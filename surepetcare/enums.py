@@ -11,6 +11,7 @@ class SureEnum(IntEnum):
 class ProductId(SureEnum):
     """Sure Entity Types."""
 
+    PET = 0  # Dummy just to simplify the pet
     HUB = 1
     PET_DOOR = 3
     FEEDER_CONNECT = 4
@@ -18,6 +19,15 @@ class ProductId(SureEnum):
     DUAL_SCAN_PET_DOOR = 10
     POSEIDON_CONNECT = 8
     NO_ID_DOG_BOWL_CONNECT = 32
+
+    @classmethod
+    def find(cls, value: int):
+        if isinstance(value, cls):
+            return value
+        try:
+            return cls(value)
+        except ValueError:
+            return None
 
 
 class BowlPosition(SureEnum):

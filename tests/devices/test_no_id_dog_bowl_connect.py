@@ -3,10 +3,6 @@ from surepetcare.devices.no_id_dog_bowl_connect import NoIdDogBowlConnect
 from surepetcare.enums import ProductId
 
 
-class DummyClient:
-    pass
-
-
 def make_data():
     return {
         "id": 123,
@@ -17,5 +13,5 @@ def make_data():
 
 
 def test_no_id_dog_bowl_connect_properties():
-    device = NoIdDogBowlConnect(DummyClient(), make_data())
+    device = NoIdDogBowlConnect(make_data())
     assert device.product == ProductId.NO_ID_DOG_BOWL_CONNECT

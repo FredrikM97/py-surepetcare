@@ -3,10 +3,6 @@ from surepetcare.devices.pet_door import PetDoor
 from surepetcare.enums import ProductId
 
 
-class DummyClient:
-    pass
-
-
 def make_data():
     return {
         "id": 123,
@@ -17,5 +13,5 @@ def make_data():
 
 
 def test_pet_door_properties():
-    device = PetDoor(DummyClient(), make_data())
+    device = PetDoor(make_data())
     assert device.product == ProductId.PET_DOOR

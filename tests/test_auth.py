@@ -1,28 +1,13 @@
 import pytest
 
 from surepetcare.security.auth import AuthClient
+from tests.mock_helpers import DummySession
 
 
 @pytest.mark.asyncio
 async def test_login_success():
-    class DummyResponse:
-        status = 200
-
-        async def json(self):
-            return {"data": {"token": "dummy-token"}}
-
-        async def __aenter__(self):
-            return self
-
-        async def __aexit__(self, exc_type, exc, tb):
-            pass
-
-    class DummySession:
-        def request(self, *args, **kwargs):
-            return DummyResponse()
-
     client = AuthClient()
-    client.session = DummySession()
+    client.session = DummySession(ok=True, status=200, json_data={"data": {"token": "dummy-token"}})
     result = await client.login("user@example.com", "password")
     assert client._token == "dummy-token"
     assert result is client
@@ -30,59 +15,26 @@ async def test_login_success():
 
 @pytest.mark.asyncio
 async def test_login_failure():
-    class DummyResponse:
-        status = 401
-
-        async def json(self):
-            return {"error": "invalid credentials"}
-
-        async def __aenter__(self):
-            return self
-
-        async def __aexit__(self, exc_type, exc, tb):
-            pass
-
-    class DummySession:
-        def request(self, *args, **kwargs):
-            return DummyResponse()
-
     client = AuthClient()
-    client.session = DummySession()
+    client.session = DummySession(ok=False, status=401, json_data={"error": "invalid credentials"})
     with pytest.raises(Exception):
         await client.login("user@example.com", "wrongpassword")
 
 
 @pytest.mark.asyncio
 async def test_login_failure_and_token_not_found():
-    class DummyResponse:
-        status = 401
-
-        async def json(self):
-            return {"error": "invalid credentials"}
-
-        async def __aenter__(self):
-            return self
-
-        async def __aexit__(self, exc_type, exc, tb):
-            pass
-
-    class DummySession:
-        def request(self, *args, **kwargs):
-            return DummyResponse()
-
     client = AuthClient()
-    client.session = DummySession()
-    # login should fail and token should not be set
+    client.session = DummySession(ok=False, status=401, json_data={"error": "invalid credentials"})
     with pytest.raises(Exception):
         await client.login("user@example.com", "wrongpassword")
     with pytest.raises(Exception):
-        client.get_token()
+        client.token
 
 
 @pytest.mark.asyncio
 async def test_login_token_device_id():
     client = AuthClient()
-    client.session = object()  # Dummy, won't be used
+    client.session = DummySession(ok=True, status=200, json_data={"data": {"token": "tok"}})
     result = await client.login(token="tok", device_id="dev")
     assert client._token == "tok"
     assert client._device_id == "dev"
@@ -92,9 +44,17 @@ async def test_login_token_device_id():
 @pytest.mark.asyncio
 async def test_login_missing_credentials():
     client = AuthClient()
-    client.session = object()
+    client.session = DummySession(ok=True, status=200, json_data={"data": {"token": "tok"}})
     with pytest.raises(Exception):
         await client.login()
+
+
+@pytest.mark.asyncio
+async def test_login_success_but_token_missing():
+    client = AuthClient()
+    client.session = DummySession(ok=True, status=200, json_data={"data": {}})
+    with pytest.raises(Exception, match="Token not found"):
+        await client.login("user@example.com", "password")
 
 
 def test_generate_headers():
@@ -105,16 +65,16 @@ def test_generate_headers():
     assert any("tok" in v for v in headers.values())
 
 
-def test_get_token_success():
+def test_token_success():
     client = AuthClient()
     client._token = "tok"
-    assert client.get_token() == "tok"
+    assert client.token == "tok"
 
 
-def test_get_token_missing():
+def test_token_missing():
     client = AuthClient()
     with pytest.raises(Exception):
-        client.get_token()
+        client.token
 
 
 def test_get_formatted_header():
@@ -148,32 +108,14 @@ async def test_set_session():
     client = AuthClient()
     await client.set_session()
     assert client.session is not None
+
     # Should not overwrite if already set
-    s = object()
+    class DummyWithClosed:
+        @property
+        def closed(self):
+            return False
+
+    s = DummyWithClosed()
     client.session = s
     await client.set_session()
     assert client.session is s
-
-
-@pytest.mark.asyncio
-async def test_login_success_but_token_missing():
-    class DummyResponse:
-        status = 200
-
-        async def json(self):
-            return {"data": {}}  # No token in response
-
-        async def __aenter__(self):
-            return self
-
-        async def __aexit__(self, exc_type, exc, tb):
-            pass
-
-    class DummySession:
-        def request(self, *args, **kwargs):
-            return DummyResponse()
-
-    client = AuthClient()
-    client.session = DummySession()
-    with pytest.raises(Exception, match="Token not found"):
-        await client.login("user@example.com", "password")

@@ -1,4 +1,4 @@
-from surepetcare.devices.base import SurepyDevice
+from .device import SurepyDevice
 from surepetcare.enums import ProductId
 
 

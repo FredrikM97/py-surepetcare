@@ -3,10 +3,6 @@ from surepetcare.devices.dual_scan_connect import DualScanConnect
 from surepetcare.enums import ProductId
 
 
-class DummyClient:
-    pass
-
-
 def make_data():
     return {
         "id": 123,
@@ -17,5 +13,5 @@ def make_data():
 
 
 def test_dual_scan_connect_properties():
-    device = DualScanConnect(DummyClient(), make_data())
+    device = DualScanConnect(make_data())
     assert device.product == ProductId.DUAL_SCAN_CONNECT

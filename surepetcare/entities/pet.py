@@ -1,115 +1,137 @@
 import logging
-from dataclasses import dataclass
-from typing import Any
+from typing import Optional
 
-from surepetcare.const import API_ENDPOINT_V1
-from surepetcare.const import API_ENDPOINT_V2
-from surepetcare.helper import validate_date_fields
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
+from pydantic import model_validator
+
 
 logger = logging.getLogger(__name__)
 
 
-class PetHouseholdReport:
-    def __init__(self, client, household_id: int, pet_id: int) -> None:
-        self._data: dict[str, Any] = {}
-        self.client = client
+class ReportHouseholdMovementResource(BaseModel):
+    """Represents a movement resource in the household report."""
 
-        self.household_id = household_id
-        self.pet_id = pet_id
-
-    @validate_date_fields("from_date", "to_date")
-    async def fetch(self, from_date: str, to_date: str, event_type: int | None = None) -> None:
-        """Fetch pet history data from the API."""
-
-        params: dict[str, Any] = {"From": from_date, "To": to_date}
-
-        if event_type is not None and event_type not in [1, 2, 3]:
-            raise ValueError("event_type can only contain 1, 2, or 3")
-        if event_type is not None:
-            params["EventType"] = event_type
-
-        logger.info(
-            f"Fetching pet history data pet_id={self.pet_id},household_id={self.household_id}, \
-            **params={params}"
-        )
-        self._data = (
-            await self.client.get(
-                f"{API_ENDPOINT_V2}/report/household/{self.household_id}/pet/{self.pet_id}/aggregate",
-                params=params,
-            )
-        )["data"]
-
-    @property
-    def feeding(self):
-        return self._data["feeding"]
-
-    @property
-    def movement(self):
-        return self._data["movement"]
-
-    @property
-    def drinking(self):
-        return self._data["drinking"]
-
-    @property
-    def consumption_habit(self):
-        return self._data["consumption_habit"]
-
-    @property
-    def consumption_alert(self):
-        return self._data["consumption_alert"]
-
-
-@dataclass
-class PetFeeding:
-    id: int
-    tag: int
+    created_at: str
+    updated_at: str
+    deleted_at: str
     device_id: int
-    change: int
-    time: str
+    tag_id: int
+    user_id: int
+    from_: str = Field(alias="from")
+    to: str
+    duration: int
+    entry_device_id: int
+    entry_user_id: int
+    exit_device_id: int
+    exit_user_id: int
+    active: bool
+    exit_movement_id: int
+    entry_movement_id: int
+
+    @model_validator(mode="before")
+    def flatten_data(cls, values):
+        # If this resource is wrapped in a 'data' key, flatten it
+        if "datapoints" in values and isinstance(values["datapoints"], dict):
+            if "data" in values:
+                return values["data"]
+            return values
+        return values
+
+    model_config = ConfigDict(extra="ignore")
 
 
-class Pet:
-    def __init__(self, client, data: dict) -> None:
-        self._data = data
-        self.client = client
+class ReportWeightFrame(BaseModel):
+    """Represents a weight frame in the household report."""
 
-        self._id = data["id"]
-        self._household_id = data["household_id"]
-        self._name = data["name"]
-        self._tag = data["tag"]["id"]
+    index: Optional[int] = None
+    weight: Optional[float] = None
+    change: Optional[float] = None
+    food_type_id: Optional[int] = None
+    target_weight: Optional[float] = None
 
-    @validate_date_fields("from_date")
-    async def get_pet_dashboard(self, from_date: str, pet_ids: list[int]) -> str:
-        """Old API endpoint for fetching pet dashboard data"""
-        return await self.client.get(
-            f"{API_ENDPOINT_V1}/dashboard/pet", params={"From": from_date, "PetId": pet_ids}
-        )
 
-    def history(self) -> PetHouseholdReport:
-        return PetHouseholdReport(self.client, self._household_id, self._id)
+class ReportHouseholdFeedingResource(BaseModel):
+    """Represents a feeding resource in the household report."""
 
-    @property
-    def id(self) -> int:
-        return self._id
+    from_: str = Field(alias="from")
+    to: str
+    duration: int
+    context: Optional[str] = None
+    bowl_count: Optional[int] = None
+    device_id: Optional[int] = None
+    weights: Optional[list[ReportWeightFrame]] = None
+    actual_weight: Optional[float] = None
+    entry_user_id: Optional[int] = None
+    exit_user_id: Optional[int] = None
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
+    deleted_at: Optional[str] = None
+    tag_id: Optional[int] = None
+    user_id: Optional[int] = None
 
-    @property
-    def household_id(self) -> int:
-        return self._household_id
+    @model_validator(mode="before")
+    def flatten_data(cls, values):
+        if "data" in values and isinstance(values["data"], dict):
+            values = values["data"]
+        # Convert context to str if it's int
+        if "context" in values and not isinstance(values["context"], str):
+            values["context"] = str(values["context"])
+        # Convert weights to list of dicts if present
+        if "weights" in values and isinstance(values["weights"], list):
+            weights = []
+            for w in values["weights"]:
+                if isinstance(w, dict):
+                    weights.append(w)
+                else:
+                    weights.append({"weight": w})
+            values["weights"] = weights
+        return values
 
-    @property
-    def name(self) -> str:
-        return self._name
 
-    @property
-    def tag(self) -> str:
-        return self._tag
+class ReportHouseholdDrinkingResource(BaseModel):
+    """Represents a drinking resource in the household report."""
 
-    def feeding(self) -> PetFeeding:
-        return PetFeeding(
-            id=self._data["status"]["feeding"]["id"],
-            tag=self._data["status"]["feeding"]["tag_id"],
-            device_id=self._data["status"]["feeding"]["device_id"],
-            change=self._data["status"]["feeding"]["change"],
-            time=self._data["status"]["feeding"]["at"],
-        )
+    from_: str = Field(alias="from")
+    to: str
+    duration: int
+    context: str
+    bowl_count: int
+    device_id: int
+    weights: list[float]
+    actual_weight: float
+    entry_user_id: int
+    exit_user_id: int
+    created_at: str
+    updated_at: str
+    deleted_at: str
+    tag_id: int
+    user_id: int
+
+    @model_validator(mode="before")
+    def flatten_data(cls, values):
+        if "datapoints" in values and isinstance(values["datapoints"], dict):
+            if "data" in values:
+                return values["data"]
+            return values
+        return values
+
+    model_config = ConfigDict(extra="ignore")
+
+
+class ReportHouseholdResource(BaseModel):
+    pet_id: Optional[int] = None
+    device_id: Optional[int] = None
+    movement: Optional[list[ReportHouseholdMovementResource]] = None
+    feeding: Optional[list[ReportHouseholdFeedingResource]] = None
+    drinking: Optional[list[ReportHouseholdDrinkingResource]] = None
+
+    @model_validator(mode="before")
+    def flatten_datapoints(cls, values):
+        for key in ["movement", "feeding", "drinking"]:
+            if key in values and isinstance(values[key], dict) and "datapoints" in values[key]:
+                values[key] = values[key]["datapoints"]
+        return values
+
+    model_config = ConfigDict(extra="ignore")

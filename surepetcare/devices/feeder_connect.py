@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from typing import Any
 
+from .device import SurepyDevice
+from surepetcare.command import Command
 from surepetcare.const import API_ENDPOINT_V1
-from surepetcare.devices.base import SurepyDevice
 from surepetcare.enums import BowlPosition
 from surepetcare.enums import FoodType
 from surepetcare.enums import ProductId
@@ -34,5 +35,13 @@ class FeederConnect(SurepyDevice, BowlMixin):
     def product(self) -> ProductId:
         return ProductId.FEEDER_CONNECT
 
-    async def fetch(self) -> None:
-        self._data = (await self.client.get(f"{API_ENDPOINT_V1}/device/{self.id}"))["data"]
+    def refresh(self):
+        def parse(response):
+            self._data = response["data"]
+            return self
+
+        return Command(
+            method="GET",
+            endpoint=f"{API_ENDPOINT_V1}/device/{self.id}",
+            callback=parse,
+        )
