@@ -13,6 +13,7 @@ from surepetcare.enums import ProductId
 
 class Pet(SurepyDevice):
     def __init__(self, data: dict) -> None:
+        super().__init__(data)
         self._data = data
         self._id = data["id"]
         self._household_id = data["household_id"]
@@ -72,18 +73,6 @@ class Pet(SurepyDevice):
     @property
     def product(self) -> ProductId:
         return ProductId.PET
-
-    @property
-    def id(self) -> int:
-        return self._id
-
-    @property
-    def household_id(self) -> int:
-        return self._household_id
-
-    @property
-    def name(self) -> str:
-        return self._name
 
     @property
     def tag(self) -> int:

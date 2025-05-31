@@ -15,7 +15,8 @@ class SurepyDevice(ABC, BatteryMixin):
         self._id = data["id"]
         self._household_id = data["household_id"]
         self._name = data["name"]
-        self._available = data["status"]["online"]
+        self._available = data.get("status", {}).get("online", None)
+        self._parent_device_id = data.get("parent_device_id", None)
 
     @property
     @abstractmethod
@@ -33,6 +34,11 @@ class SurepyDevice(ABC, BatteryMixin):
     @property
     def id(self) -> int:
         return self._id
+
+    @property
+    def parent_device_id(self) -> str:
+        return self._parent_device_id
+
 
     @property
     def household_id(self) -> int:

@@ -1,5 +1,6 @@
 import logging
 
+from surepetcare.command import Command
 from surepetcare.security.auth import AuthClient
 
 logger = logging.getLogger(__name__)
@@ -27,7 +28,7 @@ class SurePetcareClient(AuthClient):
                 return {}
             return await response.json()
 
-    async def api(self, command):
+    async def api(self, command: Command):
         method = command.method.lower()
         if method == "get":
             response = await self.get(command.endpoint, params=command.params)

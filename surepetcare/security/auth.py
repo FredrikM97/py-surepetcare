@@ -75,7 +75,7 @@ class AuthClient:
             await self.session.close()
 
     async def set_session(self) -> None:
-        if not self.session:
+        if not self.session or self.session.closed:
             self.session = aiohttp.ClientSession()
 
     @property
