@@ -18,3 +18,4 @@ CACHEDIR.TAG
 env
 contribute/files
 dist
+htmlcov
