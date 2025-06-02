@@ -23,7 +23,13 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Set version variable
+      - name: Create and checkout version bump branch
+        run: |
+          BRANCH=version-bump-v${{ github.event.inputs.bump }}-$(date +%s)
+          git checkout -b $BRANCH
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+
+      - name: Set version variable and update file
         id: set_version
         run: |
           VERSION_FILE=pyproject.toml
@@ -40,17 +46,16 @@ jobs:
           NEW_VERSION="$MAJOR.$MINOR.$PATCH"
           sed -i.bak -E "s/version = \"[0-9]+\.[0-9]+\.[0-9]+\"/version = \"$NEW_VERSION\"/" $VERSION_FILE
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
-        
-      
+
       - name: Set up Git user
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          
+
       - name: Commit version bump
         run: |
           git add pyproject.toml
-          git commit -m "Bump version to v${{ steps.set_version.outputs.version }} [skip ci]" || echo "No changes to commit"
+          git commit -m "Bump version to v${{ steps.set_version.outputs.version }}" || echo "No changes to commit"
 
       - name: Create tag
         run: |
@@ -60,17 +65,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BRANCH=version-bump-v${{ steps.set_version.outputs.version }}
-          git checkout -b $BRANCH
           git push origin $BRANCH v${{ steps.set_version.outputs.version }}
-          echo "::notice ::Pushed version bump to branch $BRANCH. Creating Pull Request to merge into main."
-
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: version-bump-v${{ steps.set_version.outputs.version }}
-          base: main
-          title: "Bump version to v${{ steps.set_version.outputs.version }}"
-          body: "Automated version bump and tag for v${{ steps.set_version.outputs.version }}."
-          draft: false
+          echo "::notice ::Pushed version bump to branch $BRANCH. Please open a Pull Request to merge into main."
