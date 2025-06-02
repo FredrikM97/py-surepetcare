@@ -58,5 +58,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git push
-          git push origin v${{ steps.set_version.outputs.version }}
+          git push --force
+          git push origin v${{ steps.set_version.outputs.version }} --force
