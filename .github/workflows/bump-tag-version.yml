@@ -61,5 +61,5 @@ jobs:
           BRANCH=version-bump-v${{ steps.set_version.outputs.version }}
           git checkout -b $BRANCH
           git push origin $BRANCH
-          git push origin v${{ steps.set_version.outputs.version }}
+          git push origin $BRANCH v${{ steps.set_version.outputs.version }}
           echo "::notice ::Pushed version bump to branch $BRANCH. Please open a Pull Request to merge into main."
