@@ -63,4 +63,14 @@ jobs:
           BRANCH=version-bump-v${{ steps.set_version.outputs.version }}
           git checkout -b $BRANCH
           git push origin $BRANCH v${{ steps.set_version.outputs.version }}
-          echo "::notice ::Pushed version bump to branch $BRANCH. Please open a Pull Request to merge into main."
+          echo "::notice ::Pushed version bump to branch $BRANCH. Creating Pull Request to merge into main."
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: version-bump-v${{ steps.set_version.outputs.version }}
+          base: main
+          title: "Bump version to v${{ steps.set_version.outputs.version }}"
+          body: "Automated version bump and tag for v${{ steps.set_version.outputs.version }}."
+          draft: false
