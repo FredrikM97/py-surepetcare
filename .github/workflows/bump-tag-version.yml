@@ -17,17 +17,17 @@ permissions:
   pull-requests: write
 jobs:
   bump-version-and-tag:
-    name: Bump Version and Ta
+    name: Bump Version and Tag
     runs-on: ubuntu-latest
+    env:
+      VERSION_BUMP_BRANCH: version-bump-v${{ github.event.inputs.bump }}-${{ github.run_id }}
     steps:
       - name: Check out code
         uses: actions/checkout@v4
 
       - name: Create and checkout version bump branch
         run: |
-          BRANCH=version-bump-v${{ github.event.inputs.bump }}-$(date +%s)
-          git checkout -b $BRANCH
-          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+          git checkout -b "$VERSION_BUMP_BRANCH"
 
       - name: Set version variable and update file
         id: set_version
@@ -65,5 +65,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git push origin $BRANCH v${{ steps.set_version.outputs.version }}
-          echo "::notice ::Pushed version bump to branch $BRANCH. Please open a Pull Request to merge into main."
+          git push origin "$VERSION_BUMP_BRANCH" v${{ steps.set_version.outputs.version }}
+          echo "::notice ::Pushed version bump to branch $VERSION_BUMP_BRANCH. Creating Pull Request to merge into main."
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ env.VERSION_BUMP_BRANCH }}
+          base: main
+          title: "Bump version to v${{ steps.set_version.outputs.version }}"
+          body: "Automated version bump and tag for v${{ steps.set_version.outputs.version }}."
+          draft: false
