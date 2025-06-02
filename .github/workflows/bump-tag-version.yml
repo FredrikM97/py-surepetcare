@@ -12,7 +12,9 @@ on:
           - patch
           - minor
           - major
-
+permissions:
+  contents: write
+  pull-requests: write
 jobs:
   bump-version-and-tag:
     name: Bump Version and Ta
@@ -54,12 +56,10 @@ jobs:
         run: |
           git tag v${{ steps.set_version.outputs.version }}
 
-      - name: Push branch and tag to new branch
+      - name: Push commit and tag to main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BRANCH=version-bump-v${{ steps.set_version.outputs.version }}
-          git checkout -b $BRANCH
-          git push origin $BRANCH
-          git push origin $BRANCH v${{ steps.set_version.outputs.version }}
-          echo "::notice ::Pushed version bump to branch $BRANCH. Please open a Pull Request to merge into main."
+          git push origin main
+          git push origin v${{ steps.set_version.outputs.version }}
+          echo "::notice ::Pushed version bump commit and tag directly to main."
