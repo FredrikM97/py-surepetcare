@@ -56,10 +56,11 @@ jobs:
         run: |
           git tag v${{ steps.set_version.outputs.version }}
 
-      - name: Push commit and tag to main
+      - name: Push branch and tag to new branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git push origin main --force
-          git push origin v${{ steps.set_version.outputs.version }} --force
-          echo "::notice ::Pushed version bump commit and tag directly to main."
+          BRANCH=version-bump-v${{ steps.set_version.outputs.version }}
+          git checkout -b $BRANCH
+          git push origin $BRANCH v${{ steps.set_version.outputs.version }}
+          echo "::notice ::Pushed version bump to branch $BRANCH. Please open a Pull Request to merge into main."
