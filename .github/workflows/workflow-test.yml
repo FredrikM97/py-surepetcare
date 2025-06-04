@@ -46,31 +46,34 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           
-      - name: Install bump2version
-        run: pip install bump2version
+      - name: Install bump-my-version
+        run: pip install bump-my-version
 
       - name: Bump version
-        run: bump2version ${{ steps.bump_type.outputs.bump }} --allow-dirty
+        id: bump
+        uses: callowayproject/bump-my-version@master
+        env:
+          BUMPVERSION_TAG: "true"
+        with:
+          args: ${{ steps.bump_type.outputs.bump }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check
+        if: steps.bump.outputs.bumped == 'true'
+        run: |
+          echo "Version was bumped from ${{ steps.bump.outputs.previous-version }} to ${{ steps.bump.outputs.current-version }}!"
 
       - name: Commit version bump
         run: |
           git add .
           git commit -m "Bump version [skip ci]" || echo "No changes to commit"
 
-      - name: Create version bump branch
-        id: create_branch
-        run: |
-          BRANCH_NAME="bump-version-${{ github.run_id }}"
-          git branch "$BRANCH_NAME"
-          git checkout "$BRANCH_NAME"
-          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
-
-      - name: Push version bump branch
+      - name: Push version bump commit and tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git push --set-upstream origin "bump-version-${{ github.run_id }}"
+          git push origin "$(git describe --tags --abbrev=0)"
 
 
       - name: Install build dependencies
