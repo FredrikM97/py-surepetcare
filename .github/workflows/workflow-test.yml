@@ -15,7 +15,6 @@ on:
             - patch
             - minor
             - major
-          default: patch
 
 permissions:
   contents: read
@@ -29,6 +28,14 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
+      - name: Set bump type
+        id: bump_type
+        run: |
+          if [ -z "${{ github.event.inputs.bump }}" ]; then
+            echo "bump=patch" >> $GITHUB_OUTPUT
+          else
+            echo "bump=${{ github.event.inputs.bump }}" >> $GITHUB_OUTPUT
+          fi
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
