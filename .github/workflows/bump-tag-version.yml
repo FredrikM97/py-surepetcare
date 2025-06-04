@@ -67,37 +67,6 @@ jobs:
         if: steps.bump.outputs.bumped == 'true'
         run: |
           git tag -a v${{ steps.bump.outputs.current-version }} -m "v${{ steps.bump.outputs.current-version }}"
-          git push origin v${{ steps.bump.outputs.current-version }} --force
-    
-      - name: Create Pull Request
-        if: steps.bump.outputs.bumped == 'true'
-        uses: peter-evans/create-pull-request@v7
-        id: cpr
-        with:
-          title: "Bump version to ${{ steps.bump.outputs.current-version }}"
-          body: "This PR bumps the version to ${{ steps.bump.outputs.current-version }}."
-          base: main
-          head: bump-version-${{ github.run_id }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          draft: false
-          labels: bump-version
-          commit-message: "Bump version to ${{ steps.bump.outputs.current-version }}"
-          branch: bump-version-${{ github.run_id }}
-          delete-branch: true
+          git push origin main --force
 
-      - name: Auto-merge PR
-        if: steps.bump.outputs.bumped == 'true'
-        uses: pascalgn/automerge-action@v0.16.3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          pullRequest: ${{ steps.cpr.outputs.pull-request-number }}
-          mergeMethod: squash
-
-      - name: Tag merged commit on main
-        if: steps.bump.outputs.bumped == 'true'
-        run: |
-          git fetch origin main
-          MERGE_COMMIT=$(git rev-parse origin/main)
-          git tag -a v${{ steps.bump.outputs.current-version }} $MERGE_COMMIT -m "v${{ steps.bump.outputs.current-version }}"
-          git push origin v${{ steps.bump.outputs.current-version }}
+  
