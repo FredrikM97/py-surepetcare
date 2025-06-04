@@ -12,6 +12,7 @@ on:
           - minor
           - major
 
+
 permissions:
   contents: write
 
