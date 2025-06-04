@@ -1,0 +1,55 @@
+name: Publish to PyPI
+
+on:
+  workflow_dispatch:
+    inputs:
+      repository_tag:
+        description: 'Git tag to publish (must exist in this repo)'
+        required: true
+        default: ''
+        type: string
+      pypi_target:
+        description: 'PyPI repository to publish to (pypi or testpypi)'
+        required: true
+        default: 'testpypi'
+        type: choice
+        options:
+          - testpypi
+          - pypi
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    environment: pypi-publish
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.inputs.repository_tag }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build dependencies
+        run: python -m pip install --upgrade build twine
+
+      - name: Build package
+        run: python -m build
+
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          if [ "${{ github.event.inputs.pypi_target }}" = "testpypi" ]; then
+            python -m twine upload --repository testpypi dist/*
+          else
+            python -m twine upload dist/*
+          fi
