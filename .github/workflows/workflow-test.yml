@@ -4,71 +4,17 @@ on:
   push:
     branches:
     - workflow-test
-    workflow_dispatch:
-      inputs:
-        bump:
-          description: 'Version bump type'
-          required: true
-          default: 'patch'
-          type: choice
-          options:
-            - patch
-            - minor
-            - major
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
 
 permissions:
   contents: write
-
-jobs:
-  publish:
-    name: Publish to PyPI
-    runs-on: ubuntu-latest
-    environment: pypi-publish
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set bump type # Temprary step to set the bump type
-        id: bump_type
-        run: |
-          if [ -z "${{ github.event.inputs.bump }}" ]; then
-            echo "bump=patch" >> $GITHUB_OUTPUT
-          else
-            echo "bump=${{ github.event.inputs.bump }}" >> $GITHUB_OUTPUT
-          fi
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Set up Git user
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-      
-      - name: Create and checkout version bump branch
-        run: |
-          git checkout -b bump-version-${{ github.run_id }}
-
-      - name: Install bump-my-version
-        run: pip install bump-my-version
-
-      - name: Bump version
-        id: bump
-        uses: callowayproject/bump-my-version@master
-        with:
-          args: ${{ steps.bump_type.outputs.bump }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Check
-        if: steps.bump.outputs.bumped == 'true'
-        run: |
-          echo "Version was bumped from ${{ steps.bump.outputs.previous-version }} to ${{ steps.bump.outputs.current-version }}!"
-
-      - name: Install build dependencies
-        run: python -m pip install --upgrade build twine
-
-      - name: Build package
-        run: python -m build
