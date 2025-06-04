@@ -74,10 +74,4 @@ jobs:
           labels: bump-version
           commit-message: "Bump version to ${{ steps.bump.outputs.current-version }}"
           branch: bump-version-${{ github.run_id }}
-          delete-branch: true
-          allow-no-changes: true
-          create-commit: true
-          create-branch: true
-          update-existing-branch: true
-          merge-method: squash
           
