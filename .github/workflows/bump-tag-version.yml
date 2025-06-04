@@ -16,6 +16,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
   
 
 jobs:
@@ -66,11 +67,11 @@ jobs:
         if: steps.bump.outputs.bumped == 'true'
         run: |
           git tag -a v${{ steps.bump.outputs.current-version }} -m "v${{ steps.bump.outputs.current-version }}"
-          git push origin v${{ steps.bump.outputs.current-version }}
+          git push origin v${{ steps.bump.outputs.current-version }} --force
     
       - name: Create Pull Request
         if: steps.bump.outputs.bumped == 'true'
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v7
         with:
           title: "Bump version to ${{ steps.bump.outputs.current-version }}"
           body: "This PR bumps the version to ${{ steps.bump.outputs.current-version }}."
@@ -81,3 +82,4 @@ jobs:
           labels: bump-version
           commit-message: "Bump version to ${{ steps.bump.outputs.current-version }}"
           branch: bump-version-${{ github.run_id }}
+          delete-branch: true
