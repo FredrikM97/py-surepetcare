@@ -16,6 +16,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  
 
 jobs:
   bump-version:
@@ -54,13 +55,18 @@ jobs:
         run: |
           git add .
           git commit -m "Bump version to ${{ steps.bump.outputs.current-version }}" || echo "No changes to commit"  
+          git t
       - name: Push version bump branch
         if: steps.bump.outputs.bumped == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-     
+      - name: Tag version bump commit
+        if: steps.bump.outputs.bumped == 'true'
+        run: |
+          git tag -a v${{ steps.bump.outputs.current-version }} -m "v${{ steps.bump.outputs.current-version }}"
+          git push origin v${{ steps.bump.outputs.current-version }}
       - name: Create Pull Request
         if: steps.bump.outputs.bumped == 'true'
         uses: peter-evans/create-pull-request@v4
@@ -74,4 +80,3 @@ jobs:
           labels: bump-version
           commit-message: "Bump version to ${{ steps.bump.outputs.current-version }}"
           branch: bump-version-${{ github.run_id }}
-          
