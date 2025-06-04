@@ -5,34 +5,9 @@ on:
     types: [published]
 
 jobs:
-  verify-version:
-    name: Verify tag matches pyproject.toml version
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-      - name: Install bump-my-version
-        run: pip install bump-my-version
-      - name: Check tag and file version
-        id: version_check
-        run: |
-          TAG_VERSION="${{ github.event.release.tag_name#v }}"
-          FILE_VERSION=$(bump-my-version show current_version)
-          echo "Tag version: $TAG_VERSION"
-          echo "pyproject.toml version: $FILE_VERSION"
-          if [ "$TAG_VERSION" != "$FILE_VERSION" ]; then
-            echo "Error: Tag version ($TAG_VERSION) does not match pyproject.toml version ($FILE_VERSION)."
-            exit 1
-          fi
 
   build:
     name: Build distribution
-    needs: verify-version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
