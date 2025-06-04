@@ -67,6 +67,6 @@ jobs:
         if: steps.bump.outputs.bumped == 'true'
         run: |
           git tag -a v${{ steps.bump.outputs.current-version }} -m "v${{ steps.bump.outputs.current-version }}"
-          git push origin main --force
+          git push --force
 
   
