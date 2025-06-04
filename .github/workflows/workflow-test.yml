@@ -45,7 +45,11 @@ jobs:
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          
+      
+      - name: Create and checkout version bump branch
+        run: |
+          git checkout -b bump-version-${{ github.run_id }}
+
       - name: Install bump-my-version
         run: pip install bump-my-version
 
@@ -62,11 +66,6 @@ jobs:
         if: steps.bump.outputs.bumped == 'true'
         run: |
           echo "Version was bumped from ${{ steps.bump.outputs.previous-version }} to ${{ steps.bump.outputs.current-version }}!"
-
-      - name: Commit version bump
-        run: |
-          git add .
-          git commit -m "Bump version [skip ci]" || echo "No changes to commit"
 
       - name: Push version bump commit and tag
         env:
