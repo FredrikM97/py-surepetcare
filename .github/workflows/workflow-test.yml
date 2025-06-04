@@ -28,7 +28,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Set bump type
+      - name: Set bump type # Temprary step to set the bump type
         id: bump_type
         run: |
           if [ -z "${{ github.event.inputs.bump }}" ]; then
@@ -50,7 +50,7 @@ jobs:
         run: pip install bump2version
 
       - name: Bump version
-        run: bump2version ${{ github.event.inputs.bump }} --allow-dirty
+        run: bump2version ${{ steps.bump_type.outputs.bump }} --allow-dirty
 
 
       - name: Commit version bump
