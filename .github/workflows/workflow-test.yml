@@ -59,7 +59,8 @@ jobs:
         id: bump
         uses: callowayproject/bump-my-version@master
         env:
-          BUMPVERSION_TAG: "true"
+          BUMPVERSION_COMMIT: "true"
+
         with:
           args: ${{ steps.bump_type.outputs.bump }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
