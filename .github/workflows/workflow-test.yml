@@ -15,6 +15,7 @@ on:
             - patch
             - minor
             - major
+          default: patch
 
 permissions:
   contents: read
