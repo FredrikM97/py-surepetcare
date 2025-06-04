@@ -1,80 +1,60 @@
-name: Bump Version and Tag
-
+name: Bump version tag
 
 on:
-  workflow_dispatch:
-    inputs:
-      bump:
-        description: 'Version bump type'
-        required: true
-        default: 'patch'
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
-
-permissions:
-  contents: write
-  pull-requests: write
+  push:
+    branches:
+      - main
 
 jobs:
-  bump-version:
+  tag-version:
+    name: Tag version if pyproject.toml changed
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
-      - name: Checkout repository
+      - name: Check out code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Set up Git
+      - name: Get previous commit on main
+        id: prev_commit
+        run: |
+          PREV_SHA=$(git rev-parse HEAD^1)
+          echo "prev_sha=$PREV_SHA" >> $GITHUB_OUTPUT
+          
+      - name: Compare pyproject.toml version
+        id: check_version
+        run: |
+          NEW_VER=$(grep '^version' pyproject.toml | head -1 | cut -d'=' -f2 | tr -d ' "')
+          git checkout ${{ steps.prev_commit.outputs.prev_sha }} -- pyproject.toml
+          OLD_VER=$(grep '^version' pyproject.toml | head -1 | cut -d'=' -f2 | tr -d ' "')
+          git checkout HEAD -- pyproject.toml
+          if [ "$NEW_VER" != "$OLD_VER" ]; then
+            echo "Version updated: $OLD_VER -> $NEW_VER"
+            echo "tag=v$NEW_VER" >> $GITHUB_OUTPUT
+            echo "should_tag=true" >> $GITHUB_OUTPUT
+          else
+            echo "No version change. Skipping tag."
+            echo "should_tag=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Check if tag already exists
+        if: steps.check_version.outputs.should_tag == 'true'
+        id: tag_exists
+        run: |
+          if git rev-parse ${{ steps.check_version.outputs.tag }} >/dev/null 2>&1; then
+            echo "Tag already exists."
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Tag does not exist."
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Create and push tag
+        if: steps.check_version.outputs.should_tag == 'true' && steps.tag_exists.outputs.exists == 'false'
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
-      - name: Create version bump branch
-        id: create_branch
-        run: |
-          git checkout main
-          git pull origin main
-          BRANCH="version-bump-${{ github.run_id }}"
-          git checkout -b "$BRANCH"
-          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
-
-      - name: Bump version
-        id: bump
-        run: |
-          OLD=$(grep -E '^version\s*=\s*".+"' pyproject.toml | sed -E 's/.*"([0-9]+\.[0-9]+\.[0-9]+)".*/\1/')
-          IFS='.' read -r major minor patch <<< "$OLD"
-
-          case "${{ github.event.inputs.bump }}" in
-            major)
-              major=$((major + 1)); minor=0; patch=0 ;;
-            minor)
-              minor=$((minor + 1)); patch=0 ;;
-            patch)
-              patch=$((patch + 1)) ;;
-          esac
-
-          NEW="$major.$minor.$patch"
-          echo "New version: $NEW"
-
-          sed -i -E "s/version = \"[0-9]+\.[0-9]+\.[0-9]+\"/version = \"$NEW\"/" pyproject.toml
-          echo "new_version=$NEW" >> "$GITHUB_OUTPUT"
-
-      - name: Commit version bump
-        run: |
-          git add pyproject.toml
-          git status
-          git diff --cached
-          git commit -m "Bump version to ${{ steps.bump.outputs.new_version }}"
-          git tag -f v${{ steps.bump.outputs.new_version }}
-          git push origin ${{ steps.create_branch.outputs.branch }}
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ steps.create_branch.outputs.branch }}
-          base: main
-          title: "Bump version to ${{ steps.bump.outputs.new_version }}"
-          body: "This pull request bumps the version to ${{ steps.bump.outputs.new_version }}."
-          draft: false
+          git tag -a ${{ steps.check_version.outputs.tag }} -m "${{ steps.check_version.outputs.tag }}"
+          git push origin ${{ steps.check_version.outputs.tag }}
