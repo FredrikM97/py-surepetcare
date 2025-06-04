@@ -29,6 +29,11 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Set up Git user
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+      
       - name: Create and checkout version bump branch
         run: |
           git checkout -b bump-version-${{ github.run_id }}
