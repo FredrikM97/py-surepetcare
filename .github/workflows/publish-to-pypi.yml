@@ -5,9 +5,8 @@ on:
     types: [published]
 
 jobs:
-  build:
-    name: Build distribution
-    if: startsWith(github.event.release.tag_name, 'v')
+  verify-version:
+    name: Verify tag matches pyproject.toml version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,42 +16,54 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-
-      - name: Install pypa/build
-        run: python3 -m pip install build --user
-
       - name: Install bump-my-version
         run: pip install bump-my-version
-
-      - name: Get tag and file version
+      - name: Check tag and file version
         id: version_check
         run: |
           TAG_VERSION="${{ github.event.release.tag_name#v }}"
           FILE_VERSION=$(bump-my-version show current_version)
-          echo "tag_version=$TAG_VERSION" >> $GITHUB_OUTPUT
-          echo "file_version=$FILE_VERSION" >> $GITHUB_OUTPUT
-      - name: Build a binary wheel and a source tarball
-        if: steps.version_check.outputs.tag_version == steps.version_check.outputs.file_version
-        run: python3 -m build
+          echo "Tag version: $TAG_VERSION"
+          echo "pyproject.toml version: $FILE_VERSION"
+          if [ "$TAG_VERSION" != "$FILE_VERSION" ]; then
+            echo "Error: Tag version ($TAG_VERSION) does not match pyproject.toml version ($FILE_VERSION)."
+            exit 1
+          fi
 
+  build:
+    name: Build distribution
+    needs: verify-version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install pypa/build
+        run: python3 -m pip install build --user
+      - name: Build a binary wheel and a source tarball
+        run: python3 -m build
       - name: Store the distribution packages
         uses: actions/upload-artifact@v4
         with:
           name: python-package-distributions
           path: dist/
 
-  publish-to-testpypi:
-    name: Publish Python distribution to TestPyPI
+  publish-to-pypi:
+    name: >-
+      Publish Python distribution to PyPI
+    if: startsWith(github.event.release.tag_name, 'v')
     needs:
     - build
     runs-on: ubuntu-latest
-
     environment:
-      name: testpypi
-      url: https://test.pypi.org/p/py-surepetcare
-
+      name: pypi
+      url: https://pypi.org/p/py-surepetcare
     permissions:
-      id-token: write  
+      id-token: write 
 
     steps:
     - name: Download all the dists
@@ -60,7 +71,5 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
-    - name: Publish distribution to TestPyPI
+    - name: Publish distribution to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://test.pypi.org/legacy/

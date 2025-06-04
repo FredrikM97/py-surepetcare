@@ -1,11 +1,16 @@
 name: Bump package version
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - 'v*'
-
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
  
 
 permissions:
@@ -35,17 +40,11 @@ jobs:
       - name: Install bump-my-version
         run: pip install bump-my-version
 
-      - name: Extract version from tag
-        id: extract_version
-        run: |
-          TAG_NAME="${GITHUB_REF#refs/tags/}"
-          VERSION="${TAG_NAME#v}"
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
       - name: Bump version
         id: bump
         uses: callowayproject/bump-my-version@master
         with:
-          args: --new-version ${{ steps.extract_version.outputs.version }} --allow-dirty pyproject.toml
+          args: ${{ github.event.inputs.bump }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check
