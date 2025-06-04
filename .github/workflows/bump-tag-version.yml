@@ -28,7 +28,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          
+
       - name: Create and checkout version bump branch
         run: |
           git checkout -b bump-version-${{ github.run_id }}
@@ -40,7 +40,7 @@ jobs:
         id: bump
         uses: callowayproject/bump-my-version@master
         with:
-          args: ${{ inputs.bump-type }}
+          args: ${{ github.event.inputs.bump }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check
