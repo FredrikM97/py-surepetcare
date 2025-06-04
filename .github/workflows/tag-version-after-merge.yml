@@ -27,7 +27,7 @@ jobs:
           NEW_VER=$(grep '^version' pyproject.toml | head -1 | cut -d'=' -f2 | tr -d ' "')
           git checkout ${{ steps.prev_commit.outputs.prev_sha }} -- pyproject.toml
           OLD_VER=$(grep '^version' pyproject.toml | head -1 | cut -d'=' -f2 | tr -d ' "')
-          git checkout -
+          git checkout HEAD -- pyproject.toml
           if [ "$NEW_VER" != "$OLD_VER" ]; then
             echo "Version updated: $OLD_VER -> $NEW_VER"
             echo "tag=v$NEW_VER" >> $GITHUB_OUTPUT
