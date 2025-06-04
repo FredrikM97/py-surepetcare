@@ -1,62 +1,65 @@
 name: Publish Python distribution to PyPI and TestPyPI
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - main
 
 jobs:
-  check-tag-on-main:
-    name: Check for v* tag on main commit
+  check-merge-and-version:
+    name: Check PR merge and version bump
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Get previous commit on main
+        id: prev_commit
+        run: |
+          PREV_SHA=$(git rev-parse HEAD^1)
+          echo "prev_sha=$PREV_SHA" >> $GITHUB_OUTPUT
+      - name: Compare pyproject.toml version
+        id: check_version
+        run: |
+          NEW_VER=$(grep '^version' pyproject.toml | head -1 | cut -d'=' -f2 | tr -d ' "')
+          git checkout ${{ steps.prev_commit.outputs.prev_sha }} -- pyproject.toml
+          OLD_VER=$(grep '^version' pyproject.toml | head -1 | cut -d'=' -f2 | tr -d ' "')
+          if [ "$NEW_VER" != "$OLD_VER" ]; then
+            echo "Version updated: $OLD_VER -> $NEW_VER"
+            echo "deploy=true" >> $GITHUB_OUTPUT
+            echo "new_version=$NEW_VER" >> $GITHUB_OUTPUT
+          else
+            echo "No version change. Skipping publish."
+            echo "deploy=false" >> $GITHUB_OUTPUT
+          fi
+    outputs:
+      deploy: ${{ steps.check_version.outputs.deploy }}
+      new_version: ${{ steps.check_version.outputs.new_version }}
+
+  build:
+    name: Build distribution
+    needs: check-merge-and-version
+    if: needs.check-merge-and-version.outputs.deploy == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Check for v* tag on HEAD
-        id: check_tag
-        run: |
-          TAG=$(git tag --points-at HEAD | grep '^v' || true)
-          if [ -z "$TAG" ]; then
-            echo "No v* tag found on this commit. Skipping deployment."
-            echo "deploy=false" >> $GITHUB_OUTPUT
-          else
-            echo "Found tag: $TAG"
-            echo "deploy=true" >> $GITHUB_OUTPUT
-            echo "tag=$TAG" >> $GITHUB_OUTPUT
-          fi
-    outputs:
-      deploy: ${{ steps.check_tag.outputs.deploy }}
-      tag: ${{ steps.check_tag.outputs.tag }}
-
-  build:
-    name: Build distribution
-    needs: check-tag-on-main
-    if: needs.check-tag-on-main.outputs.deploy == 'true'
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        persist-credentials: false
-        fetch-depth: 0
-        ref: ${{ needs.check-tag-on-main.outputs.tag }}
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.x"
-    - name: Install pypa/build
-      run: >-
-        python3 -m
-        pip install
-        build
-        --user
-    - name: Build a binary wheel and a source tarball
-      run: python3 -m build
-    - name: Store the distribution packages
-      uses: actions/upload-artifact@v4
-      with:
-        name: python-package-distributions
-        path: dist/
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install pypa/build
+        run: python3 -m pip install build --user
+      - name: Build a binary wheel and a source tarball
+        run: python3 -m build
+      - name: Store the distribution packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
 
   publish-to-testpypi:
     name: Publish Python distribution to TestPyPI
@@ -68,12 +71,12 @@ jobs:
     permissions:
       id-token: write
     steps:
-    - name: Download all the dists
-      uses: actions/download-artifact@v4
-      with:
-        name: python-package-distributions
-        path: dist/
-    - name: Publish distribution to TestPyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://test.pypi.org/legacy/
+      - name: Download all the dists
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Publish distribution to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
