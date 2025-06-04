@@ -52,10 +52,6 @@ jobs:
         run: |
           git checkout -b bump-version-${{ github.run_id }}
 
-      - name: Set up git authentication for pushing
-        run: |
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-
       - name: Install bump-my-version
         run: pip install bump-my-version
 
@@ -75,7 +71,8 @@ jobs:
 
       - name: Push version bump branch and tag
         run: |
-          git push 
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git push origin bump-version-${{ github.run_id }}
 
       - name: Install build dependencies
         run: python -m pip install --upgrade build twine
