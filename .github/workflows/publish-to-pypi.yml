@@ -1,14 +1,13 @@
 name: Publish Python distribution to PyPI and TestPyPI
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - main
+  push:
+    tags:
+      - 'v*'
 
-permissions:
-  contents: read
-  id-token: write
 jobs:
   check-merge-and-version:
     name: Check PR merge and version bump

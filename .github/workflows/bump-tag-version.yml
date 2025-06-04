@@ -63,12 +63,7 @@ jobs:
         run: |
           git add .
           git commit -m "Bump version to ${{ steps.bump.outputs.current-version }}" || echo "No changes to commit"  
-      - name: Tag version bump commit
-        if: steps.bump.outputs.bumped == 'true'
-        run: |
-          git tag -a v${{ steps.bump.outputs.current-version }} -m "v${{ steps.bump.outputs.current-version }}"
-          git push origin v${{ steps.bump.outputs.current-version }} --force
-    
+  
       - name: Create Pull Request
         if: steps.bump.outputs.bumped == 'true'
         uses: peter-evans/create-pull-request@v7
