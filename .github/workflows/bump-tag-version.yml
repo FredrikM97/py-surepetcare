@@ -1,4 +1,4 @@
-
+name: Bump Version Tag
 on:
   workflow_dispatch:
     inputs:
@@ -23,19 +23,12 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
-      - name: Set up Git user
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-      
+          
       - name: Create and checkout version bump branch
         run: |
           git checkout -b bump-version-${{ github.run_id }}
