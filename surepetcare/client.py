@@ -16,13 +16,13 @@ class SurePetcareClient(AuthClient):
                 raise Exception(f"Error {endpoint} {response.status}: {await response.text()}")
             if response.status == 204:
                 logger.info(f"GET {endpoint} returned 204 No Content")
-                return {'status': response.status}
+                return None
             if response.status == 304:
                 # Not modified, keep existing data
                 logger.debug(f"GET {endpoint} returned 304 Not Modified")
-                return {'status': response.status}
+                return None
             self.populate_headers(response)
-            return {**(await response.json()), 'status': response.status}
+            return await response.json()
 
     async def post(self, endpoint: str, data: dict | None = None, headers=None, reuse=True) -> dict:
         await self.set_session()
@@ -33,9 +33,10 @@ class SurePetcareClient(AuthClient):
                 raise Exception(f"Error {response.status}: {await response.text()}")
             if response.status == 204:
                 logger.info(f"POST {endpoint} returned 204 No Content")
-                return {'status': response.status}
+                return {"status": 204}
             self.populate_headers(response)
-            return {**(await response.json()), 'status': response.status}
+            return await response.json()
+            
 
     async def api(self, command: Command):
         headers = self._generate_headers(headers=self.headers(command.endpoint) if command.reuse else {})

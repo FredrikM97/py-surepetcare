@@ -30,7 +30,7 @@ class Pet(SurepyDevice):
         self, from_date: str | None = None, to_date: str | None = None, event_type: int | None = None
     ) -> Command:
         def parse(response):
-            if response['status'] == 304:
+            if not response:
                 return self
             self._report = ReportHouseholdResource.model_validate(response["data"])
             self.last_fetched_datetime = datetime.utcnow().isoformat()
@@ -63,15 +63,16 @@ class Pet(SurepyDevice):
 
     def get_pet_dashboard(self, from_date: str, pet_ids: list[int]):
         def parse(response):
-            if response['status'] == 304:
-                return {}
+            if not response:
+                return []
             return response['data']
-
+        
         return Command(
             method="GET",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/dashboard/pet",
             params={"From": from_date, "PetId": pet_ids},
             callback=parse,
+            reuse=False,
         )
 
     @property

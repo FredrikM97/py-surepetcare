@@ -15,7 +15,7 @@ class Household:
 
     def get_pets(self):
         def parse(response):
-            if response['status'] == 304:
+            if not response:
                 return self.data.get("pets", [])
             pets = [Pet(p) for p in response["data"]]
             self.data['pets'] = pets
@@ -29,15 +29,17 @@ class Household:
     def get_devices(self):
         def parse(response):
             logger.info(f"Parsing devices for household {self.id}: {response}")
-            if response['status'] == 304:
+            if not response:
                 logger.info("Returning cached devices")
                 return self.data.get("devices",[])
-            devices = []
-            for device in response["data"]:
-                if device["product_id"] in set(ProductId):
-                    devices.append(load_device_class(device["product_id"])(device))
-            self.data['devices'] = devices
-            return devices
+            if isinstance(response["data"], list):
+                devices = []
+                for device in response["data"]:
+                    if device["product_id"] in set(ProductId):
+                        devices.append(load_device_class(device["product_id"])(device))
+                self.data['devices'] = devices
+                return devices
+            return []
 
         return Command(
             method="GET",
@@ -49,17 +51,32 @@ class Household:
     @staticmethod
     def get_households():
         def parse(response):
-            return [Household(h) for h in response["data"]]
+            if not response:
+                return []
+            if isinstance(response["data"], list):
+                return [Household(h) for h in response["data"]]
+            return []
 
         return Command(method="GET", endpoint=f"{API_ENDPOINT_PRODUCTION}/household", params={}, callback=parse, reuse=False)
 
     @staticmethod
     def get_household(household_id: int):
-        return Command(method="GET", endpoint=f"{API_ENDPOINT_PRODUCTION}/household/{household_id}", reuse=False)
+        def parse(response):
+            if not response:
+                return None
+            if isinstance(response["data"], dict):
+                return response["data"]
+            return {}
+        return Command(method="GET", endpoint=f"{API_ENDPOINT_PRODUCTION}/household/{household_id}", callback=parse, reuse=False)
 
     @staticmethod
     def get_product(product_id: ProductId, device_id: int):
-        """TODO: Move to devices instead"""
+        def parse(response):
+            if not response:
+                return None
+            if isinstance(response["data"], dict):
+                return response["data"]
+            return {}
         return Command(
-            method="GET", endpoint=f"{API_ENDPOINT_PRODUCTION}/product/{product_id}/device/{device_id}/control", reuse=False
+            method="GET", endpoint=f"{API_ENDPOINT_PRODUCTION}/product/{product_id}/device/{device_id}/control", callback=parse, reuse=False
         )
