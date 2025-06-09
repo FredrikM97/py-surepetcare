@@ -1,13 +1,13 @@
 import logging
 
 from surepetcare.command import Command
-from surepetcare.entities.api import ApiResponse
+from surepetcare.client_headers import ClientHeaders
 from surepetcare.security.auth import AuthClient
 
 logger = logging.getLogger(__name__)
 
 
-class SurePetcareClient(AuthClient, ApiResponse):
+class SurePetcareClient(AuthClient, ClientHeaders):
     async def get(self, endpoint: str, params: dict | None = None, headers=None) -> dict:
         if not headers:
             headers = self._generate_headers(self.token)
