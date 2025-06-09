@@ -36,12 +36,13 @@ class DummyUrl:
 
 
 class DummyResponse:
-    def __init__(self, ok=True, status=200, json_data=None, path="/endpoint"):
+    def __init__(self, ok=True, status=200, json_data=None, path="/endpoint", text=None):
         self.ok = ok
         self.status = status
         self._json_data = json_data or {}
         self.headers = {}
         self.url = DummyUrl(path)
+        self.text = text or "OK"
 
     def get(self, key, default=None):
         return self._json_data.get(key, default)

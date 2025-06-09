@@ -30,7 +30,7 @@ class Pet(SurepyDevice):
         self, from_date: str | None = None, to_date: str | None = None, event_type: int | None = None
     ) -> Command:
         def parse(response):
-            if 'data' not in response:
+            if response['status'] == 304:
                 return self
             self._report = ReportHouseholdResource.model_validate(response["data"])
             self.last_fetched_datetime = datetime.utcnow().isoformat()
@@ -63,7 +63,7 @@ class Pet(SurepyDevice):
 
     def get_pet_dashboard(self, from_date: str, pet_ids: list[int]):
         def parse(response):
-            if 'data' not in response:
+            if response['status'] == 304:
                 return {}
             return response['data']
 

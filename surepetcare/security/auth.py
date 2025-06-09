@@ -8,12 +8,13 @@ import aiohttp
 from surepetcare.const import HEADER_TEMPLATE
 from surepetcare.const import LOGIN_ENDPOINT
 from surepetcare.const import USER_AGENT
-from surepetcare.security.exceptions import AuthenticationError
+from .cache import CacheHeaders
+from .exceptions import AuthenticationError
 
 logger = logging.getLogger(__name__)
 
 
-class AuthClient:
+class AuthClient(CacheHeaders):
     def __init__(self):
         self._token = None
         self.session = None
@@ -27,6 +28,7 @@ class AuthClient:
         device_id: str | None = None,
     ) -> "AuthClient":
         await self.set_session()
+        self.clear_resources()
 
         if token and device_id:
             # If token is provided, use it directly
@@ -62,7 +64,7 @@ class AuthClient:
             else:
                 raise AuthenticationError(f"Authentication error {response.status} {await response.json()}")
 
-    def _generate_headers(self, token=None, additional_headers={}):
+    def _generate_headers(self, token=None, headers={}):
         """Build a HTTP header accepted by the API"""
         user_agent = USER_AGENT.format(version=None)
 
@@ -71,8 +73,7 @@ class AuthClient:
             user_agent=user_agent if user_agent else USER_AGENT,
             device_id=self._device_id
         )
-        all_headers = headers | additional_headers
-        logger.error(f"Generated headers: {all_headers}")
+        all_headers = headers | headers
         return all_headers
 
     async def close(self):

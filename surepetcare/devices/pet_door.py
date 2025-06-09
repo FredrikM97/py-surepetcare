@@ -11,7 +11,7 @@ class PetDoor(SurepyDevice):
 
     def refresh(self):
         def parse(response):
-            if 'data' not in response:
+            if response['status'] == 304:
                 return self
             self._data = response["data"]
             return self

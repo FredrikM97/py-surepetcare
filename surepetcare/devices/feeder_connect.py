@@ -3,7 +3,7 @@ from typing import Any
 
 from .device import SurepyDevice
 from surepetcare.command import Command
-from surepetcare.const import API_ENDPOINT_PRODUCTION, API_ENDPOINT_V1
+from surepetcare.const import API_ENDPOINT_PRODUCTION
 from surepetcare.enums import BowlPosition
 from surepetcare.enums import FoodType
 from surepetcare.enums import ProductId
@@ -30,7 +30,16 @@ class BowlMixin:
     def bowls(self) -> list:
         settings = self._data["control"]["bowls"]["settings"]
         return [
-            BowlState(BowlPosition(index), FoodType(bowl["food_type"])) for index, bowl in enumerate(settings)
+            BowlState(
+                BowlPosition(index),
+                FoodType(bowl.get("food_type", 0)),
+                bowl.get("substrance_type", 0),
+                bowl.get("current_weight", 0.0),
+                bowl.get("last_filled_at", ""),
+                bowl.get("last_zeroed_at", ""),
+                bowl.get("fill_percent", 0),
+            )
+            for index, bowl in enumerate(settings)
         ]
 
 
@@ -42,7 +51,7 @@ class FeederConnect(SurepyDevice, BowlMixin):
 
     def refresh(self):
         def parse(response):
-            if 'data' not in response:
+            if response['status'] == 304:
                 return self
             self._data = response["data"]
             return self

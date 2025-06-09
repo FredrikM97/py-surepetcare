@@ -62,3 +62,4 @@ class SurepyDevice(ABC, BatteryMixin):
     def refresh(self) -> Command:
         """Refresh the device data."""
         raise NotImplementedError("Subclasses must implement refresh method")
+    
