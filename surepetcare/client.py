@@ -7,11 +7,9 @@ logger = logging.getLogger(__name__)
 
 
 class SurePetcareClient(AuthClient):
-    async def get(self, endpoint: str, params: dict | None = None, headers=None) -> dict:
+    async def get(self, endpoint: str, params: dict | None = None, headers=None) -> dict | None:
         await self.set_session()
-        async with self.session.get(
-            endpoint, params=params, headers=headers
-        ) as response:
+        async with self.session.get(endpoint, params=params, headers=headers) as response:
             if not response.ok:
                 raise Exception(f"Error {endpoint} {response.status}: {await response.text()}")
             if response.status == 204:
@@ -26,9 +24,7 @@ class SurePetcareClient(AuthClient):
 
     async def post(self, endpoint: str, data: dict | None = None, headers=None, reuse=True) -> dict:
         await self.set_session()
-        async with self.session.post(
-            endpoint, json=data, headers=headers
-        ) as response:
+        async with self.session.post(endpoint, json=data, headers=headers) as response:
             if not response.ok:
                 raise Exception(f"Error {response.status}: {await response.text()}")
             if response.status == 204:
@@ -36,20 +32,19 @@ class SurePetcareClient(AuthClient):
                 return {"status": 204}
             self.populate_headers(response)
             return await response.json()
-            
 
     async def api(self, command: Command):
         headers = self._generate_headers(headers=self.headers(command.endpoint) if command.reuse else {})
         method = command.method.lower()
         if method == "get":
             coro = self.get(
-                command.endpoint, 
+                command.endpoint,
                 params=command.params,
                 headers=headers,
-                )
+            )
         elif method == "post":
             coro = self.post(
-                command.endpoint, 
+                command.endpoint,
                 data=command.params,
                 headers=headers,
             )
@@ -60,5 +55,5 @@ class SurePetcareClient(AuthClient):
 
         if command.callback:
             return command.callback(response)
-            
+
         return response

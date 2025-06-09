@@ -1,7 +1,12 @@
 import pytest
+
 from surepetcare.const import API_ENDPOINT_V2
 from surepetcare.devices.pet import Pet
-from surepetcare.entities.pet import ReportHouseholdDrinkingResource, ReportHouseholdFeedingResource, ReportHouseholdMovementResource, ReportHouseholdResource, ReportWeightFrame
+from surepetcare.entities.pet import ReportHouseholdDrinkingResource
+from surepetcare.entities.pet import ReportHouseholdFeedingResource
+from surepetcare.entities.pet import ReportHouseholdMovementResource
+from surepetcare.entities.pet import ReportHouseholdResource
+from surepetcare.entities.pet import ReportWeightFrame
 from tests.mock_helpers import MockSurePetcareClient
 
 

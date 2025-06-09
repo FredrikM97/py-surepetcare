@@ -1,7 +1,8 @@
 # Integration tests for PoseidonConnect device (add real integration if/when mock data is available)
+import pytest
+
 from surepetcare.devices.poseidon_connect import PoseidonConnect
 from surepetcare.enums import ProductId
-import pytest
 
 
 def make_data():

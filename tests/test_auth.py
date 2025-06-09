@@ -1,4 +1,5 @@
 import pytest
+
 from surepetcare.security.auth import AuthClient
 from tests.mock_helpers import DummySession
 
@@ -14,10 +15,13 @@ async def test_login_success():
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("json_data", [
-    {"error": "invalid credentials"},
-    {"data": {}},
-])
+@pytest.mark.parametrize(
+    "json_data",
+    [
+        {"error": "invalid credentials"},
+        {"data": {}},
+    ],
+)
 async def test_login_failure(json_data):
     """Test login failure raises Exception and token is not set."""
     client = AuthClient()
@@ -134,9 +138,12 @@ def test_device_id_missing_error_message():
 
 def test_del_warns(monkeypatch):
     import warnings
+
     client = AuthClient()
+
     class DummySession:
         closed = False
+
     client.session = DummySession()
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")

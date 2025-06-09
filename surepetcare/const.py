@@ -33,6 +33,5 @@ HEADER_TEMPLATE = {
     "sec-ch-ua-platform": '"macOS"',
     "spc-client-type": "react",
     "dnt": "1",
- 
-    "priority": "u=1, i", 
+    "priority": "u=1, i",
 }

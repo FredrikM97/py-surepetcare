@@ -1,7 +1,9 @@
 import pytest
 
 from surepetcare.client import SurePetcareClient
-from surepetcare.const import API_ENDPOINT_V1, API_ENDPOINT_V2
+from surepetcare.const import API_ENDPOINT_V1
+from surepetcare.const import API_ENDPOINT_V2
+from surepetcare.enums import ProductId
 from surepetcare.household import Household
 from tests.mock_helpers import MockSurePetcareClient
 
@@ -22,10 +24,13 @@ def make_device_data():
 
 
 # --- Parametrized error/corner case tests ---
-@pytest.mark.parametrize("callback,expected", [
-    (lambda h: h.get_pets().callback(None), []),
-    (lambda h: h.get_pets().callback({"data": {"not": "a list"}}), []),
-])
+@pytest.mark.parametrize(
+    "callback,expected",
+    [
+        (lambda h: h.get_pets().callback(None), []),
+        (lambda h: h.get_pets().callback({"data": {"not": "a list"}}), []),
+    ],
+)
 def test_get_pets_none_and_invalid_response(callback, expected):
     """Test get_pets returns [] for None or invalid response."""
     household = Household({"id": 1})
@@ -36,20 +41,26 @@ def test_get_pets_none_and_invalid_response(callback, expected):
     assert result == expected
 
 
-@pytest.mark.parametrize("callback,expected", [
-    (lambda h: h.get_devices().callback(None), []),
-    (lambda h: h.get_devices().callback({"data": {"not": "a list"}}), []),
-])
+@pytest.mark.parametrize(
+    "callback,expected",
+    [
+        (lambda h: h.get_devices().callback(None), []),
+        (lambda h: h.get_devices().callback({"data": {"not": "a list"}}), []),
+    ],
+)
 def test_get_devices_none_and_invalid_response(callback, expected):
     """Test get_devices returns [] for None or invalid response."""
     household = Household({"id": 1})
     assert callback(household) == expected
 
 
-@pytest.mark.parametrize("command_factory,expected", [
-    (lambda: Household.get_households(), []),
-    (lambda: Household.get_households(), []),
-])
+@pytest.mark.parametrize(
+    "command_factory,expected",
+    [
+        (lambda: Household.get_households(), []),
+        (lambda: Household.get_households(), []),
+    ],
+)
 def test_get_households_none_and_invalid_response(command_factory, expected):
     """Test get_households returns [] for None or invalid response."""
     command = command_factory()
@@ -57,23 +68,28 @@ def test_get_households_none_and_invalid_response(command_factory, expected):
     assert command.callback({"data": {"not": "a list"}}) == expected
 
 
-@pytest.mark.parametrize("command_factory,none_expected,invalid_expected", [
-    (lambda: Household.get_household(1), None, {}),
-    (lambda: Household.get_product(1, 2), None, {}),
-])
+@pytest.mark.parametrize(
+    "command_factory,none_expected,invalid_expected",
+    [
+        (lambda: Household.get_household(1), None, {}),
+        (lambda: Household.get_product(ProductId.FEEDER_CONNECT, 2), None, {}),
+    ],
+)
 def test_get_household_and_product_none_and_invalid(command_factory, none_expected, invalid_expected):
     """Test get_household/get_product returns None for None, {{}} for invalid response."""
     command = command_factory()
     assert command.callback(None) == none_expected
-    assert command.callback({"data": [1,2,3]}) == invalid_expected
+    assert command.callback({"data": [1, 2, 3]}) == invalid_expected
 
 
 # --- Main functional tests ---
 @pytest.mark.asyncio
 async def test_get_households(monkeypatch):
     """Test fetching list of households."""
+
     async def mock_get(endpoint, params=None, headers=None):
         return {"data": [{"id": 1}, {"id": 2}]}
+
     client = SurePetcareClient()
     monkeypatch.setattr(client, "get", mock_get)
     command = Household.get_households()
@@ -134,6 +150,7 @@ async def test_get_product():
 def test_get_devices_skips_invalid_product(monkeypatch):
     """Test get_devices skips devices with invalid product_id."""
     from surepetcare.household import Household
+
     mock_data = {
         "data": [
             {"id": 10, "household_id": 1, "name": "Hub1", "product_id": 999, "status": {"online": True}},
@@ -143,11 +160,14 @@ def test_get_devices_skips_invalid_product(monkeypatch):
     household = Household({"id": 1})
     command = household.get_devices()
     import surepetcare.devices
+
     orig_loader = surepetcare.devices.load_device_class
+
     def fake_loader(pid):
         if pid == 999:
             raise Exception("Invalid product_id")
         return orig_loader(pid)
+
     monkeypatch.setattr(surepetcare.devices, "load_device_class", fake_loader)
     devices = command.callback(mock_data)
     assert len(devices) == 1

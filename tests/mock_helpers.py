@@ -27,62 +27,119 @@ class MockSurePetcareClient(SurePetcareClient):
         data = self.mock_get_data.get(endpoint, None)
         if data is None:
             # Only use fallback if no mock is provided
-            if '/product/' in endpoint:
+            if "/product/" in endpoint:
                 data = {"data": {"foo": "bar"}}
-            elif endpoint.endswith('/pet') or endpoint.endswith('/dashboard/pet'):
+            elif endpoint.endswith("/pet") or endpoint.endswith("/dashboard/pet"):
                 data = {"data": []}
-            elif endpoint.endswith('/device'):
-                data = {"data": [
-                    {
-                        "id": 10,
-                        "household_id": 1,
-                        "name": "Hub1",
-                        "product_id": 1,
-                        "status": {"online": True},
-                        "control": {},
-                    },
-                    {
-                        "id": 11,
+            elif endpoint.endswith("/device"):
+                data = {
+                    "data": [
+                        {
+                            "id": 10,
+                            "household_id": 1,
+                            "name": "Hub1",
+                            "product_id": 1,
+                            "status": {"online": True},
+                            "control": {},
+                        },
+                        {
+                            "id": 11,
+                            "household_id": 1,
+                            "name": "Feeder1",
+                            "product_id": 4,
+                            "status": {"online": True},
+                            "control": {
+                                "lid": {"close_delay": 5},
+                                "bowls": {
+                                    "settings": [
+                                        {
+                                            "food_type": 1,
+                                            "substance_type": 0,
+                                            "current_weight": 0.0,
+                                            "last_filled_at": "",
+                                            "last_zeroed_at": "",
+                                            "fill_percent": 0,
+                                        },
+                                        {
+                                            "food_type": 2,
+                                            "substance_type": 0,
+                                            "current_weight": 0.0,
+                                            "last_filled_at": "",
+                                            "last_zeroed_at": "",
+                                            "fill_percent": 0,
+                                        },
+                                    ]
+                                },
+                            },
+                        },
+                    ]
+                }
+            elif "/device/" in endpoint or endpoint.endswith("/aggregate"):
+                data = {
+                    "data": {
+                        "id": 1,
                         "household_id": 1,
                         "name": "Feeder1",
                         "product_id": 4,
-                        "status": {"online": True},
+                        "status": {
+                            "online": True,
+                            "bowl_status": [
+                                {
+                                    "index": 0,
+                                    "food_type": 1,
+                                    "substance_type": 0,
+                                    "current_weight": 0.0,
+                                    "last_filled_at": "",
+                                    "last_zeroed_at": "",
+                                    "fill_percent": 0,
+                                },
+                                {
+                                    "index": 1,
+                                    "food_type": 1,
+                                    "substance_type": 0,
+                                    "current_weight": 0.0,
+                                    "last_filled_at": "",
+                                    "last_zeroed_at": "",
+                                    "fill_percent": 0,
+                                },
+                            ],
+                        },
                         "control": {
                             "lid": {"close_delay": 5},
-                            "bowls": {"settings": [
-                                {"food_type": 1, "substance_type": 0, "current_weight": 0.0, "last_filled_at": "", "last_zeroed_at": "", "fill_percent": 0},
-                                {"food_type": 2, "substance_type": 0, "current_weight": 0.0, "last_filled_at": "", "last_zeroed_at": "", "fill_percent": 0}
-                            ]},
+                            "bowls": {
+                                "settings": [
+                                    {
+                                        "food_type": 1,
+                                        "substance_type": 0,
+                                        "current_weight": 0.0,
+                                        "last_filled_at": "",
+                                        "last_zeroed_at": "",
+                                        "fill_percent": 0,
+                                    },
+                                    {
+                                        "food_type": 1,
+                                        "substance_type": 0,
+                                        "current_weight": 0.0,
+                                        "last_filled_at": "",
+                                        "last_zeroed_at": "",
+                                        "fill_percent": 0,
+                                    },
+                                ]
+                            },
                         },
                     }
-                ]}
-            elif '/device/' in endpoint or endpoint.endswith('/aggregate'):
-                data = {"data": {
-                    "id": 1,
-                    "household_id": 1,
-                    "name": "Feeder1",
-                    "product_id": 4,
-                    "status": {"online": True, "bowl_status": [
-                        {"index": 0, "food_type": 1, "substance_type": 0, "current_weight": 0.0, "last_filled_at": "", "last_zeroed_at": "", "fill_percent": 0},
-                        {"index": 1, "food_type": 1, "substance_type": 0, "current_weight": 0.0, "last_filled_at": "", "last_zeroed_at": "", "fill_percent": 0}
-                    ]},
-                    "control": {
-                        "lid": {"close_delay": 5},
-                        "bowls": {"settings": [
-                            {"food_type": 1, "substance_type": 0, "current_weight": 0.0, "last_filled_at": "", "last_zeroed_at": "", "fill_percent": 0},
-                            {"food_type": 1, "substance_type": 0, "current_weight": 0.0, "last_filled_at": "", "last_zeroed_at": "", "fill_percent": 0}
-                        ]},
-                    },
-                }}
-            elif '/household/' in endpoint:
+                }
+            elif "/household/" in endpoint:
                 data = {"data": {"id": 1, "name": "TestHouse"}}
             else:
                 data = {"data": {}}
-        if 'status' not in data:
-            data['status'] = 200
+        if "status" not in data:
+            data["status"] = 200
         return data
 
-    async def post(self, endpoint: str, data: Optional[dict[Any, Any]] = None, headers=None):
+    async def post(
+        self, endpoint: str, data: dict[Any, Any] | None = None, headers=None, reuse=True
+    ) -> dict[Any, Any]:
         # Return mock data if available, else default
         mock = self.mock_get_data.get(endpoint) if isinstance(self.mock_get_data, dict) else None
         if mock and isinstance(mock, dict) and "data" in mock:
@@ -182,4 +239,5 @@ class DummySession:
 
 def make_pet():
     from surepetcare.devices.pet import Pet
+
     return Pet({"id": 2, "household_id": 1, "name": "N", "tag": {"id": 3}})

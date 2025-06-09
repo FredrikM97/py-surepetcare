@@ -75,10 +75,13 @@ async def test_post_204():
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("ok,status,raises", [
-    (False, 404, Exception),
-    (False, 400, Exception),
-])
+@pytest.mark.parametrize(
+    "ok,status,raises",
+    [
+        (False, 404, Exception),
+        (False, 400, Exception),
+    ],
+)
 async def test_get_and_post_raises_on_error(ok, status, raises):
     """Test GET/POST raises on error status."""
     client = SurePetcareClient()

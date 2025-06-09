@@ -5,11 +5,11 @@ from uuid import uuid1
 
 import aiohttp
 
+from .cache import CacheHeaders
+from .exceptions import AuthenticationError
 from surepetcare.const import HEADER_TEMPLATE
 from surepetcare.const import LOGIN_ENDPOINT
 from surepetcare.const import USER_AGENT
-from .cache import CacheHeaders
-from .exceptions import AuthenticationError
 
 logger = logging.getLogger(__name__)
 
@@ -53,8 +53,6 @@ class AuthClient(CacheHeaders):
             json=authentication_data,
             headers=self._generate_headers(),
         ) as response:
-
-
             if response.status == HTTPStatus.OK:
                 self._token = (await response.json()).get("data").get("token")
                 if not self._token:
@@ -71,7 +69,7 @@ class AuthClient(CacheHeaders):
         headers = get_formatted_header(
             token=token if token is not None else self._token,
             user_agent=user_agent if user_agent else USER_AGENT,
-            device_id=self._device_id
+            device_id=self._device_id,
         )
         all_headers = headers | headers
         return all_headers

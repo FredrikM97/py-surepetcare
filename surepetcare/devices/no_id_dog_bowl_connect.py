@@ -13,7 +13,7 @@ class NoIdDogBowlConnect(SurepyDevice):
         def parse(response):
             if not response:
                 return self
-            self._raw_data = response['data']
+            self._raw_data = response["data"]
             return self
 
-        return Command(method="GET", endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}",callback=parse)
+        return Command(method="GET", endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}", callback=parse)

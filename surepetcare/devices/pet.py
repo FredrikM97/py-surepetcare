@@ -3,7 +3,7 @@ from datetime import timedelta
 
 from .device import SurepyDevice
 from surepetcare.command import Command
-from surepetcare.const import API_ENDPOINT_PRODUCTION, API_ENDPOINT_V2
+from surepetcare.const import API_ENDPOINT_PRODUCTION
 from surepetcare.entities.pet import ReportHouseholdDrinkingResource
 from surepetcare.entities.pet import ReportHouseholdFeedingResource
 from surepetcare.entities.pet import ReportHouseholdMovementResource
@@ -56,7 +56,9 @@ class Pet(SurepyDevice):
             params["EventType"] = str(event_type)
         return Command(
             method="GET",
-            endpoint=f"{API_ENDPOINT_PRODUCTION}/report/household/{self.household_id}/pet/{self.id}/aggregate",
+            endpoint=(
+                f"{API_ENDPOINT_PRODUCTION}/report/household/{self.household_id}/pet/{self.id}/aggregate"
+            ),
             params=params,
             callback=parse,
         )
@@ -65,8 +67,8 @@ class Pet(SurepyDevice):
         def parse(response):
             if not response:
                 return []
-            return response['data']
-        
+            return response["data"]
+
         return Command(
             method="GET",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/dashboard/pet",

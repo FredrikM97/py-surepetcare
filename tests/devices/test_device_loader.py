@@ -1,7 +1,8 @@
+import pytest
+
 from surepetcare.devices import DEVICE_CLASS_REGISTRY
 from surepetcare.devices import load_device_class
 from surepetcare.enums import ProductId
-import pytest
 
 
 def test_load_device_class_dynamic():

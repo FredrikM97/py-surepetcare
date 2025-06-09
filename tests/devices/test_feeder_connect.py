@@ -14,8 +14,24 @@ def test_feeder_connect_integration():
     data = load_mock_data("tests/mock_data/mock_device_feeder_connect.json")
     # Patch: ensure 'bowl_status' is present in status after refresh
     data["data"][0]["status"]["bowl_status"] = [
-        {"index": 0, "food_type": 1, "substance_type": 0, "current_weight": 0.0, "last_filled_at": "", "last_zeroed_at": "", "fill_percent": 0},
-        {"index": 1, "food_type": 1, "substance_type": 0, "current_weight": 0.0, "last_filled_at": "", "last_zeroed_at": "", "fill_percent": 0}
+        {
+            "index": 0,
+            "food_type": 1,
+            "substance_type": 0,
+            "current_weight": 0.0,
+            "last_filled_at": "",
+            "last_zeroed_at": "",
+            "fill_percent": 0,
+        },
+        {
+            "index": 1,
+            "food_type": 1,
+            "substance_type": 0,
+            "current_weight": 0.0,
+            "last_filled_at": "",
+            "last_zeroed_at": "",
+            "fill_percent": 0,
+        },
     ]
     for bowl in data["data"][0]["control"]["bowls"]["settings"]:
         bowl.setdefault("substance_type", 0)
@@ -46,22 +62,66 @@ async def test_feeder_connect_refresh():
         "household_id": 1,
         "name": "Feeder1",
         "product_id": 4,
-        "status": {"online": True, "bowl_status": [
-            {"index": 0, "food_type": 1, "substance_type": 0, "current_weight": 0.0, "last_filled_at": "", "last_zeroed_at": "", "fill_percent": 0},
-            {"index": 1, "food_type": 1, "substance_type": 0, "current_weight": 0.0, "last_filled_at": "", "last_zeroed_at": "", "fill_percent": 0}
-        ]},
+        "status": {
+            "online": True,
+            "bowl_status": [
+                {
+                    "index": 0,
+                    "food_type": 1,
+                    "substance_type": 0,
+                    "current_weight": 0.0,
+                    "last_filled_at": "",
+                    "last_zeroed_at": "",
+                    "fill_percent": 0,
+                },
+                {
+                    "index": 1,
+                    "food_type": 1,
+                    "substance_type": 0,
+                    "current_weight": 0.0,
+                    "last_filled_at": "",
+                    "last_zeroed_at": "",
+                    "fill_percent": 0,
+                },
+            ],
+        },
         "control": {
             "lid": {"close_delay": 5},
-            "bowls": {"settings": [
-                {"food_type": 1, "substance_type": 0, "current_weight": 0.0, "last_filled_at": "", "last_zeroed_at": "", "fill_percent": 0},
-                {"food_type": 1, "substance_type": 0, "current_weight": 0.0, "last_filled_at": "", "last_zeroed_at": "", "fill_percent": 0}
-            ]},
+            "bowls": {
+                "settings": [
+                    {
+                        "food_type": 1,
+                        "substance_type": 0,
+                        "current_weight": 0.0,
+                        "last_filled_at": "",
+                        "last_zeroed_at": "",
+                        "fill_percent": 0,
+                    },
+                    {
+                        "food_type": 1,
+                        "substance_type": 0,
+                        "current_weight": 0.0,
+                        "last_filled_at": "",
+                        "last_zeroed_at": "",
+                        "fill_percent": 0,
+                    },
+                ]
+            },
         },
     }
     # The client must return {'data': refreshed_data} for the endpoint
     client = MockSurePetcareClient({f"{API_ENDPOINT_V1}/device/1": {"data": refreshed_data}})
     # The initial feeder data can be anything, since it will be replaced by the refresh
-    feeder = FeederConnect({"id": 1, "household_id": 1, "name": "Feeder1", "product_id": 4, "status": {"online": True}, "control": {"lid": {"close_delay": 5}, "bowls": {"settings": []}}})
+    feeder = FeederConnect(
+        {
+            "id": 1,
+            "household_id": 1,
+            "name": "Feeder1",
+            "product_id": 4,
+            "status": {"online": True},
+            "control": {"lid": {"close_delay": 5}, "bowls": {"settings": []}},
+        }
+    )
     command = feeder.refresh()
     result = await client.api(command)
     assert result is feeder

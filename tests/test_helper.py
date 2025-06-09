@@ -1,7 +1,9 @@
 import asyncio
+
 import pytest
 
-from surepetcare.helper import data_exist_validation, validate_date_fields
+from surepetcare.helper import data_exist_validation
+from surepetcare.helper import validate_date_fields
 
 
 @pytest.fixture
@@ -37,21 +39,27 @@ def dummy_date():
     return DummyDate()
 
 
-@pytest.mark.parametrize("date_str", [
-    "2024-01-01",
-    "2024-01-01T12:00:00+0000",
-])
+@pytest.mark.parametrize(
+    "date_str",
+    [
+        "2024-01-01",
+        "2024-01-01T12:00:00+0000",
+    ],
+)
 def test_validate_date_fields_valid(dummy_date, date_str):
     """Test validate_date_fields accepts valid date strings."""
     d = dummy_date
     assert asyncio.run(d.foo(date_str)) == date_str
 
 
-@pytest.mark.parametrize("date_str", [
-    "not-a-date",
-    "2024-13-01",
-    "2024-01-32",
-])
+@pytest.mark.parametrize(
+    "date_str",
+    [
+        "not-a-date",
+        "2024-13-01",
+        "2024-01-32",
+    ],
+)
 def test_validate_date_fields_invalid(dummy_date, date_str):
     """Test validate_date_fields raises ValueError for invalid date strings."""
     d = dummy_date

@@ -8,6 +8,7 @@ from surepetcare.enums import BowlPosition
 from surepetcare.enums import FoodType
 from surepetcare.enums import ProductId
 
+
 @dataclass
 class BowlState:
     position: BowlPosition
@@ -18,6 +19,7 @@ class BowlState:
     last_zeroed_at: str
     last_fill_weight: str
     fill_percent: int
+
 
 @dataclass
 class BowlTargetWeight:
@@ -48,14 +50,14 @@ class BowlMixin:
             )
             for entry in raw_status
         ]
+
     @property
     def bowl_targets(self):
         # Map each dict in bowls['settings'] to BowlTargetWeight
         settings = self._data["control"]["bowls"]["settings"]
         return [
             BowlTargetWeight(
-                food_type=FoodType(entry.get("food_type", 0)),
-                full_weight=entry.get("target", 0)
+                food_type=FoodType(entry.get("food_type", 0)), full_weight=entry.get("target", 0)
             )
             for entry in settings
         ]
@@ -64,8 +66,8 @@ class BowlMixin:
     def tare(self):
         return self._data["control"]["tare"]
 
+
 class FeederConnect(SurepyDevice, BowlMixin):
-    
     @property
     def product(self) -> ProductId:
         return ProductId.FEEDER_CONNECT
@@ -78,12 +80,13 @@ class FeederConnect(SurepyDevice, BowlMixin):
             self._data = response["data"]
             return self
 
-        command =  Command(
+        command = Command(
             method="GET",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}",
             callback=parse,
-        )   
+        )
         return command
+
     @property
     def rssi(self) -> int:
         """Return the RSSI value."""

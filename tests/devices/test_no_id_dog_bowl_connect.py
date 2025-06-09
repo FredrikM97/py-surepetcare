@@ -1,8 +1,9 @@
 import pytest
 
-# Integration tests for NoIdDogBowlConnect device (add real integration if/when mock data is available)
 from surepetcare.devices.no_id_dog_bowl_connect import NoIdDogBowlConnect
 from surepetcare.enums import ProductId
+
+# Integration tests for NoIdDogBowlConnect device (add real integration if/when mock data is available)
 
 
 def make_data():

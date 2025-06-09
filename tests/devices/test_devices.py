@@ -1,4 +1,5 @@
 import pytest
+
 from surepetcare.devices.device import SurepyDevice
 from surepetcare.enums import ProductId
 
@@ -44,11 +45,14 @@ def test_surepydevice_properties(dummy_device, product):
     assert str(device).startswith("<DummyDevice id=123>")
 
 
-@pytest.mark.parametrize("battery,expected", [
-    (6.4, 100),
-    (1.2, 0),
-    (3.8, 0),  # main code returns 0 for anything less than 6.4V
-])
+@pytest.mark.parametrize(
+    "battery,expected",
+    [
+        (6.4, 100),
+        (1.2, 0),
+        (3.8, 0),  # main code returns 0 for anything less than 6.4V
+    ],
+)
 def test_battery_level(dummy_device, battery, expected):
     """Test battery_level calculation for various voltages."""
     device = dummy_device(make_data())
@@ -76,6 +80,7 @@ def test_surepydevice_notimplemented():
 def test_surepydevice_product_notimplemented():
     class Dummy(SurepyDevice):
         pass
+
     with pytest.raises(TypeError):
         Dummy({"id": 1, "household_id": 2, "name": "n"})
 

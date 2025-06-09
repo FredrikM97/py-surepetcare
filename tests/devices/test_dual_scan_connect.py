@@ -21,7 +21,14 @@ def test_dual_scan_connect_refresh_with_response():
     device = DualScanConnect(make_data())
     command = device.refresh()
     # Simulate API response
-    response = {"data": {"id": 123, "household_id": 456, "name": "Updated Device", "status": {"online": False, "battery": 5.2}}}
+    response = {
+        "data": {
+            "id": 123,
+            "household_id": 456,
+            "name": "Updated Device",
+            "status": {"online": False, "battery": 5.2},
+        }
+    }
     result = command.callback(response)
     assert result is device
     assert device._data["name"] == "Updated Device"

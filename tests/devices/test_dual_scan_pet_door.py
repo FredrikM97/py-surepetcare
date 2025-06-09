@@ -1,8 +1,9 @@
 import pytest
 
-# Integration tests for DualScanPetDoor device (add real integration if/when mock data is available)
 from surepetcare.devices.dual_scan_pet_door import DualScanPetDoor
 from surepetcare.enums import ProductId
+
+# Integration tests for DualScanPetDoor device (add real integration if/when mock data is available)
 
 
 def make_data():

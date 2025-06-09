@@ -13,7 +13,7 @@ class Hub(SurepyDevice):
         def parse(response):
             if not response:
                 return self
-            self._raw_data = response['data']
+            self._raw_data = response["data"]
             return self
 
         return Command(
