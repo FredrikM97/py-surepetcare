@@ -7,35 +7,53 @@ logger = logging.getLogger(__name__)
 
 
 class SurePetcareClient(AuthClient):
-    async def get(self, endpoint: str, params: dict | None = None):
+    async def get(self, endpoint: str, params: dict | None = None, headers=None) -> dict | None:
         await self.set_session()
-        async with self.session.get(
-            endpoint, params=params, headers=self._generate_headers(self.token)
-        ) as response:
+        async with self.session.get(endpoint, params=params, headers=headers) as response:
             if not response.ok:
-                print(response)
                 raise Exception(f"Error {endpoint} {response.status}: {await response.text()}")
+            if response.status == 204:
+                logger.info(f"GET {endpoint} returned 204 No Content")
+                return None
+            if response.status == 304:
+                # Not modified, keep existing data
+                logger.debug(f"GET {endpoint} returned 304 Not Modified")
+                return None
+            self.populate_headers(response)
             return await response.json()
 
-    async def post(self, endpoint: str, data: dict | None = None):
+    async def post(self, endpoint: str, data: dict | None = None, headers=None, reuse=True) -> dict:
         await self.set_session()
-        async with self.session.post(
-            endpoint, json=data, headers=self._generate_headers(self.token)
-        ) as response:
+        async with self.session.post(endpoint, json=data, headers=headers) as response:
             if not response.ok:
                 raise Exception(f"Error {response.status}: {await response.text()}")
             if response.status == 204:
-                return {}
+                logger.info(f"POST {endpoint} returned 204 No Content")
+                return {"status": 204}
+            self.populate_headers(response)
             return await response.json()
 
     async def api(self, command: Command):
+        headers = self._generate_headers(headers=self.headers(command.endpoint) if command.reuse else {})
         method = command.method.lower()
         if method == "get":
-            response = await self.get(command.endpoint, params=command.params)
+            coro = self.get(
+                command.endpoint,
+                params=command.params,
+                headers=headers,
+            )
         elif method == "post":
-            response = await self.post(command.endpoint, data=command.params)
+            coro = self.post(
+                command.endpoint,
+                data=command.params,
+                headers=headers,
+            )
+
         else:
             raise NotImplementedError(f"HTTP method {command.method} not supported.")
+        response = await coro
+
         if command.callback:
             return command.callback(response)
+
         return response

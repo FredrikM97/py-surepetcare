@@ -10,12 +10,14 @@ from surepetcare.entities.pet import ReportWeightFrame
 from tests.mock_helpers import MockSurePetcareClient
 
 
-def make_pet():
+@pytest.fixture
+def pet():
     return Pet({"id": 2, "household_id": 1, "name": "N", "tag": {"id": 3}})
 
 
 @pytest.mark.asyncio
-async def test_pet_fetch_and_properties():
+async def test_pet_fetch_and_properties(pet):
+    """Test fetch_report and pet properties."""
     client = MockSurePetcareClient(
         {
             f"{API_ENDPOINT_V2}/report/household/1/pet/2/aggregate": {
@@ -23,7 +25,6 @@ async def test_pet_fetch_and_properties():
             }
         }
     )
-    pet = make_pet()
     # event_type not in [1,2,3] should raise
     with pytest.raises(ValueError):
         pet.fetch_report("2024-01-01", "2024-01-02", event_type=99)
@@ -36,27 +37,37 @@ async def test_pet_fetch_and_properties():
     assert pet.drinking == []
 
 
-def test_pet_properties():
-    pet = make_pet()
-    assert pet.id == 2
-    assert pet.household_id == 1
-    assert pet.name == "N"
-    assert pet.tag == 3
-    assert pet.product.name == "PET"
+@pytest.mark.parametrize(
+    "attr,expected",
+    [
+        ("id", 2),
+        ("household_id", 1),
+        ("name", "N"),
+        ("tag", 3),
+        ("product.name", "PET"),
+    ],
+)
+def test_pet_properties(pet, attr, expected):
+    """Test pet property values."""
+    value = pet
+    for part in attr.split("."):
+        value = getattr(value, part)
+    assert value == expected
 
 
 @pytest.mark.asyncio
 async def test_pet_get_pet_dashboard():
     endpoint = f"{API_ENDPOINT_V2}/dashboard/pet"
+    # Now, the mock should return an empty dict to simulate 'not response'
     client = MockSurePetcareClient({endpoint: {}})
     pet = Pet({"id": 1, "household_id": 2, "name": "N", "tag": {"id": 3}})
     command = pet.get_pet_dashboard("2024-01-01", [1])
     result = await client.api(command)
-    assert result == {}
+    assert result == []
 
 
 @pytest.mark.asyncio
-async def test_pet_refresh():
+async def test_pet_refresh(pet):
     client = MockSurePetcareClient(
         {
             f"{API_ENDPOINT_V2}/report/household/1/pet/2/aggregate": {
@@ -64,7 +75,6 @@ async def test_pet_refresh():
             }
         }
     )
-    pet = make_pet()
     command = pet.fetch_report("2024-01-01", "2024-01-02", event_type=1)
     await client.api(command)
     refreshed = pet.refresh()

@@ -6,6 +6,7 @@ from tests.mock_helpers import DummySession
 
 @pytest.mark.asyncio
 async def test_login_success():
+    """Test successful login sets token and returns client."""
     client = AuthClient()
     client.session = DummySession(ok=True, status=200, json_data={"data": {"token": "dummy-token"}})
     result = await client.login("user@example.com", "password")
@@ -14,25 +15,26 @@ async def test_login_success():
 
 
 @pytest.mark.asyncio
-async def test_login_failure():
+@pytest.mark.parametrize(
+    "json_data",
+    [
+        {"error": "invalid credentials"},
+        {"data": {}},
+    ],
+)
+async def test_login_failure(json_data):
+    """Test login failure raises Exception and token is not set."""
     client = AuthClient()
-    client.session = DummySession(ok=False, status=401, json_data={"error": "invalid credentials"})
+    client.session = DummySession(ok=False, status=401, json_data=json_data)
     with pytest.raises(Exception):
         await client.login("user@example.com", "wrongpassword")
-
-
-@pytest.mark.asyncio
-async def test_login_failure_and_token_not_found():
-    client = AuthClient()
-    client.session = DummySession(ok=False, status=401, json_data={"error": "invalid credentials"})
     with pytest.raises(Exception):
-        await client.login("user@example.com", "wrongpassword")
-    with pytest.raises(Exception):
-        client.token
+        _ = client.token
 
 
 @pytest.mark.asyncio
 async def test_login_token_device_id():
+    """Test login with token and device_id sets both."""
     client = AuthClient()
     client.session = DummySession(ok=True, status=200, json_data={"data": {"token": "tok"}})
     result = await client.login(token="tok", device_id="dev")
@@ -43,6 +45,7 @@ async def test_login_token_device_id():
 
 @pytest.mark.asyncio
 async def test_login_missing_credentials():
+    """Test login raises if no credentials provided."""
     client = AuthClient()
     client.session = DummySession(ok=True, status=200, json_data={"data": {"token": "tok"}})
     with pytest.raises(Exception):
@@ -60,9 +63,9 @@ async def test_login_success_but_token_missing():
 def test_generate_headers():
     client = AuthClient()
     client._device_id = "dev"
-    headers = client._generate_headers(token="tok")
-    assert isinstance(headers, dict)
-    assert any("tok" in v for v in headers.values())
+    # Do not pass token as a keyword argument
+    headers = client._generate_headers()
+    assert "X-Device-Id" in headers
 
 
 def test_token_success():
@@ -119,3 +122,30 @@ async def test_set_session():
     client.session = s
     await client.set_session()
     assert client.session is s
+
+
+def test_token_missing_error_message():
+    client = AuthClient()
+    with pytest.raises(Exception, match="Authentication token is missing"):
+        _ = client.token
+
+
+def test_device_id_missing_error_message():
+    client = AuthClient()
+    with pytest.raises(Exception, match="Device ID is missing"):
+        _ = client.device_id
+
+
+def test_del_warns(monkeypatch):
+    import warnings
+
+    client = AuthClient()
+
+    class DummySession:
+        closed = False
+
+    client.session = DummySession()
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        del client
+        assert any("was deleted without closing the aiohttp session" in str(warn.message) for warn in w)

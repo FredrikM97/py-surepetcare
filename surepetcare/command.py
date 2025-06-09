@@ -11,12 +11,14 @@ class Command:
         params: Optional[dict[Any, Any]] = None,
         response_type: Optional[str] = None,
         callback: Optional[Callable] = None,
+        reuse: bool = True,
     ):
         self.method = method
         self.endpoint = endpoint
         self.params = params or {}
         self.response_type = response_type
         self.callback = callback
+        self.reuse = reuse
 
     def __str__(self) -> str:
         return (
