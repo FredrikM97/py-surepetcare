@@ -1,6 +1,6 @@
 from .device import SurepyDevice
 from surepetcare.command import Command
-from surepetcare.const import API_ENDPOINT_V1
+from surepetcare.const import API_ENDPOINT_PRODUCTION
 from surepetcare.enums import ProductId
 
 
@@ -11,7 +11,9 @@ class NoIdDogBowlConnect(SurepyDevice):
 
     def refresh(self):
         def parse(response):
-            self._raw_data = response
+            if 'data' not in response:
+                return self
+            self._raw_data = response['data']
             return self
 
-        return Command(method="GET", endpoint=f"{API_ENDPOINT_V1}/device/{self.id}", callback=parse)
+        return Command(method="GET", endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}",callback=parse)

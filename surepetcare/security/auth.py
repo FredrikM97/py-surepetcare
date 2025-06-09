@@ -1,14 +1,13 @@
 import logging
 import warnings
 from http import HTTPStatus
-from typing import Optional
 from uuid import uuid1
 
 import aiohttp
 
 from surepetcare.const import HEADER_TEMPLATE
 from surepetcare.const import LOGIN_ENDPOINT
-from surepetcare.const import SUREPY_USER_AGENT
+from surepetcare.const import USER_AGENT
 from surepetcare.security.exceptions import AuthenticationError
 
 logger = logging.getLogger(__name__)
@@ -19,7 +18,6 @@ class AuthClient:
         self._token = None
         self.session = None
         self._device_id = None
-        self._surepy_version = None
 
     async def login(
         self,
@@ -32,10 +30,13 @@ class AuthClient:
 
         if token and device_id:
             # If token is provided, use it directly
+
+            logger.info("Using provided token and device_id for authentication")
             self._token = token
             self._device_id = device_id
             return self
         elif email and password:
+            logger.info("Using email and password for authentication")
             device_id = device_id if device_id else str(uuid1())
             self._device_id = device_id
             authentication_data: dict[str, str | None] = dict(
@@ -50,7 +51,7 @@ class AuthClient:
             json=authentication_data,
             headers=self._generate_headers(),
         ) as response:
-            logger.info(f"Response status: {response.status}")
+
 
             if response.status == HTTPStatus.OK:
                 self._token = (await response.json()).get("data").get("token")
@@ -61,13 +62,18 @@ class AuthClient:
             else:
                 raise AuthenticationError(f"Authentication error {response.status} {await response.json()}")
 
-    def _generate_headers(self, token: Optional[str] = None) -> dict[str, str]:
+    def _generate_headers(self, token=None, additional_headers={}):
         """Build a HTTP header accepted by the API"""
-        user_agent = SUREPY_USER_AGENT.format(version=None)
+        user_agent = USER_AGENT.format(version=None)
 
-        return get_formatted_header(
-            token=token, user_agent=user_agent if user_agent else SUREPY_USER_AGENT, device_id=self._device_id
+        headers = get_formatted_header(
+            token=token if token is not None else self._token,
+            user_agent=user_agent if user_agent else USER_AGENT,
+            device_id=self._device_id
         )
+        all_headers = headers | additional_headers
+        logger.error(f"Generated headers: {all_headers}")
+        return all_headers
 
     async def close(self):
         if self.session:
@@ -105,7 +111,7 @@ class AuthClient:
             )
 
 
-def get_formatted_header(user_agent, token, device_id):
+def get_formatted_header(user_agent=None, token=None, device_id=None):
     formatted_header = {
         key: value.format(user_agent=user_agent, token=token, device_id=device_id)
         for key, value in HEADER_TEMPLATE.items()

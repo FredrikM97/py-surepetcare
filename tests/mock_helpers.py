@@ -30,15 +30,21 @@ class MockSurePetcareClient(SurePetcareClient):
         return {}
 
 
+class DummyUrl:
+    def __init__(self, path):
+        self.path = path
+
+
 class DummyResponse:
-    def __init__(self, ok=True, status=200, text="OK", json_data=None):
+    def __init__(self, ok=True, status=200, json_data=None, path="/endpoint"):
         self.ok = ok
         self.status = status
-        self._text = text
-        self._json_data = json_data or {"foo": "bar"}
+        self._json_data = json_data or {}
+        self.headers = {}
+        self.url = DummyUrl(path)
 
-    async def text(self):
-        return self._text
+    def get(self, key, default=None):
+        return self._json_data.get(key, default)
 
     async def json(self):
         return self._json_data

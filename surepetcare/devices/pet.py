@@ -3,7 +3,7 @@ from datetime import timedelta
 
 from .device import SurepyDevice
 from surepetcare.command import Command
-from surepetcare.const import API_ENDPOINT_V2
+from surepetcare.const import API_ENDPOINT_PRODUCTION, API_ENDPOINT_V2
 from surepetcare.entities.pet import ReportHouseholdDrinkingResource
 from surepetcare.entities.pet import ReportHouseholdFeedingResource
 from surepetcare.entities.pet import ReportHouseholdMovementResource
@@ -30,6 +30,8 @@ class Pet(SurepyDevice):
         self, from_date: str | None = None, to_date: str | None = None, event_type: int | None = None
     ) -> Command:
         def parse(response):
+            if 'data' not in response:
+                return self
             self._report = ReportHouseholdResource.model_validate(response["data"])
             self.last_fetched_datetime = datetime.utcnow().isoformat()
             return self
@@ -54,18 +56,20 @@ class Pet(SurepyDevice):
             params["EventType"] = str(event_type)
         return Command(
             method="GET",
-            endpoint=f"{API_ENDPOINT_V2}/report/household/{self.household_id}/pet/{self.id}/aggregate",
+            endpoint=f"{API_ENDPOINT_PRODUCTION}/report/household/{self.household_id}/pet/{self.id}/aggregate",
             params=params,
             callback=parse,
         )
 
     def get_pet_dashboard(self, from_date: str, pet_ids: list[int]):
         def parse(response):
-            return response
+            if 'data' not in response:
+                return {}
+            return response['data']
 
         return Command(
             method="GET",
-            endpoint=f"{API_ENDPOINT_V2}/dashboard/pet",
+            endpoint=f"{API_ENDPOINT_PRODUCTION}/dashboard/pet",
             params={"From": from_date, "PetId": pet_ids},
             callback=parse,
         )
