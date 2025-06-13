@@ -40,7 +40,7 @@ class BowlMixin:
         return [
             BowlState(
                 position=BowlPosition(entry.get("index", 0)),
-                food_type=FoodType(entry.get("food_type", 0)),
+                food_type=FoodType(entry.get("food_type", -1)),
                 substance_type=entry.get("substance_type", 0),
                 current_weight=entry.get("current_weight", 0.0),
                 last_filled_at=entry.get("last_filled_at", ""),
@@ -76,7 +76,6 @@ class FeederConnect(SurepyDevice, BowlMixin):
         def parse(response):
             if not response:
                 return self
-            print("Parsing FeederConnect data %s" % response)
             self._data = response["data"]
             return self
 
