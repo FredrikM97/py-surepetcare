@@ -26,7 +26,7 @@ class Pet(SurepyDevice):
     @property
     def photo(self) -> str:
         return self._photo
-    
+
     def refresh(self) -> Command:
         """Refresh the pet's report data."""
         return self.fetch_report()

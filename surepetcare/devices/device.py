@@ -56,9 +56,9 @@ class SurepyDevice(ABC, BatteryMixin):
     @property
     def raw_data(self) -> Optional[dict]:
         return self._data
-    
+
     @property
-    def photo(self) -> Optional[dict]:
+    def photo(self) -> str:
         """Return the url path for device photo."""
         return ""
 

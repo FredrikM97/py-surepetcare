@@ -75,7 +75,7 @@ class FeederConnect(SurepyDevice, BowlMixin):
     @property
     def photo(self) -> str:
         return "https://www.surepetcare.io/assets/assets/products/feeder.7ff330c9e368df01d256156b6fc797bb.png"
-    
+
     def refresh(self):
         def parse(response):
             if not response:
