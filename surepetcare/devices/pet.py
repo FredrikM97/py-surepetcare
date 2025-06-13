@@ -24,9 +24,13 @@ class Pet(SurepyDevice):
         self._photo = data.get("photo", {}).get("location", "")
 
     @property
+    def available(self) -> bool:
+        """Static untill figured out how to handle pet availability."""
+        return True
+
+    @property
     def photo(self) -> str:
         return self._photo
-
     def refresh(self) -> Command:
         """Refresh the pet's report data."""
         return self.fetch_report()
