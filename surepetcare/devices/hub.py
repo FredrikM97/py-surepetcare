@@ -9,6 +9,10 @@ class Hub(SurepyDevice):
     def product(self) -> ProductId:
         return ProductId.HUB
 
+    @property
+    def photo(self) -> str:
+        return "https://www.surepetcare.io/assets/assets/products/hub/hub.6475b3a385180ab8fb96731c4bfd1eda.png"
+    
     def refresh(self):
         def parse(response):
             if not response:

@@ -56,6 +56,12 @@ class SurepyDevice(ABC, BatteryMixin):
     @property
     def raw_data(self) -> Optional[dict]:
         return self._data
+    
+    @abstractmethod
+    @property
+    def photo(self) -> Optional[dict]:
+        """Return the url path for device photo."""
+        raise NotImplementedError("Subclasses must implement refresh method")
 
     def __str__(self):
         return f"<{self.__class__.__name__} id={self.id}>"

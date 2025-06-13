@@ -21,7 +21,12 @@ class Pet(SurepyDevice):
         self._tag = data["tag"]["id"]
         self.last_fetched_datetime: str | None = None
         self._report: ReportHouseholdResource | None = None
+        self._photo = data.get("photo", {}).get("location", "")
 
+    @property
+    def photo(self) -> str:
+        return self._photo
+    
     def refresh(self) -> Command:
         """Refresh the pet's report data."""
         return self.fetch_report()
