@@ -2,7 +2,6 @@ import asyncio
 import json
 import os
 from datetime import datetime
-from datetime import timedelta
 
 from dotenv import load_dotenv
 
@@ -33,8 +32,6 @@ async def async_main():
 
     # Fetch households (now returns list of Household objects)
     households = await client.api(Household.get_households())
-    # If client.api expects a command, and you need a household from get_households(),
-    # you can use the first household or prompt the user to select. Here, we use the first one.
     if not households:
         print("No households found.")
         await client.close()
@@ -46,7 +43,6 @@ async def async_main():
     all_pets_history = []
 
     today = datetime.now().date()
-    yesterday = today - timedelta(days=1)
 
     for household in households:
         # Fetch devices for this household
