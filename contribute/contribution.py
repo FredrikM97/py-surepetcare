@@ -7,6 +7,7 @@ from datetime import timedelta
 from dotenv import load_dotenv
 
 from surepetcare.client import SurePetcareClient
+from surepetcare.household import Household
 
 FILE_DIR = "contribute/files"
 
@@ -30,31 +31,56 @@ async def async_main():
     client = SurePetcareClient()
     await client.login(email=email, password=password)
 
-    # Fetch devices
-    household_ids = [h["id"] for h in await client.get_households()]
-    devices = await client.get_devices(household_ids)
-    devices_data = [d.raw_data for d in devices]
-    save_json(devices_data, f"{FILE_DIR}/contr_mock_devices.json")
-    # Fetch products
-    products_data = [await client.get_product(device.product_id, device.id) for device in devices]
-    save_json(products_data, f"{FILE_DIR}/contr_mock_products.json")
+    # Fetch households (now returns list of Household objects)
+    households = await client.api(Household.get_households())
+    # If client.api expects a command, and you need a household from get_households(),
+    # you can use the first household or prompt the user to select. Here, we use the first one.
+    if not households:
+        print("No households found.")
+        await client.close()
+        return
 
-    # Fetch pet household history
-    pets = await client.get_households_pets()
+    all_devices = []
+    all_products = []
+    all_pets = []
+    all_pets_history = []
+
     today = datetime.now().date()
     yesterday = today - timedelta(days=1)
-    pets_history = [pet.history() for pet in pets]
-    [
-        (await history.fetch(from_date=yesterday.isoformat(), to_date=today.isoformat()))
-        for history in pets_history
-    ]
-    save_json([history._data for history in pets_history], f"{FILE_DIR}/contr_mock_pets_history.json")
 
-    # Fetch pets
-    pets = []
-    for household_id in household_ids:
-        pets.extend(await client.get_pets(household_id))
-    pets_data = [p._data for p in pets]
+    for household in households:
+        # Fetch devices for this household
+        devices = await client.api(household.get_devices())
+        all_devices.extend(devices)
+
+        # Fetch products for this household's devices
+        products = [await client.api(Household.get_product(device.product_id, device.id)) for device in devices]
+        all_products.extend(products)
+
+        # Fetch pets for this household
+        pets = await client.api(household.get_pets())
+        all_pets.extend(pets)
+
+        # Fetch pet history for this household's pets
+    
+        [
+            (await client.api(pet.refresh()))
+            for pet in pets
+        ]
+        all_pets_history.extend(pets)
+
+    # Save all devices
+    devices_data = [d.raw_data for d in all_devices]
+    save_json(devices_data, f"{FILE_DIR}/contr_mock_devices.json")
+
+    # Save all products
+    save_json(all_products, f"{FILE_DIR}/contr_mock_products.json")
+
+    # Save all pets history
+    save_json([history._data for history in all_pets_history], f"{FILE_DIR}/contr_mock_pets_history.json")
+
+    # Save all pets
+    pets_data = [p._data for p in all_pets]
     save_json(pets_data, f"{FILE_DIR}/contr_mock_pets.json")
 
     print("\nPlease open a GitHub issue and attach the following files:")
