@@ -1,7 +1,7 @@
 import logging
 
 from surepetcare.command import Command
-from surepetcare.const import API_ENDPOINT_PRODUCTION
+from surepetcare.const import API_ENDPOINT_PRODUCTION, API_ENDPOINT_V2
 from surepetcare.const import API_ENDPOINT_V1
 from surepetcare.devices import load_device_class
 from surepetcare.devices.pet import Pet
@@ -94,7 +94,7 @@ class Household:
 
         return Command(
             method="GET",
-            endpoint=f"{API_ENDPOINT_PRODUCTION}/product/{product_id}/device/{device_id}/control",
+            endpoint=f"{API_ENDPOINT_V2}/product/{product_id}/device/{device_id}/control",
             callback=parse,
             reuse=False,
         )
