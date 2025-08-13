@@ -1,8 +1,9 @@
 import logging
 
 from surepetcare.command import Command
-from surepetcare.const import API_ENDPOINT_PRODUCTION, API_ENDPOINT_V2
+from surepetcare.const import API_ENDPOINT_PRODUCTION
 from surepetcare.const import API_ENDPOINT_V1
+from surepetcare.const import API_ENDPOINT_V2
 from surepetcare.devices import load_device_class
 from surepetcare.devices.pet import Pet
 from surepetcare.enums import ProductId
