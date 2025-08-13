@@ -53,6 +53,7 @@ class SurePetcareClient(AuthClient):
             raise NotImplementedError(f"HTTP method {command.method} not supported.")
         response = await coro
 
+        logger.debug(f"Response for {command.endpoint} refresh: {response}")
         if command.callback:
             return command.callback(response)
 
