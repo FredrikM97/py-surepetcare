@@ -3,7 +3,7 @@ from abc import abstractmethod
 from typing import Optional
 
 from surepetcare.command import Command
-from surepetcare.entities.battery import BatteryMixin
+from surepetcare.entities.battery_mixin import BatteryMixin
 from surepetcare.enums import ProductId
 
 

@@ -1,7 +1,6 @@
 import asyncio
 import json
 import os
-from datetime import datetime
 
 from dotenv import load_dotenv
 
@@ -42,15 +41,15 @@ async def async_main():
     all_pets = []
     all_pets_history = []
 
-    today = datetime.now().date()
-
     for household in households:
         # Fetch devices for this household
         devices = await client.api(household.get_devices())
         all_devices.extend(devices)
 
         # Fetch products for this household's devices
-        products = [await client.api(Household.get_product(device.product_id, device.id)) for device in devices]
+        products = [
+            await client.api(Household.get_product(device.product_id, device.id)) for device in devices
+        ]
         all_products.extend(products)
 
         # Fetch pets for this household
@@ -58,11 +57,8 @@ async def async_main():
         all_pets.extend(pets)
 
         # Fetch pet history for this household's pets
-    
-        [
-            (await client.api(pet.refresh()))
-            for pet in pets
-        ]
+
+        [(await client.api(pet.refresh())) for pet in pets]
         all_pets_history.extend(pets)
 
     # Save all devices

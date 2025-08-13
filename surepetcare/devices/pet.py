@@ -1,14 +1,144 @@
 from datetime import datetime
 from datetime import timedelta
+from typing import Optional
+
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
+from pydantic import model_validator
 
 from .device import SurepyDevice
 from surepetcare.command import Command
 from surepetcare.const import API_ENDPOINT_PRODUCTION
-from surepetcare.entities.pet import ReportHouseholdDrinkingResource
-from surepetcare.entities.pet import ReportHouseholdFeedingResource
-from surepetcare.entities.pet import ReportHouseholdMovementResource
-from surepetcare.entities.pet import ReportHouseholdResource
+from surepetcare.entities.error_mixin import ImprovedErrorMixin
 from surepetcare.enums import ProductId
+
+
+class ReportHouseholdMovementResource(ImprovedErrorMixin):
+    """Represents a movement resource in the household report."""
+
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
+    deleted_at: Optional[str] = None
+    device_id: Optional[int] = None
+    tag_id: Optional[int] = None
+    user_id: Optional[int] = None
+    from_: Optional[str] = Field(default=None, alias="from")
+    to: Optional[str] = None
+    duration: Optional[int] = None
+    entry_device_id: Optional[int] = None
+    entry_user_id: Optional[int] = None
+    exit_device_id: Optional[int] = None
+    exit_user_id: Optional[int] = None
+    active: Optional[bool] = None
+    exit_movement_id: Optional[int] = None
+    entry_movement_id: Optional[int] = None
+
+    @model_validator(mode="before")
+    def flatten_data(cls, values):
+        # If this resource is wrapped in a 'data' key, flatten it
+        if "datapoints" in values and isinstance(values["datapoints"], dict):
+            if "data" in values:
+                return values["data"]
+            return values
+        return values
+
+    model_config = ConfigDict(extra="ignore")
+
+
+class ReportWeightFrame(BaseModel):
+    """Represents a weight frame in the household report."""
+
+    index: Optional[int] = None
+    weight: Optional[float] = None
+    change: Optional[float] = None
+    food_type_id: Optional[int] = None
+    target_weight: Optional[float] = None
+
+
+class ReportHouseholdFeedingResource(ImprovedErrorMixin):
+    """Represents a feeding resource in the household report."""
+
+    from_: str = Field(alias="from")
+    to: str
+    duration: int
+    context: Optional[str] = None
+    bowl_count: Optional[int] = None
+    device_id: Optional[int] = None
+    weights: Optional[list[ReportWeightFrame]] = None
+    actual_weight: Optional[float] = None
+    entry_user_id: Optional[int] = None
+    exit_user_id: Optional[int] = None
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
+    deleted_at: Optional[str] = None
+    tag_id: Optional[int] = None
+    user_id: Optional[int] = None
+
+    @model_validator(mode="before")
+    def flatten_data(cls, values):
+        if "data" in values and isinstance(values["data"], dict):
+            values = values["data"]
+        # Convert context to str if it's int
+        if "context" in values and not isinstance(values["context"], str):
+            values["context"] = str(values["context"])
+        # Convert weights to list of dicts if present
+        if "weights" in values and isinstance(values["weights"], list):
+            weights = []
+            for w in values["weights"]:
+                if isinstance(w, dict):
+                    weights.append(w)
+                else:
+                    weights.append({"weight": w})
+            values["weights"] = weights
+        return values
+
+
+class ReportHouseholdDrinkingResource(ImprovedErrorMixin):
+    """Represents a drinking resource in the household report."""
+
+    from_: Optional[str] = Field(default=None, alias="from")
+    to: Optional[str] = None
+    duration: Optional[int] = None
+    context: Optional[str] = None
+    bowl_count: Optional[int] = None
+    device_id: Optional[int] = None
+    weights: Optional[list[float]] = None
+    actual_weight: Optional[float] = None
+    entry_user_id: Optional[int] = None
+    exit_user_id: Optional[int] = None
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
+    deleted_at: Optional[str] = None
+    tag_id: Optional[int] = None
+    user_id: Optional[int] = None
+
+    @model_validator(mode="before")
+    def flatten_data(cls, values):
+        if "datapoints" in values and isinstance(values["datapoints"], dict):
+            if "data" in values:
+                return values["data"]
+            return values
+        return values
+
+    model_config = ConfigDict(extra="ignore")
+
+
+class ReportHouseholdResource(ImprovedErrorMixin):
+    pet_id: Optional[int] = None
+    device_id: Optional[int] = None
+    movement: Optional[list[ReportHouseholdMovementResource]] = None
+    feeding: Optional[list[ReportHouseholdFeedingResource]] = None
+    drinking: Optional[list[ReportHouseholdDrinkingResource]] = None
+
+    @model_validator(mode="before")
+    def flatten_datapoints(cls, values):
+        for key in ["movement", "feeding", "drinking"]:
+            if key in values and isinstance(values[key], dict) and "datapoints" in values[key]:
+                values[key] = values[key]["datapoints"]
+        return values
+
+    model_config = ConfigDict(extra="ignore")
 
 
 class Pet(SurepyDevice):
