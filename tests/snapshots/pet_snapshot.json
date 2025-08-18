@@ -114,6 +114,11 @@
     }
   },
   "status": {
+    "report": {
+      "movement": [],
+      "feeding": [],
+      "drinking": []
+    },
     "id": 123455,
     "name": "Lilo",
     "gender": 0,
@@ -176,5 +181,5 @@
       }
     }
   },
-  "last_fetched_datetime": "2025-08-18T11:38:03.465743"
+  "last_fetched_datetime": "2025-08-18T11:49:17.173749"
 }
