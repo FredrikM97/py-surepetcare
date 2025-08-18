@@ -75,10 +75,6 @@ class FeederConnect(SurepyDevice):
         return command
 
     @property
-    def rssi(self) -> int:
+    def rssi(self) -> Optional[int]:
         """Return the RSSI value."""
-        return (
-            self.status.signal.device_rssi
-            if self.status.signal and self.status.signal.device_rssi is not None
-            else 0
-        )
+        return self.status.signal.device_rssi if self.status.signal else None

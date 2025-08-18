@@ -45,7 +45,7 @@ class DeviceInfo(BaseInfo):
     id: int
     name: str
     household_id: int
-    parent_device_id: int
+    parent_device_id: Optional[int] = None
     product_id: int
 
 

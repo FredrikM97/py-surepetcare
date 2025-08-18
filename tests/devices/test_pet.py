@@ -9,7 +9,7 @@ from tests.mock_helpers import recursive_dump
 
 
 @pytest.fixture
-def pet_data():
+def device_data():
     data = load_mock_data("tests/fixture/pet.json")
     return data["data"][0]
 
@@ -25,10 +25,33 @@ async def test_pet(pet_data):
 
 
 @pytest.mark.asyncio
-async def test_pet_snapshot(snapshot, pet_data):
+async def test_snapshot(snapshot, device_data):
     snapshot.snapshot_dir = "tests/snapshots"
-    feeder = Pet(pet_data)
-    client = patch_client_get(pet_data)
-    command = feeder.refresh()
+    device = Pet(device_data)
+    client = patch_client_get(device_data)
+    command = device.refresh()
     await client.api(command)
-    snapshot.assert_match(json.dumps(recursive_dump(feeder), indent=2), "pet_snapshot.json")
+    snapshot.assert_match(json.dumps(recursive_dump(device), indent=2), "pet_snapshot.json")
+
+
+@pytest.mark.asyncio
+async def test_refresh_updates_status_and_control(device_data):
+    device = Pet({"id": 123, "household_id": 1, "name": "Test Feeder"})
+    client = patch_client_get(device_data)
+    command = device.refresh()
+    await client.api(command)
+    device_data["status"]["report"]["pet_id"] = 5
+    client = patch_client_get(device_data)
+    command = device.refresh()
+    await client.api(command)
+    assert device.status.report.pet_id == 5
+
+
+@pytest.mark.asyncio
+async def test_refresh_none_response_keeps_state(device_data):
+    device = Pet(device_data)
+    old_pet_id = device.status.report.pet_id
+    client = patch_client_get(None)
+    command = device.refresh()
+    await client.api(command)
+    assert device.status.report.pet_id == old_pet_id

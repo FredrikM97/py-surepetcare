@@ -19,7 +19,7 @@ def test_surepydevice_notimplemented():
         def product(self):
             return ProductId.HUB
 
-    d = Dummy({"id": 1, "household_id": 2, "name": "n"})
+    d = Dummy({"id": 1, "household_id": 2, "name": "n", "product_id": 1, "parent_device_id": 3})
     with pytest.raises(NotImplementedError):
         d.refresh()
 
@@ -35,7 +35,7 @@ def test_surepydevice_product_notimplemented():
         pass
 
     with pytest.raises(TypeError):
-        Dummy({"id": 1, "household_id": 2, "name": "n"})
+        Dummy({"id": 1, "household_id": 2, "name": "n", "parent_device_id": 3, "product_id": 1})
 
 
 def test_surepydevice_str_and_parent():
@@ -44,8 +44,8 @@ def test_surepydevice_str_and_parent():
         def product(self):
             return ProductId.HUB
 
-    d = Dummy({"id": 1, "household_id": 2, "name": "n"})
+    d = Dummy({"id": 1, "household_id": 2, "name": "n", "product_id": 1, "parent_device_id": 5})
     assert str(d) == "<Dummy id=1>"
-    assert d.parent_device_id is None
-    d2 = Dummy({"id": 2, "household_id": 2, "name": "n", "parent_device_id": 3})
+    assert d.parent_device_id == 5
+    d2 = Dummy({"id": 2, "household_id": 2, "name": "n", "parent_device_id": 3, "product_id": 1})
     assert d2.parent_device_id == 3
