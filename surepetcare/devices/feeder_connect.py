@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 from typing import Optional
 
@@ -9,10 +10,13 @@ from .device import BaseStatus
 from .device import SurepyDevice
 from surepetcare.command import Command
 from surepetcare.const import API_ENDPOINT_PRODUCTION
+from surepetcare.devices.entities import DeviceInfo
 from surepetcare.devices.entities import FlattenWrappersMixin
 from surepetcare.enums import BowlPosition
 from surepetcare.enums import FoodType
 from surepetcare.enums import ProductId
+
+logger = logging.getLogger(__name__)
 
 
 class BowlState(FlattenWrappersMixin):
@@ -47,9 +51,13 @@ class Status(BaseStatus):
 
 class FeederConnect(SurepyDevice):
     def __init__(self, data: dict) -> None:
-        super().__init__(data)
-        self.status: Status = Status(**data)
-        self.control: Control = Control(**data)
+        try:
+            self.device_info = DeviceInfo(**data)
+            self.status: Status = Status(**data)
+            self.control: Control = Control(**data)
+        except Exception as e:
+            logger.warning("Error while storing data %s", data)
+            raise e
 
     @property
     def product(self) -> ProductId:

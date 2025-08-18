@@ -1,14 +1,19 @@
+import logging
 from datetime import datetime
 from datetime import timedelta
 from typing import Optional
 
 from pydantic import Field
+from pydantic import model_validator
 
 from .device import SurepyPet
 from surepetcare.command import Command
 from surepetcare.const import API_ENDPOINT_PRODUCTION
 from surepetcare.devices.entities import FlattenWrappersMixin
+from surepetcare.devices.entities import PetInfo
 from surepetcare.enums import ProductId
+
+logger = logging.getLogger(__name__)
 
 
 class ReportHouseholdMovementResource(FlattenWrappersMixin):
@@ -48,18 +53,10 @@ class ReportHouseholdFeedingResource(FlattenWrappersMixin):
     from_: str = Field(alias="from")
     to: str
     duration: int
-    context: Optional[str] = None
-    bowl_count: Optional[int] = None
-    device_id: Optional[int] = None
-    weights: Optional[list[ReportWeightFrame]] = None
-    actual_weight: Optional[float] = None
-    entry_user_id: Optional[int] = None
-    exit_user_id: Optional[int] = None
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
-    deleted_at: Optional[str] = None
-    tag_id: Optional[int] = None
-    user_id: Optional[int] = None
+    context: int
+    bowl_count: int
+    device_id: int
+    weights: list[ReportWeightFrame] = Field(default_factory=list)
 
 
 class ReportHouseholdDrinkingResource(FlattenWrappersMixin):
@@ -83,11 +80,17 @@ class ReportHouseholdDrinkingResource(FlattenWrappersMixin):
 
 
 class ReportHouseholdResource(FlattenWrappersMixin):
-    pet_id: Optional[int] = None
-    device_id: Optional[int] = None
     movement: list[ReportHouseholdMovementResource] = Field(default_factory=list)
     feeding: list[ReportHouseholdFeedingResource] = Field(default_factory=list)
     drinking: list[ReportHouseholdDrinkingResource] = Field(default_factory=list)
+
+    @model_validator(mode="before")
+    def flatmap_datapoints(cls, values):
+        for key in ("movement", "feeding", "drinking"):
+            section = values.get(key)
+            if isinstance(section, dict) and "datapoints" in section:
+                values[key] = section["datapoints"]
+        return values
 
 
 class Control(FlattenWrappersMixin):
@@ -100,9 +103,13 @@ class Status(FlattenWrappersMixin):
 
 class Pet(SurepyPet):
     def __init__(self, data: dict) -> None:
-        super().__init__(data)
-        self.control: Control = Control(**data)
-        self.status: Status = Status(**data)
+        try:
+            self.device_info = PetInfo(**data)
+            self.control: Control = Control(**data)
+            self.status: Status = Status(**data)
+        except Exception as e:
+            logger.warning("Error while storing data %s", data)
+            raise e
         self.last_fetched_datetime: str | None = None
 
     @property
@@ -124,7 +131,7 @@ class Pet(SurepyPet):
         def parse(response):
             if not response:
                 return self
-            self.status = Status(**{**self.status.model_dump(), **response})
+            self.status.report = ReportHouseholdResource(**response)
             self.control = Control(**{**self.control.model_dump(), **response})
             self.last_fetched_datetime = datetime.utcnow().isoformat()
             return self

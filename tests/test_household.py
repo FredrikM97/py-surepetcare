@@ -9,8 +9,8 @@ from tests.mock_helpers import patch_client_get
 # --- Helpers ---
 def make_pet_data():
     return [
-        {"id": 1, "household_id": 1, "name": "Pet1", "tag": {"id": 1, "tag": "123"}},
-        {"id": 2, "household_id": 1, "name": "Pet2", "tag": {"id": 2, "tag": "123"}},
+        {"id": 1, "household_id": 1, "name": "Pet1", "tag_id": 123, "tag": {"id": 1, "tag": "123"}},
+        {"id": 2, "household_id": 1, "name": "Pet2", "tag_id": 123, "tag": {"id": 2, "tag": "123"}},
     ]
 
 

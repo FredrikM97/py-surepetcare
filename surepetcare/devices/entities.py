@@ -8,7 +8,6 @@ from surepetcare.entities.error_mixin import ImprovedErrorMixin
 
 
 class FlattenWrappersMixin(ImprovedErrorMixin):
-    extras: Optional[dict] = None
     model_config = ConfigDict(extra="allow")
 
 
@@ -54,14 +53,13 @@ class PetInfo(BaseInfo):
     name: str
     household_id: int
     tag_id: int
-    photo: PetPhoto
-    tag: PetTag
+    photo: Optional[PetPhoto] = None
+    tag: Optional[PetTag] = None
 
 
 class BaseControl(FlattenWrappersMixin):
     @model_validator(mode="before")
-    def extract_status(cls, values):
-        # If 'status' is present, use it; else use values directly
+    def extract_control(cls, values):
         if "control" in values and isinstance(values["control"], dict):
             return values["control"]
         return values
@@ -80,7 +78,6 @@ class BaseStatus(FlattenWrappersMixin):
 
     @model_validator(mode="before")
     def extract_status(cls, values):
-        # If 'status' is present, use it; else use values directly
         if "status" in values and isinstance(values["status"], dict):
             return values["status"]
         return values

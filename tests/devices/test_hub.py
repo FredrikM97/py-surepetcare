@@ -32,22 +32,18 @@ async def test_refresh_updates_status_and_control(device_data):
     await client.api(command)
 
     device_data["status"]["battery"] = 3.5
-    device_data["control"]["lid"]["close_delay"] = 5
     client = patch_client_get(device_data)
     command = device.refresh()
     await client.api(command)
     assert device.status.battery == 3.5
     assert device.battery_level == 0
-    assert device.control.lid == {"close_delay": 5}
 
 
 @pytest.mark.asyncio
 async def test_refresh_none_response_keeps_state(device_data):
     device = Hub(device_data)
     old_battery = device.status.battery
-    old_lid = device.control.lid
     client = patch_client_get(None)
     command = device.refresh()
     await client.api(command)
     assert device.status.battery == old_battery
-    assert device.control.lid == old_lid

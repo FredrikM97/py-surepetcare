@@ -1,32 +1,33 @@
+import logging
+
 from .device import BaseControl
 from .device import BaseStatus
 from .device import SurepyDevice
 from surepetcare.command import Command
 from surepetcare.const import API_ENDPOINT_PRODUCTION
+from surepetcare.devices.entities import DeviceInfo
 from surepetcare.enums import ProductId
 
-
-class Control(BaseControl):
-    pass
-
-
-class Status(BaseStatus):
-    pass
+logger = logging.getLogger(__name__)
 
 
 class PoseidonConnect(SurepyDevice):
     def __init__(self, data: dict) -> None:
-        super().__init__(data)
-        self.status: Status = Status(**data)
-        self.control: Control = Control(**data)
+        try:
+            self.device_info = DeviceInfo(**data)
+            self.status: BaseStatus = BaseStatus(**data)
+            self.control: BaseControl = BaseControl(**data)
+        except Exception as e:
+            logger.warning("Error while storing data %s", data)
+            raise e
 
     def refresh(self):
         def parse(response):
             if not response:
                 return self
 
-            self.status = Status(**{**self.status.model_dump(), **response})
-            self.control = Control(**{**self.control.model_dump(), **response})
+            self.status = BaseStatus(**{**self.status.model_dump(), **response})
+            self.control = BaseControl(**{**self.control.model_dump(), **response})
             return self
 
         return Command(

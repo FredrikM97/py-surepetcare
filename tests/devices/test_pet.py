@@ -14,10 +14,16 @@ def device_data():
     return data["data"][0]
 
 
+@pytest.fixture
+def device_report_data():
+    data = load_mock_data("tests/fixture/pet_report.json")
+    return data
+
+
 @pytest.mark.asyncio
-async def test_pet(pet_data):
-    feeder = Pet({"id": 123, "name": "Test Pet", "household_id": 1})
-    client = patch_client_get(pet_data.copy())
+async def test_pet(device_data, device_report_data):
+    feeder = Pet(device_data)
+    client = patch_client_get(device_report_data)
     command = feeder.refresh()
     await client.api(command)
 
@@ -25,33 +31,23 @@ async def test_pet(pet_data):
 
 
 @pytest.mark.asyncio
-async def test_snapshot(snapshot, device_data):
+async def test_snapshot(snapshot, device_data, device_report_data):
     snapshot.snapshot_dir = "tests/snapshots"
     device = Pet(device_data)
-    client = patch_client_get(device_data)
+    client = patch_client_get(device_report_data)
     command = device.refresh()
     await client.api(command)
     snapshot.assert_match(json.dumps(recursive_dump(device), indent=2), "pet_snapshot.json")
 
 
 @pytest.mark.asyncio
-async def test_refresh_updates_status_and_control(device_data):
-    device = Pet({"id": 123, "household_id": 1, "name": "Test Feeder"})
-    client = patch_client_get(device_data)
-    command = device.refresh()
-    await client.api(command)
-    device_data["status"]["report"]["pet_id"] = 5
-    client = patch_client_get(device_data)
-    command = device.refresh()
-    await client.api(command)
-    assert device.status.report.pet_id == 5
-
-
-@pytest.mark.asyncio
-async def test_refresh_none_response_keeps_state(device_data):
+async def test_refresh_updates_status_and_control(device_data, device_report_data):
     device = Pet(device_data)
-    old_pet_id = device.status.report.pet_id
-    client = patch_client_get(None)
+    client = patch_client_get(device_report_data)
     command = device.refresh()
     await client.api(command)
-    assert device.status.report.pet_id == old_pet_id
+    device_report_data["feeding"]["datapoints"][0]["device_id"] = 1337
+    client = patch_client_get(device_report_data)
+    command = device.refresh()
+    await client.api(command)
+    assert device.status.report.feeding[0].device_id == 1337

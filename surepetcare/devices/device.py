@@ -1,3 +1,4 @@
+import logging
 from abc import ABC
 from abc import abstractmethod
 from typing import Optional
@@ -12,11 +13,12 @@ from surepetcare.devices.entities import PetInfo
 from surepetcare.entities.battery_mixin import BatteryMixin
 from surepetcare.enums import ProductId
 
+logger = logging.getLogger(__name__)
+
 
 class SurepyBase(ABC):
-    def __init__(self):
-        self.status: BaseStatus = Field(default=BaseStatus)
-        self.control: BaseControl = Field(default=BaseControl)
+    status: BaseStatus = Field(default=BaseStatus)
+    control: BaseControl = Field(default=BaseControl)
 
     @property
     @abstractmethod
@@ -40,8 +42,7 @@ class SurepyBase(ABC):
 
 
 class SurepyDevice(SurepyBase, BatteryMixin):
-    def __init__(self, data: dict) -> None:
-        self.device_info = DeviceInfo(**data)
+    device_info = Field(default=DeviceInfo)
 
     @property
     def parent_device_id(self) -> Optional[int]:
@@ -70,8 +71,7 @@ class SurepyDevice(SurepyBase, BatteryMixin):
 
 
 class SurepyPet(SurepyBase):
-    def __init__(self, data: dict) -> None:
-        self.device_info = PetInfo(**data)
+    device_info = Field(default=PetInfo)
 
     @property
     def available(self) -> Optional[bool]:
