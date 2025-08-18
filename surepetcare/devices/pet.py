@@ -2,19 +2,16 @@ from datetime import datetime
 from datetime import timedelta
 from typing import Optional
 
-from pydantic import BaseModel
-from pydantic import ConfigDict
 from pydantic import Field
-from pydantic import model_validator
 
-from .device import SurepyDevice
+from .device import SurepyPet
 from surepetcare.command import Command
 from surepetcare.const import API_ENDPOINT_PRODUCTION
-from surepetcare.entities.error_mixin import ImprovedErrorMixin
+from surepetcare.devices.entities import FlattenWrappersMixin
 from surepetcare.enums import ProductId
 
 
-class ReportHouseholdMovementResource(ImprovedErrorMixin):
+class ReportHouseholdMovementResource(FlattenWrappersMixin):
     """Represents a movement resource in the household report."""
 
     created_at: Optional[str] = None
@@ -34,19 +31,8 @@ class ReportHouseholdMovementResource(ImprovedErrorMixin):
     exit_movement_id: Optional[int] = None
     entry_movement_id: Optional[int] = None
 
-    @model_validator(mode="before")
-    def flatten_data(cls, values):
-        # If this resource is wrapped in a 'data' key, flatten it
-        if "datapoints" in values and isinstance(values["datapoints"], dict):
-            if "data" in values:
-                return values["data"]
-            return values
-        return values
 
-    model_config = ConfigDict(extra="ignore")
-
-
-class ReportWeightFrame(BaseModel):
+class ReportWeightFrame(FlattenWrappersMixin):
     """Represents a weight frame in the household report."""
 
     index: Optional[int] = None
@@ -56,7 +42,7 @@ class ReportWeightFrame(BaseModel):
     target_weight: Optional[float] = None
 
 
-class ReportHouseholdFeedingResource(ImprovedErrorMixin):
+class ReportHouseholdFeedingResource(FlattenWrappersMixin):
     """Represents a feeding resource in the household report."""
 
     from_: str = Field(alias="from")
@@ -75,26 +61,8 @@ class ReportHouseholdFeedingResource(ImprovedErrorMixin):
     tag_id: Optional[int] = None
     user_id: Optional[int] = None
 
-    @model_validator(mode="before")
-    def flatten_data(cls, values):
-        if "data" in values and isinstance(values["data"], dict):
-            values = values["data"]
-        # Convert context to str if it's int
-        if "context" in values and not isinstance(values["context"], str):
-            values["context"] = str(values["context"])
-        # Convert weights to list of dicts if present
-        if "weights" in values and isinstance(values["weights"], list):
-            weights = []
-            for w in values["weights"]:
-                if isinstance(w, dict):
-                    weights.append(w)
-                else:
-                    weights.append({"weight": w})
-            values["weights"] = weights
-        return values
 
-
-class ReportHouseholdDrinkingResource(ImprovedErrorMixin):
+class ReportHouseholdDrinkingResource(FlattenWrappersMixin):
     """Represents a drinking resource in the household report."""
 
     from_: Optional[str] = Field(default=None, alias="from")
@@ -113,45 +81,29 @@ class ReportHouseholdDrinkingResource(ImprovedErrorMixin):
     tag_id: Optional[int] = None
     user_id: Optional[int] = None
 
-    @model_validator(mode="before")
-    def flatten_data(cls, values):
-        if "datapoints" in values and isinstance(values["datapoints"], dict):
-            if "data" in values:
-                return values["data"]
-            return values
-        return values
 
-    model_config = ConfigDict(extra="ignore")
-
-
-class ReportHouseholdResource(ImprovedErrorMixin):
+class ReportHouseholdResource(FlattenWrappersMixin):
     pet_id: Optional[int] = None
     device_id: Optional[int] = None
-    movement: Optional[list[ReportHouseholdMovementResource]] = None
-    feeding: Optional[list[ReportHouseholdFeedingResource]] = None
-    drinking: Optional[list[ReportHouseholdDrinkingResource]] = None
-
-    @model_validator(mode="before")
-    def flatten_datapoints(cls, values):
-        for key in ["movement", "feeding", "drinking"]:
-            if key in values and isinstance(values[key], dict) and "datapoints" in values[key]:
-                values[key] = values[key]["datapoints"]
-        return values
-
-    model_config = ConfigDict(extra="ignore")
+    movement: list[ReportHouseholdMovementResource] = Field(default_factory=list)
+    feeding: list[ReportHouseholdFeedingResource] = Field(default_factory=list)
+    drinking: list[ReportHouseholdDrinkingResource] = Field(default_factory=list)
 
 
-class Pet(SurepyDevice):
+class Control(FlattenWrappersMixin):
+    pass
+
+
+class Status(FlattenWrappersMixin):
+    report: ReportHouseholdResource = Field(default_factory=ReportHouseholdResource)
+
+
+class Pet(SurepyPet):
     def __init__(self, data: dict) -> None:
         super().__init__(data)
-        self._data = data
-        self._id = data["id"]
-        self._household_id = data["household_id"]
-        self._name = data["name"]
-        self._tag = data["tag"]["id"]
+        self.control: Control = Control(**data)
+        self.status: Status = Status(**data)
         self.last_fetched_datetime: str | None = None
-        self._report: ReportHouseholdResource | None = None
-        self._photo = data.get("photo", {}).get("location", "")
 
     @property
     def available(self) -> bool:
@@ -160,7 +112,7 @@ class Pet(SurepyDevice):
 
     @property
     def photo(self) -> str:
-        return self._photo
+        return self.device_info.photo.location
 
     def refresh(self) -> Command:
         """Refresh the pet's report data."""
@@ -172,7 +124,8 @@ class Pet(SurepyDevice):
         def parse(response):
             if not response:
                 return self
-            self._report = ReportHouseholdResource.model_validate(response["data"])
+            self.status = Status(**{**self.status.model_dump(), **response})
+            self.control = Control(**{**self.control.model_dump(), **response})
             self.last_fetched_datetime = datetime.utcnow().isoformat()
             return self
 
@@ -203,42 +156,22 @@ class Pet(SurepyDevice):
             callback=parse,
         )
 
-    def get_pet_dashboard(self, from_date: str, pet_ids: list[int]):
-        def parse(response):
-            if not response:
-                return []
-            return response["data"]
-
-        return Command(
-            method="GET",
-            endpoint=f"{API_ENDPOINT_PRODUCTION}/dashboard/pet",
-            params={"From": from_date, "PetId": pet_ids},
-            callback=parse,
-            reuse=False,
-        )
-
     @property
     def product(self) -> ProductId:
         return ProductId.PET
 
     @property
     def tag(self) -> int:
-        return self._tag
+        return self.device_info.tag.id
 
     @property
     def feeding(self) -> list[ReportHouseholdFeedingResource]:
-        if self._report is None or self._report.feeding is None:
-            return []
-        return self._report.feeding
+        return self.status.report.feeding
 
     @property
     def movement(self) -> list[ReportHouseholdMovementResource]:
-        if self._report is None or self._report.movement is None:
-            return []
-        return self._report.movement
+        return self.status.report.movement
 
     @property
     def drinking(self) -> list[ReportHouseholdDrinkingResource]:
-        if self._report is None or self._report.drinking is None:
-            return []
-        return self._report.drinking
+        return self.status.report.drinking

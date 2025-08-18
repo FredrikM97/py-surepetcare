@@ -1,18 +1,16 @@
 import pytest
 
 from surepetcare.client import SurePetcareClient
-from surepetcare.const import API_ENDPOINT_V1
-from surepetcare.const import API_ENDPOINT_V2
 from surepetcare.enums import ProductId
 from surepetcare.household import Household
-from tests.mock_helpers import MockSurePetcareClient
+from tests.mock_helpers import patch_client_get
 
 
 # --- Helpers ---
 def make_pet_data():
     return [
-        {"id": 1, "household_id": 1, "name": "Pet1", "tag": {"id": "A1"}},
-        {"id": 2, "household_id": 1, "name": "Pet2", "tag": {"id": "B2"}},
+        {"id": 1, "household_id": 1, "name": "Pet1", "tag": {"id": 1, "tag": "123"}},
+        {"id": 2, "household_id": 1, "name": "Pet2", "tag": {"id": 2, "tag": "123"}},
     ]
 
 
@@ -102,8 +100,7 @@ async def test_get_households(monkeypatch):
 @pytest.mark.asyncio
 async def test_get_household():
     """Test fetching a single household."""
-    endpoint = f"{API_ENDPOINT_V1}/household/1"
-    client = MockSurePetcareClient({endpoint: {"data": {"id": 1, "name": "TestHouse"}}})
+    client = patch_client_get({"data": {"id": 1, "name": "TestHouse"}})
     command = Household.get_household(1)
     result = await client.api(command)
     assert (isinstance(result, dict) and result.get("id") == 1) or (hasattr(result, "id") and result.id == 1)
@@ -113,7 +110,8 @@ async def test_get_household():
 async def test_get_pets():
     """Test fetching pets for a household."""
     mock_data = {"data": make_pet_data()}
-    client = MockSurePetcareClient({f"{API_ENDPOINT_V1}/pet": mock_data})
+
+    client = patch_client_get(mock_data)
     household = Household({"id": 1})
     command = household.get_pets()
     pets = await client.api(command)
@@ -126,7 +124,7 @@ async def test_get_pets():
 async def test_get_devices():
     """Test fetching devices for a household."""
     mock_data = {"data": make_device_data()}
-    client = MockSurePetcareClient({f"{API_ENDPOINT_V1}/device": mock_data})
+    client = patch_client_get(mock_data)
     household = Household({"id": 1})
     command = household.get_devices()
     devices = await client.api(command)
@@ -140,8 +138,7 @@ async def test_get_devices():
 async def test_get_product():
     """Test fetching a product for a device."""
     mock_data = {"data": {"foo": "bar"}}
-    endpoint = f"{API_ENDPOINT_V2}/product/1/device/2/control"
-    client = MockSurePetcareClient({endpoint: mock_data})
+    client = patch_client_get(mock_data)
     command = Household.get_product(1, 2)
     result = await client.api(command)
     assert result == {"foo": "bar"}

@@ -1,7 +1,5 @@
 import json
 import os
-from typing import Any
-from typing import Optional
 
 from surepetcare.client import SurePetcareClient
 
@@ -14,141 +12,27 @@ def load_mock_data(filepath):
         return json.load(f)
 
 
-class MockSurePetcareClient(SurePetcareClient):
-    def __init__(self, mock_get_data=None):
-        super().__init__()
-        self.mock_get_data = mock_get_data or {}
+def recursive_dump(obj):
+    if hasattr(obj, "model_dump"):
+        return obj.model_dump(exclude_none=True)
+    elif isinstance(obj, dict):
+        return {k: recursive_dump(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [recursive_dump(v) for v in obj]
+    elif hasattr(obj, "__dict__"):
+        return {k: recursive_dump(v) for k, v in obj.__dict__.items()}
+    else:
+        return obj
 
-    async def get(self, endpoint: str, params: Optional[dict[Any, Any]] = None, headers=None):
-        # If the value is a string, treat it as a filename and load JSON
-        if isinstance(self.mock_get_data, str):
-            return load_mock_data(self.mock_get_data)
-        # Always return a dict with 'status' for compatibility with real client
-        data = self.mock_get_data.get(endpoint, None)
-        if data is None:
-            # Only use fallback if no mock is provided
-            if "/product/" in endpoint:
-                data = {"data": {"foo": "bar"}}
-            elif endpoint.endswith("/pet") or endpoint.endswith("/dashboard/pet"):
-                data = {"data": []}
-            elif endpoint.endswith("/device"):
-                data = {
-                    "data": [
-                        {
-                            "id": 10,
-                            "household_id": 1,
-                            "name": "Hub1",
-                            "product_id": 1,
-                            "status": {"online": True},
-                            "control": {},
-                        },
-                        {
-                            "id": 11,
-                            "household_id": 1,
-                            "name": "Feeder1",
-                            "product_id": 4,
-                            "status": {"online": True},
-                            "control": {
-                                "lid": {"close_delay": 5},
-                                "bowls": {
-                                    "settings": [
-                                        {
-                                            "food_type": 1,
-                                            "substance_type": 0,
-                                            "current_weight": 0.0,
-                                            "last_filled_at": "",
-                                            "last_zeroed_at": "",
-                                            "fill_percent": 0,
-                                        },
-                                        {
-                                            "food_type": 2,
-                                            "substance_type": 0,
-                                            "current_weight": 0.0,
-                                            "last_filled_at": "",
-                                            "last_zeroed_at": "",
-                                            "fill_percent": 0,
-                                        },
-                                    ]
-                                },
-                            },
-                        },
-                    ]
-                }
-            elif "/device/" in endpoint or endpoint.endswith("/aggregate"):
-                data = {
-                    "data": {
-                        "id": 1,
-                        "household_id": 1,
-                        "name": "Feeder1",
-                        "product_id": 4,
-                        "status": {
-                            "online": True,
-                            "bowl_status": [
-                                {
-                                    "index": 0,
-                                    "food_type": 1,
-                                    "substance_type": 0,
-                                    "current_weight": 0.0,
-                                    "last_filled_at": "",
-                                    "last_zeroed_at": "",
-                                    "fill_percent": 0,
-                                },
-                                {
-                                    "index": 1,
-                                    "food_type": 1,
-                                    "substance_type": 0,
-                                    "current_weight": 0.0,
-                                    "last_filled_at": "",
-                                    "last_zeroed_at": "",
-                                    "fill_percent": 0,
-                                },
-                            ],
-                        },
-                        "control": {
-                            "lid": {"close_delay": 5},
-                            "bowls": {
-                                "settings": [
-                                    {
-                                        "food_type": 1,
-                                        "substance_type": 0,
-                                        "current_weight": 0.0,
-                                        "last_filled_at": "",
-                                        "last_zeroed_at": "",
-                                        "fill_percent": 0,
-                                    },
-                                    {
-                                        "food_type": 1,
-                                        "substance_type": 0,
-                                        "current_weight": 0.0,
-                                        "last_filled_at": "",
-                                        "last_zeroed_at": "",
-                                        "fill_percent": 0,
-                                    },
-                                ]
-                            },
-                        },
-                    }
-                }
-            elif "/household/" in endpoint:
-                data = {"data": {"id": 1, "name": "TestHouse"}}
-            else:
-                data = {"data": {}}
-        if "status" not in data:
-            data["status"] = 200
-        return data
 
-    async def post(
-        self, endpoint: str, data: dict[Any, Any] | None = None, headers=None, reuse=True
-    ) -> dict[Any, Any]:
-        # Return mock data if available, else default
-        mock = self.mock_get_data.get(endpoint) if isinstance(self.mock_get_data, dict) else None
-        if mock and isinstance(mock, dict) and "data" in mock:
-            # Simulate a real response: merge data and status
-            result = dict(mock["data"])
-            result["status"] = 200
-            return result
-        # Default fallback
-        return {"foo": "bar", "status": 200}
+def patch_client_get(return_value):
+    client = SurePetcareClient()
+
+    async def fake_get(*args, **kwargs):
+        return return_value
+
+    client.get = fake_get
+    return client
 
 
 class DummyUrl:

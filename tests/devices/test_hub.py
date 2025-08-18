@@ -1,28 +1,33 @@
-# Integration tests for Hub device using mock data.
+import json
+
+import pytest
+
 from surepetcare.devices.hub import Hub
-from surepetcare.enums import ProductId
 from tests.mock_helpers import load_mock_data
+from tests.mock_helpers import patch_client_get
+from tests.mock_helpers import recursive_dump
 
 
-def make_hub():
-    return Hub(load_mock_data("tests/mock_data/mock_device_hub.json")["data"][0])
+@pytest.fixture
+def hub_data():
+    data = load_mock_data("tests/fixture/hub.json")
+    return data["data"][0]
 
 
-def test_hub_integration():
-    """Test Hub device properties from mock data."""
-    hub = make_hub()
-    assert hub.household_id == 7777
-    assert hub.id == 295972
-    assert hub.name == "Hem-hub"
-    assert hub.product_id == 1
-    assert hub.product_id == ProductId.HUB
-    assert hub.available is True
-    assert hub.battery_level is None
+@pytest.mark.asyncio
+async def test_hub(hub_data):
+    feeder = Hub({"id": 123, "household_id": 1, "name": "Test Hub"})
+    client = patch_client_get(hub_data)
+    command = feeder.refresh()
+    await client.api(command)
+    # Todo add data
 
 
-def test_hub_missing_fields():
-    """Test Hub with missing status and battery fields."""
-    data = {"id": 1, "household_id": 2, "name": "HubNoStatus"}
-    hub = Hub(data)
-    assert hub.available is None
-    assert hub.battery_level is None
+@pytest.mark.asyncio
+async def test_hub_snapshot(snapshot, hub_data):
+    snapshot.snapshot_dir = "tests/snapshots"
+    feeder = Hub(hub_data)
+    client = patch_client_get(hub_data)
+    command = feeder.refresh()
+    await client.api(command)
+    snapshot.assert_match(json.dumps(recursive_dump(feeder), indent=2), "hub_snapshot.json")

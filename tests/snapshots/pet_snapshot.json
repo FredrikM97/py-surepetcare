@@ -1,0 +1,180 @@
+{
+  "device_info": {
+    "id": 123455,
+    "name": "Lilo",
+    "household_id": 7777,
+    "tag_id": 55555,
+    "photo": {
+      "id": 765433,
+      "title": "1696346417336-cropped.jpg?1696346420372",
+      "location": "https://userimages.production.surehub.io/thm/3139194472/mkihFWCERyEfJ0v9PA1IPqhxfWtM7kr9ug8JTN4.jpg",
+      "hash": "mkihFWCERyEfJ0v9PA1IPqhxfWtM7kr9ug8JTN4",
+      "uploading_user_id": 1425437568,
+      "version": 0,
+      "created_at": "2023-10-03T15:20:26+00:00",
+      "updated_at": "2023-10-03T15:20:26+00:00"
+    },
+    "tag": {
+      "id": 60972,
+      "tag": "752.098100829842",
+      "supported_product_ids": [
+        3,
+        4,
+        6,
+        8,
+        10,
+        32
+      ],
+      "version": 1,
+      "created_at": "2019-09-04T19:47:39+00:00",
+      "updated_at": "2020-03-11T14:21:07+00:00"
+    },
+    "gender": 0,
+    "date_of_birth": "2015-02-26T00:00:00+00:00",
+    "weight": "4900",
+    "comments": "",
+    "breed_id": 368,
+    "food_type_id": 2,
+    "photo_id": 623736,
+    "species_id": 1,
+    "spayed": 1,
+    "version": 4,
+    "created_at": "2023-10-01T14:32:41+00:00",
+    "updated_at": "2023-12-01T09:13:05+00:00",
+    "conditions": [
+      {
+        "id": 25,
+        "version": 0,
+        "created_at": "2023-10-01T14:39:42+00:00",
+        "updated_at": "2023-10-01T14:39:42+00:00"
+      }
+    ]
+  },
+  "control": {
+    "id": 123455,
+    "name": "Lilo",
+    "gender": 0,
+    "date_of_birth": "2015-02-26T00:00:00+00:00",
+    "weight": "4900",
+    "comments": "",
+    "breed_id": 368,
+    "food_type_id": 2,
+    "household_id": 7777,
+    "photo_id": 623736,
+    "species_id": 1,
+    "spayed": 1,
+    "tag_id": 55555,
+    "version": 4,
+    "created_at": "2023-10-01T14:32:41+00:00",
+    "updated_at": "2023-12-01T09:13:05+00:00",
+    "photo": {
+      "id": 765433,
+      "title": "1696346417336-cropped.jpg?1696346420372",
+      "location": "https://userimages.production.surehub.io/thm/3139194472/mkihFWCERyEfJ0v9PA1IPqhxfWtM7kr9ug8JTN4.jpg",
+      "hash": "mkihFWCERyEfJ0v9PA1IPqhxfWtM7kr9ug8JTN4",
+      "uploading_user_id": 1425437568,
+      "version": 0,
+      "created_at": "2023-10-03T15:20:26+00:00",
+      "updated_at": "2023-10-03T15:20:26+00:00"
+    },
+    "conditions": [
+      {
+        "id": 25,
+        "version": 0,
+        "created_at": "2023-10-01T14:39:42+00:00",
+        "updated_at": "2023-10-01T14:39:42+00:00"
+      }
+    ],
+    "tag": {
+      "id": 60972,
+      "tag": "752.098100829842",
+      "supported_product_ids": [
+        3,
+        4,
+        6,
+        8,
+        10,
+        32
+      ],
+      "version": 1,
+      "created_at": "2019-09-04T19:47:39+00:00",
+      "updated_at": "2020-03-11T14:21:07+00:00"
+    },
+    "status": {
+      "feeding": {
+        "id": 720390815,
+        "tag_id": 60972,
+        "device_id": 271836,
+        "change": [
+          -2.24,
+          0
+        ],
+        "at": "2024-03-13T17:47:17+00:00"
+      }
+    }
+  },
+  "status": {
+    "id": 123455,
+    "name": "Lilo",
+    "gender": 0,
+    "date_of_birth": "2015-02-26T00:00:00+00:00",
+    "weight": "4900",
+    "comments": "",
+    "breed_id": 368,
+    "food_type_id": 2,
+    "household_id": 7777,
+    "photo_id": 623736,
+    "species_id": 1,
+    "spayed": 1,
+    "tag_id": 55555,
+    "version": 4,
+    "created_at": "2023-10-01T14:32:41+00:00",
+    "updated_at": "2023-12-01T09:13:05+00:00",
+    "photo": {
+      "id": 765433,
+      "title": "1696346417336-cropped.jpg?1696346420372",
+      "location": "https://userimages.production.surehub.io/thm/3139194472/mkihFWCERyEfJ0v9PA1IPqhxfWtM7kr9ug8JTN4.jpg",
+      "hash": "mkihFWCERyEfJ0v9PA1IPqhxfWtM7kr9ug8JTN4",
+      "uploading_user_id": 1425437568,
+      "version": 0,
+      "created_at": "2023-10-03T15:20:26+00:00",
+      "updated_at": "2023-10-03T15:20:26+00:00"
+    },
+    "conditions": [
+      {
+        "id": 25,
+        "version": 0,
+        "created_at": "2023-10-01T14:39:42+00:00",
+        "updated_at": "2023-10-01T14:39:42+00:00"
+      }
+    ],
+    "tag": {
+      "id": 60972,
+      "tag": "752.098100829842",
+      "supported_product_ids": [
+        3,
+        4,
+        6,
+        8,
+        10,
+        32
+      ],
+      "version": 1,
+      "created_at": "2019-09-04T19:47:39+00:00",
+      "updated_at": "2020-03-11T14:21:07+00:00"
+    },
+    "status": {
+      "feeding": {
+        "id": 720390815,
+        "tag_id": 60972,
+        "device_id": 271836,
+        "change": [
+          -2.24,
+          0
+        ],
+        "at": "2024-03-13T17:47:17+00:00"
+      }
+    }
+  },
+  "last_fetched_datetime": "2025-08-18T11:38:03.465743"
+}

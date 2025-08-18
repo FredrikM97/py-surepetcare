@@ -2,21 +2,21 @@ from abc import ABC
 from abc import abstractmethod
 from typing import Optional
 
+from pydantic import Field
+
 from surepetcare.command import Command
+from surepetcare.devices.entities import BaseControl
+from surepetcare.devices.entities import BaseStatus
+from surepetcare.devices.entities import DeviceInfo
+from surepetcare.devices.entities import PetInfo
 from surepetcare.entities.battery_mixin import BatteryMixin
 from surepetcare.enums import ProductId
 
 
-class SurepyDevice(ABC, BatteryMixin):
-    def __init__(self, data: dict):
-        self._data = data
-
-        # Initialize device properties
-        self._id = str(data["id"])
-        self._household_id = str(data["household_id"])
-        self._name = data["name"]
-        self._available = data.get("status", {}).get("online", None)
-        self._parent_device_id = data.get("parent_device_id", None)
+class SurepyBase(ABC):
+    def __init__(self):
+        self.status: BaseStatus = Field(default=BaseStatus)
+        self.control: BaseControl = Field(default=BaseControl)
 
     @property
     @abstractmethod
@@ -31,40 +31,65 @@ class SurepyDevice(ABC, BatteryMixin):
     def product_name(self) -> str:
         return self.product.name
 
-    @property
-    def id(self) -> int:
-        return int(self._id)
-
-    @property
-    def parent_device_id(self) -> Optional[int]:
-        if self._parent_device_id:
-            return int(self._parent_device_id)
-        return None
-
-    @property
-    def household_id(self) -> int:
-        return int(self._household_id)
-
-    @property
-    def name(self) -> str:
-        return self._name
-
-    @property
-    def available(self) -> bool:
-        return self._available
-
-    @property
-    def raw_data(self) -> Optional[dict]:
-        return self._data
-
-    @property
-    def photo(self) -> str:
-        """Return the url path for device photo."""
-        return ""
-
     def __str__(self):
         return f"<{self.__class__.__name__} id={self.id}>"
 
     def refresh(self) -> Command:
         """Refresh the device data."""
         raise NotImplementedError("Subclasses must implement refresh method")
+
+
+class SurepyDevice(SurepyBase, BatteryMixin):
+    def __init__(self, data: dict) -> None:
+        self.device_info = DeviceInfo(**data)
+
+    @property
+    def parent_device_id(self) -> Optional[int]:
+        return self.device_info.parent_device_id
+
+    @property
+    def available(self) -> Optional[bool]:
+        return self.status.online if self.status is not None else None
+
+    @property
+    def photo(self) -> str:
+        """Return the url path for device photo."""
+        return ""
+
+    @property
+    def id(self) -> Optional[int]:
+        return self.device_info.id
+
+    @property
+    def household_id(self) -> int:
+        return self.device_info.household_id
+
+    @property
+    def name(self) -> str:
+        return self.device_info.name
+
+
+class SurepyPet(SurepyBase):
+    def __init__(self, data: dict) -> None:
+        self.device_info = PetInfo(**data)
+
+    @property
+    def available(self) -> Optional[bool]:
+        return self.status.online
+
+    @property
+    def photo(self) -> str:
+        """Return the url path for device photo."""
+        return ""
+
+    @property
+    def id(self) -> Optional[int]:
+        return self.device_info.id
+
+    @property
+    def household_id(self) -> int:
+        return self.device_info.household_id
+
+    @property
+    def name(self) -> str:
+        return self.device_info.name
