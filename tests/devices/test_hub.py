@@ -15,10 +15,10 @@ def device_data():
 
 
 @pytest.mark.asyncio
-async def test_snapshot(snapshot, hub_data):
+async def test_snapshot(snapshot, device_data):
     snapshot.snapshot_dir = "tests/snapshots"
-    device = Hub(hub_data)
-    client = patch_client_get(hub_data)
+    device = Hub(device_data)
+    client = patch_client_get(device_data)
     command = device.refresh()
     await client.api(command)
     snapshot.assert_match(json.dumps(recursive_dump(device), indent=2), "hub_snapshot.json")
