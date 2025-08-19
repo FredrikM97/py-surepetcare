@@ -36,8 +36,8 @@ class Hub(SurepyDevice):
             if not response:
                 return self
 
-            self.status = BaseStatus(**{**self.status.model_dump(), **response})
-            self.control = BaseControl(**{**self.control.model_dump(), **response})
+            self.status = BaseStatus(**{**self.status.model_dump(), **response["data"]})
+            self.control = BaseControl(**{**self.control.model_dump(), **response["data"]})
             return self
 
         return Command(

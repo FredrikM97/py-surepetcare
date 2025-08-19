@@ -71,12 +71,8 @@ class FeederConnect(SurepyDevice):
         def parse(response):
             if not response:
                 return self
-            # Fetch the device data from the response
-            device_data = next(
-                (item for item in response["data"] if item.get("id") == self.device_info.id), None
-            )
-            self.status = Status(**{**self.status.model_dump(), **device_data})
-            self.control = Control(**{**self.control.model_dump(), **device_data})
+            self.status = Status(**{**self.status.model_dump(), **response["data"]})
+            self.control = Control(**{**self.control.model_dump(), **response["data"]})
             return self
 
         command = Command(

@@ -86,11 +86,15 @@ class ReportHouseholdResource(FlattenWrappersMixin):
 
     @model_validator(mode="before")
     def flatmap_datapoints(cls, values):
+        if not values:
+            return values
+        new_values = {}
         for key in ("movement", "feeding", "drinking"):
             section = values.get(key)
             if isinstance(section, dict) and "datapoints" in section:
-                values[key] = section["datapoints"]
-        return values
+                new_values[key] = section["datapoints"]
+
+        return new_values
 
 
 class Control(FlattenWrappersMixin):
@@ -129,10 +133,10 @@ class Pet(SurepyPet):
         self, from_date: str | None = None, to_date: str | None = None, event_type: int | None = None
     ) -> Command:
         def parse(response):
-            if not response:
+            if all(not v["datapoints"] for v in response["data"].values()):
                 return self
-            self.status.report = ReportHouseholdResource(**response)
-            self.control = Control(**{**self.control.model_dump(), **response})
+            self.status.report = ReportHouseholdResource(**response["data"])
+            self.control = Control(**{**self.control.model_dump(), **response["data"]})
             self.last_fetched_datetime = datetime.utcnow().isoformat()
             return self
 

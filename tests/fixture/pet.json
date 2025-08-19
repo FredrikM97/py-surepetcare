@@ -129,6 +129,7 @@
     }
   },
   "https://app-api.production.surehub.io/api/report/household/7777/pet/123455/aggregate": {
+    "data":{
     "movement": {
       "datapoints": []
     },
@@ -359,4 +360,4 @@
     "consumption_habit": [],
     "consumption_alert": []
   }
-}
+}}

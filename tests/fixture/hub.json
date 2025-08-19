@@ -10,6 +10,7 @@
         ]
     },
     "https://app-api.production.surehub.io/api/device/295972": {
+        "data":{
         "id": 295972,
         "product_id": 1,
         "household_id": 222527,
@@ -37,4 +38,5 @@
         },
         "tags": []
     }
+}
 }
