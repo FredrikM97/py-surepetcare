@@ -26,5 +26,8 @@ async def test_snapshot(snapshot, household_file, device_file):
     client.reset()
     pet = (await client.api(household.get_pets()))[0]
     await client.api(pet.refresh())
-    result = json.dumps(recursive_dump(pet), indent=2)
+    data = recursive_dump(pet)
+
+    data["last_fetched_datetime"] = "<ANY>"
+    result = json.dumps(data, indent=2)
     assert result == snapshot
