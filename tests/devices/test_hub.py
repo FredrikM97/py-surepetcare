@@ -26,4 +26,5 @@ async def test_snapshot(snapshot, household_file, device_file):
     client.reset()
     device = (await client.api(household.get_devices()))[0]
     await client.api(device.refresh())
-    snapshot.assert_match(json.dumps(recursive_dump(device), indent=2), "hub_snapshot.json")
+    result = json.dumps(recursive_dump(device), indent=2)
+    assert result == snapshot

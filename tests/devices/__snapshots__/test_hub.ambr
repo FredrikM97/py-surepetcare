@@ -1,0 +1,28 @@
+# serializer version: 1
+# name: test_snapshot
+  '''
+  {
+    "device_info": {
+      "id": 295972,
+      "name": "Hem-hub",
+      "household_id": 222527,
+      "product_id": 1
+    },
+    "status": {
+      "version": {
+        "device": {
+          "hardware": "3.0",
+          "firmware": "239.400"
+        }
+      },
+      "online": true,
+      "pairing_mode": 0,
+      "led_mode": 0
+    },
+    "control": {
+      "led_mode": 0,
+      "pairing_mode": 0
+    }
+  }
+  '''
+# ---

@@ -19,11 +19,12 @@ def household_file():
 
 @pytest.mark.asyncio
 async def test_snapshot(snapshot, household_file, device_file):
-    snapshot.snapshot_dir = "tests/snapshots"
+    # snapshot.snapshot_dir = "tests/snapshots"
     client = MockClient(fixture_file=device_file)
     client.set_mock_response(household_file)
     household = await client.api(Household.get_household(7777))
     client.reset()
     pet = (await client.api(household.get_pets()))[0]
     await client.api(pet.refresh())
-    snapshot.assert_match(json.dumps(recursive_dump(pet), indent=2), "pet_snapshot.json")
+    result = json.dumps(recursive_dump(pet), indent=2)
+    assert result == snapshot
