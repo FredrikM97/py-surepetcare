@@ -29,9 +29,11 @@ class PetDoor(SurepyDevice):
         def parse(response):
             if not response:
                 return self
-
-            self.status = BaseStatus(**{**self.status.model_dump(), **response})
-            self.control = BaseControl(**{**self.control.model_dump(), **response})
+            device_data = next(
+                (item for item in response["data"] if item.get("id") == self.device_info.id), None
+            )
+            self.status = BaseStatus(**{**self.status.model_dump(), **device_data})
+            self.control = BaseControl(**{**self.control.model_dump(), **device_data})
             return self
 
         return Command(

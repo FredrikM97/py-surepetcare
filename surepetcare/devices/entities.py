@@ -8,7 +8,7 @@ from surepetcare.entities.error_mixin import ImprovedErrorMixin
 
 
 class FlattenWrappersMixin(ImprovedErrorMixin):
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="ignore")
 
 
 class PetTag(FlattenWrappersMixin):

@@ -15,14 +15,9 @@
           "firmware": "239.400"
         }
       },
-      "online": true,
-      "pairing_mode": 0,
-      "led_mode": 0
+      "online": true
     },
-    "control": {
-      "led_mode": 0,
-      "pairing_mode": 0
-    }
+    "control": {}
   }
   '''
 # ---
