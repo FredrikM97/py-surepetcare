@@ -1,0 +1,41 @@
+{
+    "https://app-api.production.surehub.io/api/household": {
+        "data": [
+            {"id": 1},
+            {"id": 2}
+        ]
+    },
+    "https://app-api.production.surehub.io/api/household/1": {
+        "data": {
+            "id": 1
+        }
+    },
+    "https://app-api.production.surehub.io/api/household/7777": {
+        "data": {
+            "id": 7777
+        }
+    },
+    "https://app.api.surehub.io/api/v2/product/1/device/2/control": {
+        "data": {
+            "bowls": {
+                "settings": [
+                    {
+                        "food_type": 1,
+                        "target": 0
+                    },
+                    {
+                        "food_type": 1,
+                        "target": 0
+                    }
+                ],
+                "type": 4
+            },
+            "lid": {
+                "close_delay": 0
+            },
+            "tare": 2,
+            "training_mode": 0,
+            "fast_polling": false
+        }
+    }
+}

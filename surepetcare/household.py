@@ -74,7 +74,7 @@ class Household:
             if not response:
                 return None
             if isinstance(response["data"], dict):
-                return response["data"]
+                return Household(response["data"])
             return {}
 
         return Command(

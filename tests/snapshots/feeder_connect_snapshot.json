@@ -3,82 +3,330 @@
     "id": 269654,
     "name": "Maui matl\u00e5da (old) ",
     "household_id": 222527,
-    "parent_device_id": 295972,
-    "product_id": 4,
-    "index": 0,
-    "serial_number": "U003-0036414",
-    "mac_address": "3E8E00C0F9D5B370",
-    "version": 31076,
-    "created_at": "2019-03-29T13:42:22+00:00",
-    "updated_at": "2025-08-15T12:42:40+00:00",
-    "pairing_at": "2023-10-01T13:16:15+00:00",
-    "last_new_event_at": "2025-08-17T20:56:39+00:00",
-    "tags": [
-      {
-        "id": 60978,
-        "device_id": 269654,
-        "index": 1,
-        "profile": 2,
-        "version": 0,
-        "created_at": "2023-10-01T14:34:49+00:00",
-        "updated_at": "2023-10-01T14:34:49+00:00"
-      }
-    ]
+    "product_id": 4
   },
   "status": {
-    "battery": 5.046,
-    "learn_mode": false,
-    "signal": {
-      "device_rssi": -79
-    },
-    "version": {
-      "device": {
-        "hardware": "9",
-        "firmware": "406.437"
-      }
-    },
-    "online": true,
-    "bowl_status": [
+    "id": 269654,
+    "product_id": 4,
+    "household_id": 222527,
+    "name": "Maui matl\u00e5da (old) ",
+    "data": [
       {
+        "id": 269654,
+        "parent_device_id": 295972,
+        "product_id": 4,
+        "household_id": 222527,
         "index": 0,
-        "food_type": 1,
-        "substance_type": 2,
-        "current_weight": 32.16,
-        "last_filled_at": "2025-07-07T10:29:29+00:00",
-        "last_zeroed_at": "2025-05-23T10:25:29+00:00",
-        "last_fill_weight": 32.16,
-        "fill_percent": 100
+        "name": "Maui matl\u00e5da (old) ",
+        "serial_number": "U003-0036414",
+        "mac_address": "3E8E00C0F9D5B370",
+        "version": 31076,
+        "created_at": "2019-03-29T13:42:22+00:00",
+        "updated_at": "2025-08-15T12:42:40+00:00",
+        "pairing_at": "2023-10-01T13:16:15+00:00",
+        "last_new_event_at": "2025-08-17T20:56:39+00:00",
+        "control": {
+          "bowls": {
+            "settings": [
+              {
+                "food_type": 1,
+                "target": 0
+              },
+              {
+                "food_type": 1,
+                "target": 0
+              }
+            ],
+            "type": 4
+          },
+          "lid": {
+            "close_delay": 0
+          },
+          "tare": 2,
+          "training_mode": 0,
+          "fast_polling": false
+        },
+        "status": {
+          "battery": 5.046,
+          "learn_mode": false,
+          "signal": {
+            "device_rssi": -79
+          },
+          "bowl_status": [
+            {
+              "index": 0,
+              "food_type": 1,
+              "substance_type": 2,
+              "current_weight": 32.16,
+              "last_filled_at": "2025-07-07T10:29:29+00:00",
+              "last_zeroed_at": "2025-05-23T10:25:29+00:00",
+              "last_fill_weight": 32.16,
+              "fill_percent": 100
+            },
+            {
+              "index": 1,
+              "food_type": 1,
+              "substance_type": 2,
+              "current_weight": -27.2,
+              "last_filled_at": "2025-07-07T10:29:29+00:00",
+              "last_zeroed_at": "2025-05-23T10:25:29+00:00",
+              "last_fill_weight": -27.2
+            }
+          ],
+          "version": {
+            "device": {
+              "hardware": "9",
+              "firmware": "406.437"
+            }
+          },
+          "online": true
+        },
+        "tags": [
+          {
+            "id": 60978,
+            "device_id": 269654,
+            "index": 1,
+            "profile": 2,
+            "version": 0,
+            "created_at": "2023-10-01T14:34:49+00:00",
+            "updated_at": "2023-10-01T14:34:49+00:00"
+          }
+        ]
       },
       {
+        "id": 271836,
+        "parent_device_id": 295972,
+        "product_id": 4,
+        "household_id": 222527,
         "index": 1,
-        "food_type": 1,
-        "substance_type": 2,
-        "current_weight": -27.2,
-        "last_filled_at": "2025-07-07T10:29:29+00:00",
-        "last_zeroed_at": "2025-05-23T10:25:29+00:00",
-        "last_fill_weight": -27.2
+        "name": "Lilo matl\u00e5da",
+        "serial_number": "U003-0038596",
+        "mac_address": "C49600C0F9D5B370",
+        "version": 27274,
+        "created_at": "2019-03-29T13:44:38+00:00",
+        "updated_at": "2025-07-13T11:18:55+00:00",
+        "pairing_at": "2023-10-01T13:16:14+00:00",
+        "last_new_event_at": "2025-07-13T11:21:40+00:00",
+        "control": {
+          "bowls": {
+            "settings": [
+              {
+                "food_type": 2,
+                "target": 56
+              }
+            ],
+            "type": 1
+          },
+          "lid": {
+            "close_delay": 0
+          },
+          "training_mode": 0,
+          "fast_polling": true
+        },
+        "status": {
+          "battery": 4.915,
+          "learn_mode": false,
+          "signal": {
+            "device_rssi": -89
+          },
+          "bowl_status": [
+            {
+              "index": 0,
+              "food_type": 2,
+              "substance_type": 2,
+              "current_weight": -41.02
+            },
+            {
+              "index": 1,
+              "substance_type": 2,
+              "current_weight": 0
+            }
+          ],
+          "version": {
+            "device": {
+              "hardware": "9",
+              "firmware": "406.437"
+            }
+          },
+          "online": false
+        },
+        "tags": [
+          {
+            "id": 60978,
+            "device_id": 271836,
+            "index": 2,
+            "profile": 2,
+            "version": 1,
+            "created_at": "2025-07-13T11:14:42+00:00",
+            "updated_at": "2025-07-13T11:14:42+00:00"
+          }
+        ]
       }
-    ]
+    ],
+    "meta": {
+      "count": 3
+    }
   },
   "control": {
-    "lid": {
-      "close_delay": 0
-    },
-    "bowls": {
-      "settings": [
-        {
-          "food_type": 1,
-          "target": 0
+    "id": 269654,
+    "product_id": 4,
+    "household_id": 222527,
+    "name": "Maui matl\u00e5da (old) ",
+    "data": [
+      {
+        "id": 269654,
+        "parent_device_id": 295972,
+        "product_id": 4,
+        "household_id": 222527,
+        "index": 0,
+        "name": "Maui matl\u00e5da (old) ",
+        "serial_number": "U003-0036414",
+        "mac_address": "3E8E00C0F9D5B370",
+        "version": 31076,
+        "created_at": "2019-03-29T13:42:22+00:00",
+        "updated_at": "2025-08-15T12:42:40+00:00",
+        "pairing_at": "2023-10-01T13:16:15+00:00",
+        "last_new_event_at": "2025-08-17T20:56:39+00:00",
+        "control": {
+          "bowls": {
+            "settings": [
+              {
+                "food_type": 1,
+                "target": 0
+              },
+              {
+                "food_type": 1,
+                "target": 0
+              }
+            ],
+            "type": 4
+          },
+          "lid": {
+            "close_delay": 0
+          },
+          "tare": 2,
+          "training_mode": 0,
+          "fast_polling": false
         },
-        {
-          "food_type": 1,
-          "target": 0
-        }
-      ],
-      "type": 4
-    },
-    "tare": 2,
-    "training_mode": 0,
-    "fast_polling": false
+        "status": {
+          "battery": 5.046,
+          "learn_mode": false,
+          "signal": {
+            "device_rssi": -79
+          },
+          "bowl_status": [
+            {
+              "index": 0,
+              "food_type": 1,
+              "substance_type": 2,
+              "current_weight": 32.16,
+              "last_filled_at": "2025-07-07T10:29:29+00:00",
+              "last_zeroed_at": "2025-05-23T10:25:29+00:00",
+              "last_fill_weight": 32.16,
+              "fill_percent": 100
+            },
+            {
+              "index": 1,
+              "food_type": 1,
+              "substance_type": 2,
+              "current_weight": -27.2,
+              "last_filled_at": "2025-07-07T10:29:29+00:00",
+              "last_zeroed_at": "2025-05-23T10:25:29+00:00",
+              "last_fill_weight": -27.2
+            }
+          ],
+          "version": {
+            "device": {
+              "hardware": "9",
+              "firmware": "406.437"
+            }
+          },
+          "online": true
+        },
+        "tags": [
+          {
+            "id": 60978,
+            "device_id": 269654,
+            "index": 1,
+            "profile": 2,
+            "version": 0,
+            "created_at": "2023-10-01T14:34:49+00:00",
+            "updated_at": "2023-10-01T14:34:49+00:00"
+          }
+        ]
+      },
+      {
+        "id": 271836,
+        "parent_device_id": 295972,
+        "product_id": 4,
+        "household_id": 222527,
+        "index": 1,
+        "name": "Lilo matl\u00e5da",
+        "serial_number": "U003-0038596",
+        "mac_address": "C49600C0F9D5B370",
+        "version": 27274,
+        "created_at": "2019-03-29T13:44:38+00:00",
+        "updated_at": "2025-07-13T11:18:55+00:00",
+        "pairing_at": "2023-10-01T13:16:14+00:00",
+        "last_new_event_at": "2025-07-13T11:21:40+00:00",
+        "control": {
+          "bowls": {
+            "settings": [
+              {
+                "food_type": 2,
+                "target": 56
+              }
+            ],
+            "type": 1
+          },
+          "lid": {
+            "close_delay": 0
+          },
+          "training_mode": 0,
+          "fast_polling": true
+        },
+        "status": {
+          "battery": 4.915,
+          "learn_mode": false,
+          "signal": {
+            "device_rssi": -89
+          },
+          "bowl_status": [
+            {
+              "index": 0,
+              "food_type": 2,
+              "substance_type": 2,
+              "current_weight": -41.02
+            },
+            {
+              "index": 1,
+              "substance_type": 2,
+              "current_weight": 0
+            }
+          ],
+          "version": {
+            "device": {
+              "hardware": "9",
+              "firmware": "406.437"
+            }
+          },
+          "online": false
+        },
+        "tags": [
+          {
+            "id": 60978,
+            "device_id": 271836,
+            "index": 2,
+            "profile": 2,
+            "version": 1,
+            "created_at": "2025-07-13T11:14:42+00:00",
+            "updated_at": "2025-07-13T11:14:42+00:00"
+          }
+        ]
+      }
+    ],
+    "meta": {
+      "count": 3
+    }
   }
 }
