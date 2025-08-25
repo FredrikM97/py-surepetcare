@@ -31,7 +31,6 @@ class Household:
 
     def get_devices(self):
         def parse(response):
-            logger.info(f"Parsing devices for household {self.id}: {response}")
             if not response:
                 logger.info("Returning cached devices")
                 return self.data.get("devices", [])
