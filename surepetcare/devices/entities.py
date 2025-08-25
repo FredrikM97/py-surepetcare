@@ -39,7 +39,6 @@ class EntityInfo(FlattenWrappersMixin):
     photo: Optional[PetPhoto] = None
     tag: Optional[PetTag] = None
     parent_device_id: Optional[int] = None
-    product_id: int
 
     @model_validator(mode="before")
     def ignore_status_control(cls, values):
