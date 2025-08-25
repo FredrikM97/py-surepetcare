@@ -31,7 +31,6 @@ class Household:
 
     def get_devices(self):
         def parse(response):
-            logger.info(f"Parsing devices for household {self.id}: {response}")
             if not response:
                 logger.info("Returning cached devices")
                 return self.data.get("devices", [])
@@ -74,7 +73,7 @@ class Household:
             if not response:
                 return None
             if isinstance(response["data"], dict):
-                return response["data"]
+                return Household(response["data"])
             return {}
 
         return Command(

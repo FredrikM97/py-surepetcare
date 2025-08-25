@@ -1,28 +1,30 @@
-# Integration tests for Hub device using mock data.
-from surepetcare.devices.hub import Hub
-from surepetcare.enums import ProductId
-from tests.mock_helpers import load_mock_data
+import json
+
+import pytest
+
+from surepetcare.household import Household
+from tests.mock_helpers import MockClient
+from tests.mock_helpers import recursive_dump
 
 
-def make_hub():
-    return Hub(load_mock_data("tests/mock_data/mock_device_hub.json")["data"][0])
+@pytest.fixture
+def device_file():
+    return "tests/fixture/hub.json"
 
 
-def test_hub_integration():
-    """Test Hub device properties from mock data."""
-    hub = make_hub()
-    assert hub.household_id == 7777
-    assert hub.id == 295972
-    assert hub.name == "Hem-hub"
-    assert hub.product_id == 1
-    assert hub.product_id == ProductId.HUB
-    assert hub.available is True
-    assert hub.battery_level is None
+@pytest.fixture
+def household_file():
+    return "tests/fixture/household.json"
 
 
-def test_hub_missing_fields():
-    """Test Hub with missing status and battery fields."""
-    data = {"id": 1, "household_id": 2, "name": "HubNoStatus"}
-    hub = Hub(data)
-    assert hub.available is None
-    assert hub.battery_level is None
+@pytest.mark.asyncio
+async def test_snapshot(snapshot, household_file, device_file):
+    snapshot.snapshot_dir = "tests/snapshots"
+    client = MockClient(fixture_file=device_file)
+    client.set_mock_response(household_file)
+    household = await client.api(Household.get_household(7777))
+    client.reset()
+    device = (await client.api(household.get_devices()))[0]
+    await client.api(device.refresh())
+    result = json.dumps(recursive_dump(device), indent=2)
+    assert result == snapshot
