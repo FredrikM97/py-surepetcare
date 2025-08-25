@@ -31,30 +31,22 @@ class PetPhoto(FlattenWrappersMixin):
     updated_at: str
 
 
-class BaseInfo(FlattenWrappersMixin):
+class EntityInfo(FlattenWrappersMixin):
+    id: int
+    name: str
+    household_id: int
+    tag_id: Optional[int] = None
+    photo: Optional[PetPhoto] = None
+    tag: Optional[PetTag] = None
+    parent_device_id: Optional[int] = None
+    product_id: int
+
     @model_validator(mode="before")
     def ignore_status_control(cls, values):
         # Remove 'status' and 'control' from input if present
         values.pop("status", None)
         values.pop("control", None)
         return values
-
-
-class DeviceInfo(BaseInfo):
-    id: int
-    name: str
-    household_id: int
-    parent_device_id: Optional[int] = None
-    product_id: int
-
-
-class PetInfo(BaseInfo):
-    id: int
-    name: str
-    household_id: int
-    tag_id: int
-    photo: Optional[PetPhoto] = None
-    tag: Optional[PetTag] = None
 
 
 class BaseControl(FlattenWrappersMixin):

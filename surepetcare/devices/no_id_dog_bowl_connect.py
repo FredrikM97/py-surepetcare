@@ -1,20 +1,20 @@
 import logging
+from typing import Any
 
 from .device import BaseControl
 from .device import BaseStatus
 from .device import SurepyDevice
 from surepetcare.command import Command
 from surepetcare.const import API_ENDPOINT_PRODUCTION
-from surepetcare.devices.entities import DeviceInfo
 from surepetcare.enums import ProductId
 
 logger = logging.getLogger(__name__)
 
 
 class NoIdDogBowlConnect(SurepyDevice):
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: dict[Any, Any]) -> None:
         try:
-            self.device_info = DeviceInfo(**data)
+            super().__init__(data)
             self.status: BaseStatus = BaseStatus(**data)
             self.control: BaseControl = BaseControl(**data)
         except Exception as e:

@@ -10,7 +10,6 @@ from .device import SurepyPet
 from surepetcare.command import Command
 from surepetcare.const import API_ENDPOINT_PRODUCTION
 from surepetcare.devices.entities import FlattenWrappersMixin
-from surepetcare.devices.entities import PetInfo
 from surepetcare.enums import ProductId
 
 logger = logging.getLogger(__name__)
@@ -108,7 +107,7 @@ class Status(FlattenWrappersMixin):
 class Pet(SurepyPet):
     def __init__(self, data: dict) -> None:
         try:
-            self.device_info = PetInfo(**data)
+            super().__init__(data)
             self.control: Control = Control(**data)
             self.status: Status = Status(**data)
         except Exception as e:
@@ -123,7 +122,9 @@ class Pet(SurepyPet):
 
     @property
     def photo(self) -> str:
-        return self.device_info.photo.location
+        if self.entity_info.photo is None:
+            raise ValueError("household_id is not set")
+        return self.entity_info.photo.location
 
     def refresh(self) -> Command:
         """Refresh the pet's report data."""
@@ -173,7 +174,9 @@ class Pet(SurepyPet):
 
     @property
     def tag(self) -> int:
-        return self.device_info.tag.id
+        if self.entity_info.tag is None:
+            raise ValueError("household_id is not set")
+        return self.entity_info.tag.id
 
     @property
     def feeding(self) -> list[ReportHouseholdFeedingResource]:

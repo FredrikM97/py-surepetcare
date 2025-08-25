@@ -1,6 +1,7 @@
 import logging
 from abc import ABC
 from abc import abstractmethod
+from typing import Any
 from typing import Optional
 
 from pydantic import Field
@@ -8,8 +9,7 @@ from pydantic import Field
 from surepetcare.command import Command
 from surepetcare.devices.entities import BaseControl
 from surepetcare.devices.entities import BaseStatus
-from surepetcare.devices.entities import DeviceInfo
-from surepetcare.devices.entities import PetInfo
+from surepetcare.devices.entities import EntityInfo
 from surepetcare.entities.battery_mixin import BatteryMixin
 from surepetcare.enums import ProductId
 
@@ -17,8 +17,12 @@ logger = logging.getLogger(__name__)
 
 
 class SurepyBase(ABC):
-    status: BaseStatus = Field(default=BaseStatus)
-    control: BaseControl = Field(default=BaseControl)
+    entity_info: EntityInfo = Field(default_factory=EntityInfo)
+    status: BaseStatus = Field(default_factory=BaseStatus)
+    control: BaseControl = Field(default_factory=BaseControl)
+
+    def __init__(self, data: dict) -> None:
+        self.entity_info = EntityInfo(**data)
 
     @property
     @abstractmethod
@@ -42,11 +46,12 @@ class SurepyBase(ABC):
 
 
 class SurepyDevice(SurepyBase, BatteryMixin):
-    device_info = Field(default=DeviceInfo)
+    def __init__(self, data: dict[Any, Any]):
+        super().__init__(data)
 
     @property
     def parent_device_id(self) -> Optional[int]:
-        return self.device_info.parent_device_id
+        return self.entity_info.parent_device_id
 
     @property
     def available(self) -> Optional[bool]:
@@ -59,19 +64,22 @@ class SurepyDevice(SurepyBase, BatteryMixin):
 
     @property
     def id(self) -> Optional[int]:
-        return self.device_info.id
+        return self.entity_info.id
 
     @property
     def household_id(self) -> int:
-        return self.device_info.household_id
+        if self.entity_info.household_id is None:
+            raise ValueError("household_id is not set")
+        return self.entity_info.household_id
 
     @property
     def name(self) -> str:
-        return self.device_info.name
+        return self.entity_info.name
 
 
 class SurepyPet(SurepyBase):
-    device_info = Field(default=PetInfo)
+    def __init__(self, data: dict[Any, Any]):
+        super().__init__(data)
 
     @property
     def available(self) -> Optional[bool]:
@@ -84,12 +92,12 @@ class SurepyPet(SurepyBase):
 
     @property
     def id(self) -> Optional[int]:
-        return self.device_info.id
+        return self.entity_info.id
 
     @property
     def household_id(self) -> int:
-        return self.device_info.household_id
+        return self.entity_info.household_id
 
     @property
     def name(self) -> str:
-        return self.device_info.name
+        return self.entity_info.name

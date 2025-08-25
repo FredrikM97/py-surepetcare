@@ -10,7 +10,6 @@ from .device import BaseStatus
 from .device import SurepyDevice
 from surepetcare.command import Command
 from surepetcare.const import API_ENDPOINT_PRODUCTION
-from surepetcare.devices.entities import DeviceInfo
 from surepetcare.devices.entities import FlattenWrappersMixin
 from surepetcare.enums import BowlPosition
 from surepetcare.enums import FoodType
@@ -52,7 +51,7 @@ class Status(BaseStatus):
 class FeederConnect(SurepyDevice):
     def __init__(self, data: dict) -> None:
         try:
-            self.device_info = DeviceInfo(**data)
+            super().__init__(data)
             self.status: Status = Status(**data)
             self.control: Control = Control(**data)
         except Exception as e:
