@@ -21,22 +21,3 @@ Before pushing validate the changes with: `pre-commit run --all-files`..
 ### Issue with missing data
 First run `pip install -r dev-requirements.txt` to add dependencies for development
 Please upload issue with data find in contribute/files with `python -m contribute.contribution`. This generates mock data that can be used to improve the library. Dont forget to add email and password in the .env file.
-
-## Example Usage
-
-```python
-from dotenv import load_dotenv
-import os
-from surepetcare.client import SurePetcareClient
-
-# Load credentials from .env file
-load_dotenv(dotenv_path=".env")
-
-email = os.getenv("SUREPY_EMAIL")
-password = os.getenv("SUREPY_PASSWORD")
-
-client = SurePetcareClient()
-await client.login(email=email, password=password)
-household_ids = [household['id'] for household in (await client.get_households())]
-await client.get_devices(household_ids)
-```
