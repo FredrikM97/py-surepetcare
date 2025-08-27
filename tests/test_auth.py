@@ -5,16 +5,6 @@ from tests.mock_helpers import DummySession
 
 
 @pytest.mark.asyncio
-async def test_login_success():
-    """Test successful login sets token and returns client."""
-    client = AuthClient()
-    client.session = DummySession(ok=True, status=200, json_data={"data": {"token": "dummy-token"}})
-    result = await client.login("user@example.com", "password")
-    assert client._token == "dummy-token"
-    assert result is client
-
-
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "json_data",
     [

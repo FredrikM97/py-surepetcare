@@ -1,154 +1,43 @@
 import json
-import os
-from typing import Any
-from typing import Optional
 
 from surepetcare.client import SurePetcareClient
 
 
-def load_mock_data(filepath):
-    """Load and return JSON data from a file."""
-    if not os.path.exists(filepath):
-        raise FileNotFoundError(f"Mock data file not found: {filepath}")
-    with open(filepath) as f:
-        return json.load(f)
+def load_mock_data_for_endpoint(fixture_file="tests/fixture/pet.json"):
+    with open(fixture_file) as f:
+        data = json.load(f)
+    return data
 
 
-class MockSurePetcareClient(SurePetcareClient):
-    def __init__(self, mock_get_data=None):
+class MockClient(SurePetcareClient):
+    def __init__(self, fixture_file, modify_hook=None):
         super().__init__()
-        self.mock_get_data = mock_get_data or {}
+        self.fixture_file = fixture_file
+        self.modify_hook = modify_hook
+        self.session = DummySession()  # Use your DummySession
+        self.set_mock_response()
 
-    async def get(self, endpoint: str, params: Optional[dict[Any, Any]] = None, headers=None):
-        # If the value is a string, treat it as a filename and load JSON
-        if isinstance(self.mock_get_data, str):
-            return load_mock_data(self.mock_get_data)
-        # Always return a dict with 'status' for compatibility with real client
-        data = self.mock_get_data.get(endpoint, None)
-        if data is None:
-            # Only use fallback if no mock is provided
-            if "/product/" in endpoint:
-                data = {"data": {"foo": "bar"}}
-            elif endpoint.endswith("/pet") or endpoint.endswith("/dashboard/pet"):
-                data = {"data": []}
-            elif endpoint.endswith("/device"):
-                data = {
-                    "data": [
-                        {
-                            "id": 10,
-                            "household_id": 1,
-                            "name": "Hub1",
-                            "product_id": 1,
-                            "status": {"online": True},
-                            "control": {},
-                        },
-                        {
-                            "id": 11,
-                            "household_id": 1,
-                            "name": "Feeder1",
-                            "product_id": 4,
-                            "status": {"online": True},
-                            "control": {
-                                "lid": {"close_delay": 5},
-                                "bowls": {
-                                    "settings": [
-                                        {
-                                            "food_type": 1,
-                                            "substance_type": 0,
-                                            "current_weight": 0.0,
-                                            "last_filled_at": "",
-                                            "last_zeroed_at": "",
-                                            "fill_percent": 0,
-                                        },
-                                        {
-                                            "food_type": 2,
-                                            "substance_type": 0,
-                                            "current_weight": 0.0,
-                                            "last_filled_at": "",
-                                            "last_zeroed_at": "",
-                                            "fill_percent": 0,
-                                        },
-                                    ]
-                                },
-                            },
-                        },
-                    ]
-                }
-            elif "/device/" in endpoint or endpoint.endswith("/aggregate"):
-                data = {
-                    "data": {
-                        "id": 1,
-                        "household_id": 1,
-                        "name": "Feeder1",
-                        "product_id": 4,
-                        "status": {
-                            "online": True,
-                            "bowl_status": [
-                                {
-                                    "index": 0,
-                                    "food_type": 1,
-                                    "substance_type": 0,
-                                    "current_weight": 0.0,
-                                    "last_filled_at": "",
-                                    "last_zeroed_at": "",
-                                    "fill_percent": 0,
-                                },
-                                {
-                                    "index": 1,
-                                    "food_type": 1,
-                                    "substance_type": 0,
-                                    "current_weight": 0.0,
-                                    "last_filled_at": "",
-                                    "last_zeroed_at": "",
-                                    "fill_percent": 0,
-                                },
-                            ],
-                        },
-                        "control": {
-                            "lid": {"close_delay": 5},
-                            "bowls": {
-                                "settings": [
-                                    {
-                                        "food_type": 1,
-                                        "substance_type": 0,
-                                        "current_weight": 0.0,
-                                        "last_filled_at": "",
-                                        "last_zeroed_at": "",
-                                        "fill_percent": 0,
-                                    },
-                                    {
-                                        "food_type": 1,
-                                        "substance_type": 0,
-                                        "current_weight": 0.0,
-                                        "last_filled_at": "",
-                                        "last_zeroed_at": "",
-                                        "fill_percent": 0,
-                                    },
-                                ]
-                            },
-                        },
-                    }
-                }
-            elif "/household/" in endpoint:
-                data = {"data": {"id": 1, "name": "TestHouse"}}
-            else:
-                data = {"data": {}}
-        if "status" not in data:
-            data["status"] = 200
-        return data
+    def set_mock_response(self, file=None):
+        mock_data = load_mock_data_for_endpoint(self.fixture_file if file is None else file)
+        if self.modify_hook:
+            mock_data = self.modify_hook(mock_data)
+        self.session._json_data = mock_data
 
-    async def post(
-        self, endpoint: str, data: dict[Any, Any] | None = None, headers=None, reuse=True
-    ) -> dict[Any, Any]:
-        # Return mock data if available, else default
-        mock = self.mock_get_data.get(endpoint) if isinstance(self.mock_get_data, dict) else None
-        if mock and isinstance(mock, dict) and "data" in mock:
-            # Simulate a real response: merge data and status
-            result = dict(mock["data"])
-            result["status"] = 200
-            return result
-        # Default fallback
-        return {"foo": "bar", "status": 200}
+    def reset(self):
+        self.set_mock_response(self.fixture_file)
+
+
+def recursive_dump(obj):
+    if hasattr(obj, "model_dump"):
+        return obj.model_dump(exclude_none=True)
+    elif isinstance(obj, dict):
+        return {k: recursive_dump(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [recursive_dump(v) for v in obj]
+    elif hasattr(obj, "__dict__"):
+        return {k: recursive_dump(v) for k, v in obj.__dict__.items()}
+    else:
+        return obj
 
 
 class DummyUrl:
@@ -179,22 +68,30 @@ class DummyResponse:
 
 
 class DummySession:
-    def __init__(self, ok=True, status=200, text="OK", json_data=None, method=None):
+    def __init__(self, ok=True, status=200, text="OK", json_data=None):
         self._ok = ok
         self._status = status
         self._text = text
-        self._json_data = json_data or {"foo": "bar"}
+        self._json_data = json_data
         self._closed = False
-        # 'method' is accepted for compatibility but not used
 
     @property
     def closed(self):
         return self._closed
 
-    def get(self, *args, response=None, **kwargs):
-        resp = response or DummyResponse(
-            ok=self._ok, status=self._status, text=self._text, json_data=self._json_data
-        )
+    def _get_response(self, endpoint=None, response=None):
+        json_data = self._json_data
+        if endpoint is not None and isinstance(json_data, dict):
+            if endpoint in json_data:
+                resp = DummyResponse(
+                    ok=self._ok, status=self._status, text=self._text, json_data=json_data[endpoint]
+                )
+            else:
+                raise KeyError(f"Mock data for endpoint '{endpoint}' not found in fixture.")
+        else:
+            resp = response or DummyResponse(
+                ok=self._ok, status=self._status, text=self._text, json_data=json_data
+            )
 
         class AsyncContextManager:
             async def __aenter__(self_inner):
@@ -205,39 +102,14 @@ class DummySession:
 
         return AsyncContextManager()
 
-    def post(self, *args, response=None, **kwargs):
-        resp = response or DummyResponse(
-            ok=self._ok, status=self._status, text=self._text, json_data=self._json_data
-        )
+    def get(self, endpoint, *args, response=None, **kwargs):
+        return self._get_response(endpoint, response)
 
-        class AsyncContextManager:
-            async def __aenter__(self_inner):
-                return resp
-
-            async def __aexit__(self_inner, exc_type, exc, tb):
-                pass
-
-        return AsyncContextManager()
+    def post(self, endpoint, *args, response=None, **kwargs):
+        return self._get_response(endpoint, response)
 
     def request(self, *args, response=None, **kwargs):
-        resp = response or DummyResponse(
-            ok=self._ok, status=self._status, text=self._text, json_data=self._json_data
-        )
-
-        class AsyncContextManager:
-            async def __aenter__(self_inner):
-                return resp
-
-            async def __aexit__(self_inner, exc_type, exc, tb):
-                pass
-
-        return AsyncContextManager()
+        return self._get_response(response=response)
 
     async def close(self):
         self._closed = True
-
-
-def make_pet():
-    from surepetcare.devices.pet import Pet
-
-    return Pet({"id": 2, "household_id": 1, "name": "N", "tag": {"id": 3}})

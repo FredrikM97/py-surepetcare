@@ -1,73 +1,63 @@
-from dataclasses import dataclass
+import logging
 from typing import Any
+from typing import Optional
 
+from pydantic import ConfigDict
+from pydantic import Field
+
+from .device import BaseControl
+from .device import BaseStatus
 from .device import SurepyDevice
 from surepetcare.command import Command
 from surepetcare.const import API_ENDPOINT_PRODUCTION
+from surepetcare.devices.entities import FlattenWrappersMixin
 from surepetcare.enums import BowlPosition
 from surepetcare.enums import FoodType
 from surepetcare.enums import ProductId
 
-
-@dataclass
-class BowlState:
-    position: BowlPosition
-    food_type: FoodType
-    substance_type: int
-    current_weight: float
-    last_filled_at: str
-    last_zeroed_at: str
-    last_fill_weight: str
-    fill_percent: int
+logger = logging.getLogger(__name__)
 
 
-@dataclass
-class BowlTargetWeight:
-    food_type: FoodType
-    full_weight: int  # Target weight for the bowl
+class BowlState(FlattenWrappersMixin):
+    position: BowlPosition = Field(default=BowlPosition(0))
+    food_type: FoodType = Field(default=FoodType(-1))
+    substance_type: int = 0
+    current_weight: float = 0.0
+    last_filled_at: str = ""
+    last_zeroed_at: str = ""
+    last_fill_weight: float = 0.0
+    fill_percent: int = 0
+    model_config = ConfigDict(extra="allow")
 
 
-class BowlMixin:
-    _data: dict[str, Any]
-
-    @property
-    def lid_delay(self) -> float:
-        return int(self._data["control"]["lid"]["close_delay"])
-
-    @property
-    def bowls(self):
-        raw_status = self._data["status"].get("bowl_status", [])
-        return [
-            BowlState(
-                position=BowlPosition(entry.get("index", 0)),
-                food_type=FoodType(entry.get("food_type", -1)),
-                substance_type=entry.get("substance_type", 0),
-                current_weight=entry.get("current_weight", 0.0),
-                last_filled_at=entry.get("last_filled_at", ""),
-                last_zeroed_at=entry.get("last_zeroed_at", ""),
-                last_fill_weight=entry.get("last_fill_weight", 0.0),
-                fill_percent=entry.get("fill_percent", 0),
-            )
-            for entry in raw_status
-        ]
-
-    @property
-    def bowl_targets(self):
-        # Map each dict in bowls['settings'] to BowlTargetWeight
-        settings = self._data["control"]["bowls"]["settings"]
-        return [
-            BowlTargetWeight(
-                food_type=FoodType(entry.get("food_type", 0)), full_weight=entry.get("target", 0)
-            )
-            for entry in settings
-        ]
-
-    @property
-    def tare(self):
-        return self._data["control"]["tare"]
+class BowlTargetWeight(FlattenWrappersMixin):
+    food_type: FoodType = Field(default=FoodType.DRY)
+    full_weight: int = 0
+    model_config = ConfigDict(extra="allow")
 
 
-class FeederConnect(SurepyDevice, BowlMixin):
+class Control(BaseControl):
+    lid: Optional[dict[str, Any]] = None
+    bowls: Optional[dict[str, Any]] = None
+    tare: Optional[int] = None
+    training_mode: Optional[int] = None
+    fast_polling: Optional[bool] = None
+
+
+class Status(BaseStatus):
+    bowl_status: Optional[list[dict[str, Any]]] = None
+
+
+class FeederConnect(SurepyDevice):
+    def __init__(self, data: dict) -> None:
+        try:
+            super().__init__(data)
+            self.status: Status = Status(**data)
+            self.control: Control = Control(**data)
+        except Exception as e:
+            logger.warning("Error while storing data %s", data)
+            raise e
+
     @property
     def product(self) -> ProductId:
         return ProductId.FEEDER_CONNECT
@@ -80,7 +70,8 @@ class FeederConnect(SurepyDevice, BowlMixin):
         def parse(response):
             if not response:
                 return self
-            self._data = response["data"]
+            self.status = Status(**{**self.status.model_dump(), **response["data"]})
+            self.control = Control(**{**self.control.model_dump(), **response["data"]})
             return self
 
         command = Command(
@@ -91,6 +82,6 @@ class FeederConnect(SurepyDevice, BowlMixin):
         return command
 
     @property
-    def rssi(self) -> int:
+    def rssi(self) -> Optional[int]:
         """Return the RSSI value."""
-        return self._data["status"]["signal"]["device_rssi"]
+        return self.status.signal.device_rssi if self.status.signal else None

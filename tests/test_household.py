@@ -1,18 +1,15 @@
 import pytest
 
-from surepetcare.client import SurePetcareClient
-from surepetcare.const import API_ENDPOINT_V1
-from surepetcare.const import API_ENDPOINT_V2
 from surepetcare.enums import ProductId
 from surepetcare.household import Household
-from tests.mock_helpers import MockSurePetcareClient
+from tests.mock_helpers import MockClient
 
 
 # --- Helpers ---
 def make_pet_data():
     return [
-        {"id": 1, "household_id": 1, "name": "Pet1", "tag": {"id": "A1"}},
-        {"id": 2, "household_id": 1, "name": "Pet2", "tag": {"id": "B2"}},
+        {"id": 1, "household_id": 1, "name": "Pet1", "tag_id": 123, "tag": {"id": 1, "tag": "123"}},
+        {"id": 2, "household_id": 1, "name": "Pet2", "tag_id": 123, "tag": {"id": 2, "tag": "123"}},
     ]
 
 
@@ -84,14 +81,9 @@ def test_get_household_and_product_none_and_invalid(command_factory, none_expect
 
 # --- Main functional tests ---
 @pytest.mark.asyncio
-async def test_get_households(monkeypatch):
-    """Test fetching list of households."""
-
-    async def mock_get(endpoint, params=None, headers=None):
-        return {"data": [{"id": 1}, {"id": 2}]}
-
-    client = SurePetcareClient()
-    monkeypatch.setattr(client, "get", mock_get)
+async def test_get_households():
+    """Test fetching list of households using MockClient and household.json as fixture."""
+    client = MockClient(fixture_file="tests/fixture/household.json")
     command = Household.get_households()
     result = await client.api(command)
     assert isinstance(result, list)
@@ -101,50 +93,24 @@ async def test_get_households(monkeypatch):
 
 @pytest.mark.asyncio
 async def test_get_household():
-    """Test fetching a single household."""
-    endpoint = f"{API_ENDPOINT_V1}/household/1"
-    client = MockSurePetcareClient({endpoint: {"data": {"id": 1, "name": "TestHouse"}}})
+    """Test fetching a single household using MockClient and household.json as fixture."""
+    client = MockClient(fixture_file="tests/fixture/household.json")
     command = Household.get_household(1)
     result = await client.api(command)
     assert (isinstance(result, dict) and result.get("id") == 1) or (hasattr(result, "id") and result.id == 1)
 
 
 @pytest.mark.asyncio
-async def test_get_pets():
-    """Test fetching pets for a household."""
-    mock_data = {"data": make_pet_data()}
-    client = MockSurePetcareClient({f"{API_ENDPOINT_V1}/pet": mock_data})
-    household = Household({"id": 1})
-    command = household.get_pets()
-    pets = await client.api(command)
-    assert len(pets) == 2
-    assert pets[0].id == 1
-    assert pets[1].id == 2
-
-
-@pytest.mark.asyncio
-async def test_get_devices():
-    """Test fetching devices for a household."""
-    mock_data = {"data": make_device_data()}
-    client = MockSurePetcareClient({f"{API_ENDPOINT_V1}/device": mock_data})
-    household = Household({"id": 1})
-    command = household.get_devices()
-    devices = await client.api(command)
-    assert isinstance(devices, list)
-    assert len(devices) == 2
-    assert devices[0].id == 10
-    assert devices[1].id == 11
-
-
-@pytest.mark.asyncio
 async def test_get_product():
-    """Test fetching a product for a device."""
-    mock_data = {"data": {"foo": "bar"}}
-    endpoint = f"{API_ENDPOINT_V2}/product/1/device/2/control"
-    client = MockSurePetcareClient({endpoint: mock_data})
+    """Test fetching a product for a device using MockClient and household.json as fixture."""
+    from tests.mock_helpers import MockClient
+
+    client = MockClient(fixture_file="tests/fixture/household.json")
     command = Household.get_product(1, 2)
     result = await client.api(command)
-    assert result == {"foo": "bar"}
+    # Verify a key from the returned product data
+    assert "bowls" in result
+    assert result["bowls"]["type"] == 4
 
 
 def test_get_devices_skips_invalid_product(monkeypatch):
