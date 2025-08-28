@@ -19,7 +19,7 @@ def test_surepydevice_notimplemented():
         def product(self):
             return ProductId.HUB
 
-    d = Dummy({"product_id": 1})
+    d = Dummy({"product_id": 1, "household_id": 2, "name": "dummyName", "id": 1})
     with pytest.raises(NotImplementedError):
         d.refresh()
 

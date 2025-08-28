@@ -22,7 +22,7 @@ class SurepyBase(ABC):
     control: BaseControl = Field(default_factory=BaseControl)
 
     def __init__(self, data: dict) -> None:
-        self.entity_info = EntityInfo(**data)
+        self.entity_info = EntityInfo(**{**data, "product_id": self.product_id})
 
     @property
     @abstractmethod

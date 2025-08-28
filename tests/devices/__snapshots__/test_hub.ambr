@@ -2,7 +2,7 @@
 # name: test_snapshot
   '''
   {
-    "device_info": {
+    "entity_info": {
       "id": 295972,
       "name": "Hem-hub",
       "household_id": 222527,

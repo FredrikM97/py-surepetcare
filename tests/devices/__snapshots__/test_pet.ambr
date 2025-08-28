@@ -2,10 +2,11 @@
 # name: test_snapshot
   '''
   {
-    "device_info": {
+    "entity_info": {
       "id": 123455,
       "name": "Lilo",
       "household_id": 7777,
+      "product_id": 0,
       "tag_id": 55555,
       "photo": {
         "id": 765433,
