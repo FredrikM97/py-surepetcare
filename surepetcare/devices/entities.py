@@ -35,7 +35,7 @@ class EntityInfo(FlattenWrappersMixin):
     id: int
     name: str
     household_id: int
-    product_id: str
+    product_id: int
     tag_id: Optional[int] = None
     photo: Optional[PetPhoto] = None
     tag: Optional[PetTag] = None
