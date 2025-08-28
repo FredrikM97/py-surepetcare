@@ -134,8 +134,6 @@ class Pet(SurepyPet):
         self, from_date: str | None = None, to_date: str | None = None, event_type: int | None = None
     ) -> Command:
         def parse(response):
-            if all(not v["datapoints"] for v in response["data"].values()):
-                return self
             self.status.report = ReportHouseholdResource(**response["data"])
             self.control = Control(**{**self.control.model_dump(), **response["data"]})
             self.last_fetched_datetime = datetime.utcnow().isoformat()
