@@ -5,3 +5,4 @@ pre_commit>=4.2.0
 pytest-cov>=4.1.0
 syrupy
 pydantic
+aiohttp
