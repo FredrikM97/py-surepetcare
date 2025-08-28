@@ -2,7 +2,7 @@
 # name: test_snapshot
   '''
   {
-    "device_info": {
+    "entity_info": {
       "id": 269654,
       "name": "Maui matl\u00e5da (old) ",
       "household_id": 222527,
