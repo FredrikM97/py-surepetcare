@@ -22,13 +22,13 @@ class PetTag(FlattenWrappersMixin):
 
 class PetPhoto(FlattenWrappersMixin):
     id: int
-    title: str
+    title: Optional[str] = None
     location: str
     hash: str
     uploading_user_id: int
     version: int
     created_at: str
-    updated_at: str
+    updated_at: Optional[str] = None
 
 
 class EntityInfo(FlattenWrappersMixin):
