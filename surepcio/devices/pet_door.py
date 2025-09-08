@@ -2,15 +2,15 @@ import logging
 
 from .device import BaseControl
 from .device import BaseStatus
-from .device import SurepyDevice
-from surepetcare.command import Command
-from surepetcare.const import API_ENDPOINT_PRODUCTION
-from surepetcare.enums import ProductId
+from .device import DeviceBase
+from surepcio.command import Command
+from surepcio.const import API_ENDPOINT_PRODUCTION
+from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
 
 
-class DualScanConnect(SurepyDevice):
+class PetDoor(DeviceBase):
     def __init__(self, data: dict) -> None:
         try:
             super().__init__(data)
@@ -22,7 +22,7 @@ class DualScanConnect(SurepyDevice):
 
     @property
     def product(self) -> ProductId:
-        return ProductId.DUAL_SCAN_CONNECT
+        return ProductId.PET_DOOR
 
     def refresh(self):
         def parse(response):

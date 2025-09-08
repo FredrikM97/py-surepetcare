@@ -2,8 +2,8 @@ import asyncio
 
 import pytest
 
-from surepetcare.helper import data_exist_validation
-from surepetcare.helper import validate_date_fields
+from surepcio.helper import data_exist_validation
+from surepcio.helper import validate_date_fields
 
 
 @pytest.fixture

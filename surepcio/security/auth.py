@@ -7,9 +7,9 @@ import aiohttp
 
 from .cache import CacheHeaders
 from .exceptions import AuthenticationError
-from surepetcare.const import HEADER_TEMPLATE
-from surepetcare.const import LOGIN_ENDPOINT
-from surepetcare.const import USER_AGENT
+from surepcio.const import HEADER_TEMPLATE
+from surepcio.const import LOGIN_ENDPOINT
+from surepcio.const import USER_AGENT
 
 logger = logging.getLogger(__name__)
 

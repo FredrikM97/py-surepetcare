@@ -7,13 +7,13 @@ from pydantic import Field
 
 from .device import BaseControl
 from .device import BaseStatus
-from .device import SurepyDevice
-from surepetcare.command import Command
-from surepetcare.const import API_ENDPOINT_PRODUCTION
-from surepetcare.devices.entities import FlattenWrappersMixin
-from surepetcare.enums import BowlPosition
-from surepetcare.enums import FoodType
-from surepetcare.enums import ProductId
+from .device import DeviceBase
+from surepcio.command import Command
+from surepcio.const import API_ENDPOINT_PRODUCTION
+from surepcio.devices.entities import FlattenWrappersMixin
+from surepcio.enums import BowlPosition
+from surepcio.enums import FoodType
+from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +48,7 @@ class Status(BaseStatus):
     bowl_status: Optional[list[dict[str, Any]]] = None
 
 
-class FeederConnect(SurepyDevice):
+class FeederConnect(DeviceBase):
     def __init__(self, data: dict) -> None:
         try:
             super().__init__(data)

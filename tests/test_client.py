@@ -1,6 +1,6 @@
 import pytest
 
-from surepetcare.client import SurePetcareClient
+from surepcio.client import SurePetcareClient
 from tests.mock_helpers import DummySession
 from tests.mock_helpers import MockClient
 

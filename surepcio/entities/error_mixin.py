@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import model_validator
 
-from surepetcare.security.exceptions import ValidationMissingFieldsError
+from surepcio.security.exceptions import ValidationMissingFieldsError
 
 
 class ImprovedErrorMixin(BaseModel):

@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import ConfigDict
 from pydantic import model_validator
 
-from surepetcare.entities.error_mixin import ImprovedErrorMixin
+from surepcio.entities.error_mixin import ImprovedErrorMixin
 
 
 class FlattenWrappersMixin(ImprovedErrorMixin):

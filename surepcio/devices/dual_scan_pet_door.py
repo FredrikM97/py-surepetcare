@@ -1,18 +1,17 @@
 import logging
-from typing import Any
 
 from .device import BaseControl
 from .device import BaseStatus
-from .device import SurepyDevice
-from surepetcare.command import Command
-from surepetcare.const import API_ENDPOINT_PRODUCTION
-from surepetcare.enums import ProductId
+from .device import DeviceBase
+from surepcio.command import Command
+from surepcio.const import API_ENDPOINT_PRODUCTION
+from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
 
 
-class NoIdDogBowlConnect(SurepyDevice):
-    def __init__(self, data: dict[Any, Any]) -> None:
+class DualScanPetDoor(DeviceBase):
+    def __init__(self, data: dict) -> None:
         try:
             super().__init__(data)
             self.status: BaseStatus = BaseStatus(**data)
@@ -23,7 +22,7 @@ class NoIdDogBowlConnect(SurepyDevice):
 
     @property
     def product(self) -> ProductId:
-        return ProductId.NO_ID_DOG_BOWL_CONNECT
+        return ProductId.DUAL_SCAN_PET_DOOR
 
     def refresh(self):
         def parse(response):

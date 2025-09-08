@@ -1,9 +1,9 @@
 import pytest
 
-from surepetcare.enums import BowlPosition
-from surepetcare.enums import FoodType
-from surepetcare.enums import Location
-from surepetcare.enums import ProductId
+from surepcio.enums import BowlPosition
+from surepcio.enums import FoodType
+from surepcio.enums import Location
+from surepcio.enums import ProductId
 
 
 @pytest.mark.parametrize(

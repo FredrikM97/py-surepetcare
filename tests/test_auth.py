@@ -1,6 +1,6 @@
 import pytest
 
-from surepetcare.security.auth import AuthClient
+from surepcio.security.auth import AuthClient
 from tests.mock_helpers import DummySession
 
 
@@ -71,7 +71,7 @@ def test_token_missing():
 
 
 def test_get_formatted_header():
-    from surepetcare.security.auth import get_formatted_header
+    from surepcio.security.auth import get_formatted_header
 
     h = get_formatted_header(user_agent="ua", token="tok", device_id="dev")
     assert isinstance(h, dict)

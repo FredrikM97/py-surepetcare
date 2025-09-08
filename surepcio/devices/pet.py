@@ -6,11 +6,11 @@ from typing import Optional
 from pydantic import Field
 from pydantic import model_validator
 
-from .device import SurepyPet
-from surepetcare.command import Command
-from surepetcare.const import API_ENDPOINT_PRODUCTION
-from surepetcare.devices.entities import FlattenWrappersMixin
-from surepetcare.enums import ProductId
+from .device import PetBase
+from surepcio.command import Command
+from surepcio.const import API_ENDPOINT_PRODUCTION
+from surepcio.devices.entities import FlattenWrappersMixin
+from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +104,7 @@ class Status(FlattenWrappersMixin):
     report: ReportHouseholdResource = Field(default_factory=ReportHouseholdResource)
 
 
-class Pet(SurepyPet):
+class Pet(PetBase):
     def __init__(self, data: dict) -> None:
         try:
             super().__init__(data)

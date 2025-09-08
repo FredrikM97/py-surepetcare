@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["surepetcare*"]
+include = ["surepcio*"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
