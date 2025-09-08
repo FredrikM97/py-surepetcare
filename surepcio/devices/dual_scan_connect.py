@@ -7,8 +7,8 @@ from .device import BaseStatus
 from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
+from surepcio.devices.entities import FlattenWrappersMixin
 from surepcio.enums import ProductId
-from datetime import time
 
 logger = logging.getLogger(__name__)
 
