@@ -13,7 +13,7 @@ def make_data():
     }
 
 
-def test_deviceBase_notimplemented():
+def test_device_notimplemented():
     class Dummy(DeviceBase):
         @property
         def product(self):
