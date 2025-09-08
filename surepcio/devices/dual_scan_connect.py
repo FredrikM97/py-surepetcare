@@ -1,23 +1,24 @@
 import logging
+from datetime import time
 from typing import Optional
-
-from surepcio.devices.entities import FlattenWrappersMixin
 
 from .device import BaseControl
 from .device import BaseStatus
 from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
+from surepcio.devices.entities import FlattenWrappersMixin
 from surepcio.enums import ProductId
-from datetime import time
 
 logger = logging.getLogger(__name__)
+
 
 class Curfew(FlattenWrappersMixin):
     enabled: bool
     lock_time: time
     unlock_time: time
-    
+
+
 class Control(BaseControl):
     curfew: Optional[list[Curfew]] = None
     locking: Optional[int] = None
@@ -27,11 +28,10 @@ class Control(BaseControl):
 
 class Locking(FlattenWrappersMixin):
     mode: int = 0
-    
+
+
 class Status(BaseStatus):
     locking: Optional[Locking] = None
-
-
 
 
 class DualScanConnect(DeviceBase):
