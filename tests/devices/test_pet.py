@@ -1,5 +1,3 @@
-import json
-
 import pytest
 from syrupy.assertion import SnapshotAssertion
 
@@ -7,7 +5,6 @@ from surepcio.household import Household
 from tests.mock_helpers import MockClient
 from tests.mock_helpers import recursive_dump
 from syrupy.assertion import SnapshotAssertion
-
 @pytest.fixture
 def device_file():
     return "tests/fixture/pet.json"
@@ -30,5 +27,4 @@ async def test_snapshot(snapshot: SnapshotAssertion, household_file, device_file
     data = recursive_dump(pet)
 
     data["last_fetched_datetime"] = "<ANY>"
-    result = json.dumps(data, indent=2)
-    assert result == snapshot
+    assert data == snapshot

@@ -1,69 +1,67 @@
 # serializer version: 1
 # name: test_snapshot
-  '''
-  {
-    "entity_info": {
-      "id": 269654,
-      "name": "Maui matl\u00e5da (old) ",
-      "household_id": 222527,
-      "product_id": 4
-    },
-    "status": {
-      "battery": 5.046,
-      "learn_mode": false,
-      "signal": {
-        "device_rssi": -79
-      },
-      "version": {
-        "device": {
-          "hardware": "9",
-          "firmware": "406.437"
-        }
-      },
-      "online": true,
-      "bowl_status": [
-        {
-          "index": 0,
-          "food_type": 1,
-          "substance_type": 2,
-          "current_weight": 32.16,
-          "last_filled_at": "2025-07-07T10:29:29+00:00",
-          "last_zeroed_at": "2025-05-23T10:25:29+00:00",
-          "last_fill_weight": 32.16,
-          "fill_percent": 100
-        },
-        {
-          "index": 1,
-          "food_type": 1,
-          "substance_type": 2,
-          "current_weight": -27.2,
-          "last_filled_at": "2025-07-07T10:29:29+00:00",
-          "last_zeroed_at": "2025-05-23T10:25:29+00:00",
-          "last_fill_weight": -27.2
-        }
-      ]
-    },
-    "control": {
-      "lid": {
-        "close_delay": 0
-      },
-      "bowls": {
-        "settings": [
-          {
-            "food_type": 1,
-            "target": 0
-          },
-          {
-            "food_type": 1,
-            "target": 0
-          }
-        ],
-        "type": 4
-      },
-      "tare": 2,
-      "training_mode": 0,
-      "fast_polling": false
-    }
-  }
-  '''
+  dict({
+    'control': dict({
+      'bowls': dict({
+        'settings': list([
+          dict({
+            'food_type': 1,
+            'target': 0,
+          }),
+          dict({
+            'food_type': 1,
+            'target': 0,
+          }),
+        ]),
+        'type': 4,
+      }),
+      'fast_polling': False,
+      'lid': dict({
+        'close_delay': 0,
+      }),
+      'tare': 2,
+      'training_mode': 0,
+    }),
+    'entity_info': dict({
+      'household_id': 222527,
+      'id': 269654,
+      'name': 'Maui matlåda (old) ',
+      'product_id': 4,
+    }),
+    'status': dict({
+      'battery': 5.046,
+      'bowl_status': list([
+        dict({
+          'current_weight': 32.16,
+          'fill_percent': 100,
+          'food_type': 1,
+          'index': 0,
+          'last_fill_weight': 32.16,
+          'last_filled_at': '2025-07-07T10:29:29+00:00',
+          'last_zeroed_at': '2025-05-23T10:25:29+00:00',
+          'substance_type': 2,
+        }),
+        dict({
+          'current_weight': -27.2,
+          'food_type': 1,
+          'index': 1,
+          'last_fill_weight': -27.2,
+          'last_filled_at': '2025-07-07T10:29:29+00:00',
+          'last_zeroed_at': '2025-05-23T10:25:29+00:00',
+          'substance_type': 2,
+        }),
+      ]),
+      'learn_mode': False,
+      'online': True,
+      'signal': dict({
+        'device_rssi': -79,
+      }),
+      'version': dict({
+        'device': dict({
+          'firmware': '406.437',
+          'hardware': '9',
+        }),
+      }),
+    }),
+  })
 # ---

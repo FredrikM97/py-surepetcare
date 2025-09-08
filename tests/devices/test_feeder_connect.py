@@ -1,5 +1,3 @@
-import json
-
 import pytest
 from syrupy.assertion import SnapshotAssertion
 
@@ -27,5 +25,4 @@ async def test_snapshot(snapshot: SnapshotAssertion, household_file, device_file
     client.reset()
     device = (await client.api(household.get_devices()))[0]
     await client.api(device.refresh())
-    result = json.dumps(recursive_dump(device), indent=2)
-    assert result == snapshot
+    assert recursive_dump(device) == snapshot
