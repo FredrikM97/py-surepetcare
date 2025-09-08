@@ -1,5 +1,3 @@
-import json
-
 import pytest
 from syrupy.assertion import SnapshotAssertion
 
@@ -30,5 +28,4 @@ async def test_snapshot(snapshot: SnapshotAssertion, household_file, device_file
     data = recursive_dump(pet)
 
     data["last_fetched_datetime"] = "<ANY>"
-    result = json.dumps(data, indent=2)
-    assert result == snapshot
+    assert data == snapshot

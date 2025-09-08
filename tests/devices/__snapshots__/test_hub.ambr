@@ -1,23 +1,22 @@
 # serializer version: 1
 # name: test_snapshot
-  '''
-  {
-    "entity_info": {
-      "id": 295972,
-      "name": "Hem-hub",
-      "household_id": 222527,
-      "product_id": 1
-    },
-    "status": {
-      "version": {
-        "device": {
-          "hardware": "3.0",
-          "firmware": "239.400"
-        }
-      },
-      "online": true
-    },
-    "control": {}
-  }
-  '''
+  dict({
+    'control': dict({
+    }),
+    'entity_info': dict({
+      'household_id': 222527,
+      'id': 295972,
+      'name': 'Hem-hub',
+      'product_id': 1,
+    }),
+    'status': dict({
+      'online': True,
+      'version': dict({
+        'device': dict({
+          'firmware': '239.400',
+          'hardware': '3.0',
+        }),
+      }),
+    }),
+  })
 # ---
