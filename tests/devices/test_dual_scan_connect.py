@@ -1,9 +1,10 @@
 import pytest
+from syrupy.assertion import SnapshotAssertion
 
 from surepcio.household import Household
 from tests.mock_helpers import MockClient
 from tests.mock_helpers import recursive_dump
-from syrupy.assertion import SnapshotAssertion
+
 
 @pytest.fixture
 def device_file():
