@@ -1,7 +1,7 @@
 import pytest
 
-from surepetcare.devices.device import SurepyDevice
-from surepetcare.enums import ProductId
+from surepcio.devices.device import DeviceBase
+from surepcio.enums import ProductId
 
 
 def make_data():
@@ -13,8 +13,8 @@ def make_data():
     }
 
 
-def test_surepydevice_notimplemented():
-    class Dummy(SurepyDevice):
+def test_device_notimplemented():
+    class Dummy(DeviceBase):
         @property
         def product(self):
             return ProductId.HUB
@@ -23,15 +23,15 @@ def test_surepydevice_notimplemented():
     with pytest.raises(NotImplementedError):
         d.refresh()
 
-    class DummyNoProduct(SurepyDevice):
+    class DummyNoProduct(DeviceBase):
         pass
 
     with pytest.raises(TypeError):
         DummyNoProduct()
 
 
-def test_surepydevice_product_notimplemented():
-    class Dummy(SurepyDevice):
+def test_device_product_notimplemented():
+    class Dummy(DeviceBase):
         pass
 
     with pytest.raises(TypeError):

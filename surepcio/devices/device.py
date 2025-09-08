@@ -6,17 +6,17 @@ from typing import Optional
 
 from pydantic import Field
 
-from surepetcare.command import Command
-from surepetcare.devices.entities import BaseControl
-from surepetcare.devices.entities import BaseStatus
-from surepetcare.devices.entities import EntityInfo
-from surepetcare.entities.battery_mixin import BatteryMixin
-from surepetcare.enums import ProductId
+from surepcio.command import Command
+from surepcio.devices.entities import BaseControl
+from surepcio.devices.entities import BaseStatus
+from surepcio.devices.entities import EntityInfo
+from surepcio.entities.battery_mixin import BatteryMixin
+from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
 
 
-class SurepyBase(ABC):
+class SurePetCareBase(ABC):
     entity_info: EntityInfo = Field(default_factory=EntityInfo)
     status: BaseStatus = Field(default_factory=BaseStatus)
     control: BaseControl = Field(default_factory=BaseControl)
@@ -45,7 +45,7 @@ class SurepyBase(ABC):
         raise NotImplementedError("Subclasses must implement refresh method")
 
 
-class SurepyDevice(SurepyBase, BatteryMixin):
+class DeviceBase(SurePetCareBase, BatteryMixin):
     def __init__(self, data: dict[Any, Any]):
         super().__init__(data)
 
@@ -77,7 +77,7 @@ class SurepyDevice(SurepyBase, BatteryMixin):
         return self.entity_info.name
 
 
-class SurepyPet(SurepyBase):
+class PetBase(SurePetCareBase):
     def __init__(self, data: dict[Any, Any]):
         super().__init__(data)
 

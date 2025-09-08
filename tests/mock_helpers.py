@@ -1,6 +1,6 @@
 import json
 
-from surepetcare.client import SurePetcareClient
+from surepcio.client import SurePetcareClient
 
 
 def load_mock_data_for_endpoint(fixture_file="tests/fixture/pet.json"):

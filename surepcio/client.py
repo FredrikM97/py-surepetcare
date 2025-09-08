@@ -1,7 +1,7 @@
 import logging
 
-from surepetcare.command import Command
-from surepetcare.security.auth import AuthClient
+from surepcio.command import Command
+from surepcio.security.auth import AuthClient
 
 logger = logging.getLogger(__name__)
 

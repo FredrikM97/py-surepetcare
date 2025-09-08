@@ -1,7 +1,7 @@
 import pytest
 
-from surepetcare.enums import ProductId
-from surepetcare.household import Household
+from surepcio.enums import ProductId
+from surepcio.household import Household
 from tests.mock_helpers import MockClient
 
 
@@ -115,7 +115,7 @@ async def test_get_product():
 
 def test_get_devices_skips_invalid_product(monkeypatch):
     """Test get_devices skips devices with invalid product_id."""
-    from surepetcare.household import Household
+    from surepcio.household import Household
 
     mock_data = {
         "data": [
@@ -125,16 +125,16 @@ def test_get_devices_skips_invalid_product(monkeypatch):
     }
     household = Household({"id": 1})
     command = household.get_devices()
-    import surepetcare.devices
+    import surepcio.devices
 
-    orig_loader = surepetcare.devices.load_device_class
+    orig_loader = surepcio.devices.load_device_class
 
     def fake_loader(pid):
         if pid == 999:
             raise Exception("Invalid product_id")
         return orig_loader(pid)
 
-    monkeypatch.setattr(surepetcare.devices, "load_device_class", fake_loader)
+    monkeypatch.setattr(surepcio.devices, "load_device_class", fake_loader)
     devices = command.callback(mock_data)
     assert len(devices) == 1
     assert devices[0].id == 11

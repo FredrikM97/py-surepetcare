@@ -19,5 +19,4 @@ The project is inspired by [benleb/surepy](https://github.com/benleb/surepy), bu
 Before pushing validate the changes with: `pre-commit run --all-files`..
 
 ### Issue with missing data
-First run `pip install -r dev-requirements.txt` to add dependencies for development
-Please upload issue with data find in contribute/files with `python -m contribute.contribution`. This generates mock data that can be used to improve the library. Dont forget to add email and password in the .env file.
+First run `pip install -r dev-requirements.txt` to add dependencies for development. Start application and enable debug. The debug logs contain the request data which can be provided with a issue.

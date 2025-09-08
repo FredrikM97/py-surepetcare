@@ -8,7 +8,7 @@ from .no_id_dog_bowl_connect import NoIdDogBowlConnect
 from .pet import Pet
 from .pet_door import PetDoor
 from .poseidon_connect import PoseidonConnect
-from surepetcare.enums import ProductId
+from surepcio.enums import ProductId
 
 # Device class loader moved to loader.py for clarity.
 

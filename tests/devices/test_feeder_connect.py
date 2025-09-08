@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from surepetcare.household import Household
+from surepcio.household import Household
 from tests.mock_helpers import MockClient
 from tests.mock_helpers import recursive_dump
 

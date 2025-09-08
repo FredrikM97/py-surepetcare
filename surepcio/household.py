@@ -1,12 +1,12 @@
 import logging
 
-from surepetcare.command import Command
-from surepetcare.const import API_ENDPOINT_PRODUCTION
-from surepetcare.const import API_ENDPOINT_V1
-from surepetcare.const import API_ENDPOINT_V2
-from surepetcare.devices import load_device_class
-from surepetcare.devices.pet import Pet
-from surepetcare.enums import ProductId
+from surepcio.command import Command
+from surepcio.const import API_ENDPOINT_PRODUCTION
+from surepcio.const import API_ENDPOINT_V1
+from surepcio.const import API_ENDPOINT_V2
+from surepcio.devices import load_device_class
+from surepcio.devices.pet import Pet
+from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
 
