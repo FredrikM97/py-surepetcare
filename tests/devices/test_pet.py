@@ -5,7 +5,7 @@ import pytest
 from surepcio.household import Household
 from tests.mock_helpers import MockClient
 from tests.mock_helpers import recursive_dump
-
+from syrupy.assertion import SnapshotAssertion
 
 @pytest.fixture
 def device_file():
@@ -18,8 +18,8 @@ def household_file():
 
 
 @pytest.mark.asyncio
-async def test_snapshot(snapshot, household_file, device_file):
-    # snapshot.snapshot_dir = "tests/snapshots"
+async def test_snapshot(snapshot: SnapshotAssertion, household_file, device_file):
+    snapshot.snapshot_dir = "tests/snapshots"
     client = MockClient(fixture_file=device_file)
     client.set_mock_response(household_file)
     household = await client.api(Household.get_household(7777))
