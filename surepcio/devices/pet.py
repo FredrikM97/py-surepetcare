@@ -117,13 +117,13 @@ class Pet(PetBase):
 
     @property
     def available(self) -> bool:
-        """Static untill figured out how to handle pet availability."""
+        """Static until figured out how to handle pet availability."""
         return True
 
     @property
-    def photo(self) -> str:
+    def photo(self) -> str | None:
         if self.entity_info.photo is None:
-            raise ValueError("household_id is not set")
+            return None
         return self.entity_info.photo.location
 
     def refresh(self) -> Command:
@@ -171,9 +171,10 @@ class Pet(PetBase):
         return ProductId.PET
 
     @property
-    def tag(self) -> int:
+    def tag(self) -> int | None:
         if self.entity_info.tag is None:
-            raise ValueError("household_id is not set")
+            logger.warning("Pet tag is not set")
+            return None
         return self.entity_info.tag.id
 
     @property
