@@ -14,9 +14,6 @@ The project is inspired by [benleb/surepy](https://github.com/benleb/surepy), bu
 * No ID Dog Bowl Connect
 
 ## Contributing
-**Important:** Store your credentials in a `.env` file (see below) to keep them out of the repository.
-
 Before pushing validate the changes with: `pre-commit run --all-files`..
+Run `pip install -r requirements-dev.txt` to add dependencies for development. Start application and enable debug. The debug logs contain the request data which can be provided with a issue and for snapshot testing.
 
-### Issue with missing data
-First run `pip install -r dev-requirements.txt` to add dependencies for development. Start application and enable debug. The debug logs contain the request data which can be provided with a issue.
