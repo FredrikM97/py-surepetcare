@@ -1,5 +1,6 @@
 import pytest
 
+import surepcio
 from surepcio.enums import ProductId
 from surepcio.household import Household
 from tests.mock_helpers import MockClient
@@ -30,7 +31,7 @@ def make_device_data():
 )
 def test_get_pets_none_and_invalid_response(callback, expected):
     """Test get_pets returns [] for None or invalid response."""
-    household = Household({"id": 1})
+    household = Household({"id": 1, "timezone": {"timezone": "Europe/Stockholm"}})
     try:
         result = callback(household)
     except TypeError:
@@ -47,7 +48,7 @@ def test_get_pets_none_and_invalid_response(callback, expected):
 )
 def test_get_devices_none_and_invalid_response(callback, expected):
     """Test get_devices returns [] for None or invalid response."""
-    household = Household({"id": 1})
+    household = Household({"id": 1, "timezone": {"timezone": "Europe/Stockholm"}})
     assert callback(household) == expected
 
 
@@ -115,7 +116,6 @@ async def test_get_product():
 
 def test_get_devices_skips_invalid_product(monkeypatch):
     """Test get_devices skips devices with invalid product_id."""
-    from surepcio.household import Household
 
     mock_data = {
         "data": [
@@ -123,9 +123,8 @@ def test_get_devices_skips_invalid_product(monkeypatch):
             {"id": 11, "household_id": 1, "name": "Feeder1", "product_id": 4, "status": {"online": True}},
         ]
     }
-    household = Household({"id": 1})
+    household = Household({"id": 1, "timezone": {"timezone": "Europe/Stockholm"}})
     command = household.get_devices()
-    import surepcio.devices
 
     orig_loader = surepcio.devices.load_device_class
 
@@ -142,7 +141,7 @@ def test_get_devices_skips_invalid_product(monkeypatch):
 
 def test_get_pets_uses_cached():
     """Test get_pets returns cached pets if present."""
-    household = Household({"id": 1, "pets": ["cached"]})
+    household = Household({"id": 1, "pets": ["cached"], "timezone": {"timezone": "Europe/Stockholm"}})
     command = household.get_pets()
     result = command.callback(None)
     assert result == ["cached"]
@@ -150,7 +149,7 @@ def test_get_pets_uses_cached():
 
 def test_get_devices_uses_cached():
     """Test get_devices returns cached devices if present."""
-    household = Household({"id": 1, "devices": ["cached"]})
+    household = Household({"id": 1, "devices": ["cached"], "timezone": {"timezone": "Europe/Stockholm"}})
     command = household.get_devices()
     result = command.callback(None)
     assert result == ["cached"]

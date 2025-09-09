@@ -21,8 +21,9 @@ class SurePetCareBase(ABC):
     status: BaseStatus = Field(default_factory=BaseStatus)
     control: BaseControl = Field(default_factory=BaseControl)
 
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: dict, timezone=None, **kwargs) -> None:
         self.entity_info = EntityInfo(**{**data, "product_id": self.product_id})
+        self.timezone = timezone
 
     @property
     @abstractmethod
@@ -46,8 +47,8 @@ class SurePetCareBase(ABC):
 
 
 class DeviceBase(SurePetCareBase, BatteryMixin):
-    def __init__(self, data: dict[Any, Any]):
-        super().__init__(data)
+    def __init__(self, data: dict[Any, Any], **kwargs):
+        super().__init__(data, **kwargs)
 
     @property
     def parent_device_id(self) -> Optional[int]:
@@ -58,9 +59,9 @@ class DeviceBase(SurePetCareBase, BatteryMixin):
         return self.status.online if self.status is not None else None
 
     @property
-    def photo(self) -> str:
+    def photo(self) -> str | None:
         """Return the url path for device photo."""
-        return ""
+        return None
 
     @property
     def id(self) -> Optional[int]:
@@ -78,17 +79,17 @@ class DeviceBase(SurePetCareBase, BatteryMixin):
 
 
 class PetBase(SurePetCareBase):
-    def __init__(self, data: dict[Any, Any]):
-        super().__init__(data)
+    def __init__(self, data: dict[Any, Any], **kwargs):
+        super().__init__(data, **kwargs)
 
     @property
     def available(self) -> Optional[bool]:
         return self.status.online
 
     @property
-    def photo(self) -> str:
+    def photo(self) -> str | None:
         """Return the url path for device photo."""
-        return ""
+        return None
 
     @property
     def id(self) -> Optional[int]:
