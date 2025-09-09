@@ -59,9 +59,9 @@ class DeviceBase(SurePetCareBase, BatteryMixin):
         return self.status.online if self.status is not None else None
 
     @property
-    def photo(self) -> str:
+    def photo(self) -> str | None:
         """Return the url path for device photo."""
-        return ""
+        return None
 
     @property
     def id(self) -> Optional[int]:
@@ -87,9 +87,9 @@ class PetBase(SurePetCareBase):
         return self.status.online
 
     @property
-    def photo(self) -> str:
+    def photo(self) -> str | None:
         """Return the url path for device photo."""
-        return ""
+        return None
 
     @property
     def id(self) -> Optional[int]:
