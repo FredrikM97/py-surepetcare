@@ -1,18 +1,46 @@
 {
     "https://app-api.production.surehub.io/api/household": {
         "data": [
-            {"id": 1},
-            {"id": 2}
+            {
+                "id": 1,
+                "timezone": {
+                    "id": 361,
+                    "name": "(UTC+01:00) Central European Time (Stockholm)",
+                    "timezone": "Europe/Stockholm",
+                    "utc_offset": 7200
+                }
+            },
+            {
+                "id": 2,
+                "timezone": {
+                    "id": 361,
+                    "name": "(UTC+01:00) Central European Time (Stockholm)",
+                    "timezone": "Europe/Stockholm",
+                    "utc_offset": 7200
+                }
+            }
         ]
     },
     "https://app-api.production.surehub.io/api/household/1": {
         "data": {
-            "id": 1
+            "id": 1,
+             "timezone": {
+                    "id": 361,
+                    "name": "(UTC+01:00) Central European Time (Stockholm)",
+                    "timezone": "Europe/Stockholm",
+                    "utc_offset": 7200
+                }
         }
     },
     "https://app-api.production.surehub.io/api/household/7777": {
         "data": {
-            "id": 7777
+            "id": 7777,
+             "timezone": {
+                    "id": 361,
+                    "name": "(UTC+01:00) Central European Time (Stockholm)",
+                    "timezone": "Europe/Stockholm",
+                    "utc_offset": 7200
+                }
         }
     },
     "https://app.api.surehub.io/api/v2/product/1/device/2/control": {

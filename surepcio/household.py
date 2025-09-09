@@ -15,13 +15,13 @@ class Household:
     def __init__(self, data: dict):
         self.data = data
         self.id = data["id"]
-        # Add other fields as needed
+        self.timezone = (data.get("timezone") or {}).get("timezone")
 
     def get_pets(self):
         def parse(response):
             if not response:
                 return self.data.get("pets", [])
-            pets = [Pet(p) for p in response["data"]]
+            pets = [Pet(p, timezone=self.timezone) for p in response["data"]]
             self.data["pets"] = pets
             return pets
 
@@ -38,7 +38,9 @@ class Household:
                 devices = []
                 for device in response["data"]:
                     if device["product_id"] in set(ProductId):
-                        devices.append(load_device_class(device["product_id"])(device))
+                        devices.append(
+                            load_device_class(device["product_id"])(device, timezone=self.timezone)
+                        )
                 self.data["devices"] = devices
                 return devices
             return []

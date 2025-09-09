@@ -35,9 +35,9 @@ class Status(BaseStatus):
 
 
 class DualScanConnect(DeviceBase):
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: dict, **kwargs) -> None:
         try:
-            super().__init__(data)
+            super().__init__(data, **kwargs)
             self.status: Status = Status(**data)
             self.control: Control = Control(**data)
         except Exception as e:
