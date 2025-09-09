@@ -12,9 +12,9 @@ logger = logging.getLogger(__name__)
 
 
 class NoIdDogBowlConnect(DeviceBase):
-    def __init__(self, data: dict[Any, Any]) -> None:
+    def __init__(self, data: dict[Any, Any], **kwargs) -> None:
         try:
-            super().__init__(data)
+            super().__init__(data, **kwargs)
             self.status: BaseStatus = BaseStatus(**data)
             self.control: BaseControl = BaseControl(**data)
         except Exception as e:

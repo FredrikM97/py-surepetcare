@@ -2,6 +2,7 @@ import logging
 from datetime import datetime
 from datetime import timedelta
 from typing import Optional
+from zoneinfo import ZoneInfo
 
 from pydantic import Field
 from pydantic import model_validator
@@ -105,11 +106,12 @@ class Status(FlattenWrappersMixin):
 
 
 class Pet(PetBase):
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: dict, **kwargs) -> None:
         try:
-            super().__init__(data)
+            super().__init__(data, **kwargs)
             self.control: Control = Control(**data)
             self.status: Status = Status(**data)
+
         except Exception as e:
             logger.warning("Error while storing data %s", data)
             raise e
@@ -136,7 +138,7 @@ class Pet(PetBase):
         def parse(response):
             self.status.report = ReportHouseholdResource(**response["data"])
             self.control = Control(**{**self.control.model_dump(), **response["data"]})
-            self.last_fetched_datetime = datetime.utcnow().isoformat()
+            self.last_fetched_datetime = datetime.now(ZoneInfo(self.timezone)).isoformat()
             return self
 
         params = {}
@@ -145,12 +147,12 @@ class Pet(PetBase):
             if self.last_fetched_datetime:
                 from_date = self.last_fetched_datetime
             else:
-                from_date = (datetime.now() - timedelta(hours=24)).isoformat()
+                from_date = (datetime.now(ZoneInfo(self.timezone)) - timedelta(hours=24)).isoformat()
         params["From"] = from_date
 
         # Handle to_date
         if not to_date:
-            to_date = datetime.utcnow().isoformat()
+            to_date = datetime.now(ZoneInfo(self.timezone)).isoformat()
         params["To"] = to_date
 
         if event_type is not None:
