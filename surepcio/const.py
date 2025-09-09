@@ -8,9 +8,10 @@ API_ENDPOINT_V1 = "https://app.api.surehub.io/api"
 API_ENDPOINT_V2 = "https://app.api.surehub.io/api/v2"
 API_ENDPOINT_PRODUCTION = "https://app-api.production.surehub.io/api"
 LOGIN_ENDPOINT = f"{API_ENDPOINT_PRODUCTION}/auth/login"
-
 USER_AGENT = "version {version} https://github.com/FredrikM97/py-surepetcare"
 REQUEST_TYPES = ["GET", "PUT", "POST", "DELETE"]
+
+DEFAULT_SENSITIVE_FIELDS = ["email_address", "share_code", "code", "name", "users"]
 
 HEADER_TEMPLATE = {
     "Host": "app-api.production.surehub.io",
