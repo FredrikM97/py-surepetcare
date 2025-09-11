@@ -13,7 +13,6 @@ on:
           - major
           - pre_n
           - pre_l
-
 jobs:
   build:
     permissions:
