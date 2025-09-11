@@ -35,7 +35,7 @@ class ReportHouseholdMovementResource(FlattenWrappersMixin):
     active: Optional[bool] = None
     exit_movement_id: Optional[int] = None
     entry_movement_id: Optional[int] = None
-
+            
 
 class ReportWeightFrame(FlattenWrappersMixin):
     """Represents a weight frame in the household report."""
