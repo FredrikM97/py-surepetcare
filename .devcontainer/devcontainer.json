@@ -1,6 +1,6 @@
 {
   "name": "Python Dev Container",
-  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "image": "mcr.microsoft.com/devcontainers/python:3.13",
   "features": {},
   "customizations": {
     "vscode": {
@@ -18,6 +18,6 @@
     "type=volume,source=ha-core-containers,target=/workspaces"
   ],
   "workspaceFolder": "/workspaces/py-surepetcare",
-  "postCreateCommand": "pip install -e . && pip install -r dev-requirements.txt",
+  "postCreateCommand": "pip install -e . && pip install -r requirements-dev.txt",
   "overrideCommand": true
 }
