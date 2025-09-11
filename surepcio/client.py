@@ -11,13 +11,13 @@ class SurePetcareClient(AuthClient):
         await self.set_session()
         async with self.session.get(endpoint, params=params, headers=headers) as response:
             if not response.ok:
-                raise Exception(f"Error {endpoint} {response.status}: {await response.text()}")
+                raise Exception("Error %s %s: %s", endpoint, response.status, await response.text())
             if response.status == 204:
-                logger.info(f"GET {endpoint} returned 204 No Content")
+                logger.info("GET %s returned 204 No Content", endpoint)
                 return None
             if response.status == 304:
                 # Not modified, keep existing data
-                logger.debug(f"GET {endpoint} returned 304 Not Modified")
+                logger.debug("GET %s returned 304 Not Modified", endpoint)
                 return None
             self.populate_headers(response)
             return await response.json()
@@ -26,9 +26,9 @@ class SurePetcareClient(AuthClient):
         await self.set_session()
         async with self.session.post(endpoint, json=data, headers=headers) as response:
             if not response.ok:
-                raise Exception(f"Error {response.status}: {await response.text()}")
+                raise Exception("Error %s: %s", response.status, await response.text())
             if response.status == 204:
-                logger.info(f"POST {endpoint} returned 204 No Content")
+                logger.info("POST %s returned 204 No Content", endpoint)
                 return {"status": 204}
             self.populate_headers(response)
             return await response.json()
@@ -50,10 +50,10 @@ class SurePetcareClient(AuthClient):
             )
 
         else:
-            raise NotImplementedError(f"HTTP method {command.method} not supported.")
+            raise NotImplementedError("HTTP method %s not supported.", command.method)
         response = await coro
 
-        logger.debug(f"Response for {command.endpoint} refresh: {response}")
+        logger.debug("Response for %s refresh: %s", command.endpoint, response)
         if command.callback:
             return command.callback(response)
 
