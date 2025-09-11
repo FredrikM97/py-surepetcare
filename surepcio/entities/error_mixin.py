@@ -22,8 +22,9 @@ class ImprovedErrorMixin(BaseModel):
                 missing.append(field)
         if missing:
             raise ValidationMissingFieldsError(
-                f"Missing required fields for {cls.__name__}: {missing}. "
-                f"Input was: {values.dict() if hasattr(values, 'dict') else values}"
+                "Missing required fields for {}: {}. Input was: {}".format(
+                    cls.__name__, missing, values.dict() if hasattr(values, "dict") else values
+                )
             )
         return values
 
