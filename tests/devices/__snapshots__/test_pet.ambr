@@ -257,3 +257,155 @@
     'timezone': 'Europe/Stockholm',
   })
 # ---
+# name: test_snapshot.1
+  dict({
+    'control': dict({
+    }),
+    'entity_info': dict({
+      'household_id': 7777,
+      'id': 629768,
+      'name': 'Fionna',
+      'photo': dict({
+        'created_at': '2025-02-28T15:34:12+00:00',
+        'hash': 'R01qBHfrNHNkeMiNQrtfgoWlOtUGj8TqTCzgyUZPsI',
+        'id': 820465,
+        'location': 'https://userimages.production.surehub.io/thm/XXXXXXXXX/R01qBHfrNHNkeMiNQrtfgoWlOtUGj8TqTCzgyUZPsI.jpg',
+        'uploading_user_id': 9999999,
+        'version': 0,
+      }),
+      'product_id': 0,
+      'tag': dict({
+        'created_at': '2025-02-28T13:34:39+00:00',
+        'id': 1725049,
+        'supported_product_ids': list([
+          3,
+          4,
+          6,
+          8,
+          10,
+          32,
+        ]),
+        'tag': '756.098101172569',
+        'version': 0,
+      }),
+      'tag_id': 1725049,
+    }),
+    'last_fetched_datetime': '<ANY>',
+    'status': dict({
+      'report': dict({
+        'drinking': list([
+        ]),
+        'feeding': list([
+          dict({
+            'bowl_count': 1,
+            'context': 5,
+            'device_id': 1184438,
+            'duration': 5324,
+            'from_': '2025-09-11T04:07:14+00:00',
+            'to': '2025-09-11T05:35:58+00:00',
+            'weights': list([
+              dict({
+                'change': 41.0,
+                'food_type_id': 1,
+                'index': 0,
+                'target_weight': 0.0,
+                'weight': 120.0,
+              }),
+              dict({
+                'change': 0.0,
+                'food_type_id': 2,
+                'index': 1,
+                'target_weight': 0.0,
+                'weight': 0.0,
+              }),
+            ]),
+          }),
+          dict({
+            'bowl_count': 1,
+            'context': 1,
+            'device_id': 1184438,
+            'duration': 221,
+            'from_': '2025-09-11T05:36:31+00:00',
+            'to': '2025-09-11T05:40:12+00:00',
+            'weights': list([
+              dict({
+                'change': -26.0,
+                'food_type_id': 1,
+                'index': 0,
+                'target_weight': 0.0,
+                'weight': 92.0,
+              }),
+              dict({
+                'change': 0.0,
+                'food_type_id': 2,
+                'index': 1,
+                'target_weight': 0.0,
+                'weight': 0.0,
+              }),
+            ]),
+          }),
+          dict({
+            'bowl_count': 1,
+            'context': 1,
+            'device_id': 1184438,
+            'duration': 149,
+            'from_': '2025-09-11T06:33:27+00:00',
+            'to': '2025-09-11T06:35:56+00:00',
+            'weights': list([
+              dict({
+                'change': -16.0,
+                'food_type_id': 1,
+                'index': 0,
+                'target_weight': 0.0,
+                'weight': 76.0,
+              }),
+              dict({
+                'change': 0.0,
+                'food_type_id': 2,
+                'index': 1,
+                'target_weight': 0.0,
+                'weight': 0.0,
+              }),
+            ]),
+          }),
+        ]),
+        'movement': list([
+          dict({
+            'duration': 2954,
+            'entry_device_id': 1299999,
+            'entry_movement_id': 0,
+            'exit_device_id': 1299999,
+            'exit_movement_id': 0,
+            'from_': '2025-09-11T05:44:02+00:00',
+            'to': '2025-09-11T06:33:16+00:00',
+          }),
+          dict({
+            'duration': 2869,
+            'entry_device_id': 1299999,
+            'entry_movement_id': 0,
+            'exit_device_id': 1299999,
+            'exit_movement_id': 0,
+            'from_': '2025-09-11T06:43:51+00:00',
+            'to': '2025-09-11T07:31:40+00:00',
+          }),
+          dict({
+            'duration': 963,
+            'entry_device_id': 1299999,
+            'entry_movement_id': 0,
+            'exit_device_id': 1299999,
+            'exit_movement_id': 0,
+            'from_': '2025-09-11T07:32:20+00:00',
+            'to': '2025-09-11T07:48:23+00:00',
+          }),
+          dict({
+            'active': True,
+            'entry_movement_id': 0,
+            'exit_movement_id': 0,
+            'from_': '2025-09-11T10:35:57+00:00',
+          }),
+        ]),
+      }),
+    }),
+    'timezone': 'Europe/Stockholm',
+  })
+# ---
