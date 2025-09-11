@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from .dual_scan_connect import DualScanConnect
@@ -10,8 +11,7 @@ from .pet_door import PetDoor
 from .poseidon_connect import PoseidonConnect
 from surepcio.enums import ProductId
 
-# Device class loader moved to loader.py for clarity.
-
+logger = logging.getLogger(__name__)
 
 DEVICE_CLASS_REGISTRY = {
     ProductId.PET: Pet,
@@ -26,4 +26,7 @@ DEVICE_CLASS_REGISTRY = {
 
 
 def load_device_class(product: ProductId | int) -> Optional[type]:
-    return DEVICE_CLASS_REGISTRY.get(ProductId.find(product))
+    cls = DEVICE_CLASS_REGISTRY.get(ProductId.find(product))
+    if cls is None:
+        logger.warning("Unknown product id: %r (type: %s)", product, type(product).__name__)
+    return cls

@@ -60,7 +60,9 @@ class AuthClient(CacheHeaders):
 
                 return self
             else:
-                raise AuthenticationError(f"Authentication error {response.status} {await response.json()}")
+                raise AuthenticationError(
+                    "Authentication error %s %s", response.status, await response.json()
+                )
 
     def _generate_headers(self, token=None, headers={}):
         """Build a HTTP header accepted by the API"""
