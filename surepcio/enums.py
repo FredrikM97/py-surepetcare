@@ -33,6 +33,7 @@ class ProductId(SureEnum):
 class BowlPosition(SureEnum):
     """Feeder Bowl position."""
 
+    UNKNOWN = -1
     LEFT = 0
     RIGHT = 1
 
