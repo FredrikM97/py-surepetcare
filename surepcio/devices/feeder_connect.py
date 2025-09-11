@@ -20,17 +20,17 @@ logger = logging.getLogger(__name__)
 class BowlState(FlattenWrappersMixin):
     position: BowlPosition = BowlPosition.LEFT
     food_type: FoodType = FoodType.UNKNOWN
-    substance_type: Optional[int]
-    current_weight: Optional[float]
+    substance_type: Optional[int] = None
+    current_weight: Optional[float] = None
     last_filled_at: datetime
     last_zeroed_at: datetime
-    last_fill_weight: Optional[float]
-    fill_percent: Optional[int]
+    last_fill_weight: Optional[float] = None
+    fill_percent: Optional[int] = None
 
 
 class BowlTargetWeight(FlattenWrappersMixin):
     food_type: FoodType = FoodType.DRY
-    full_weight: Optional[int]
+    full_weight: Optional[int] = None
 
 
 class Lid(FlattenWrappersMixin):
@@ -38,15 +38,15 @@ class Lid(FlattenWrappersMixin):
 
 
 class Control(BaseControl):
-    lid: Optional[Lid]
-    bowls: Optional[BowlTargetWeight]
-    tare: Optional[int]
-    training_mode: Optional[int]
-    fast_polling: Optional[bool]
+    lid: Optional[Lid] = None
+    bowls: Optional[BowlTargetWeight] = None
+    tare: Optional[int] = None
+    training_mode: Optional[int] = None
+    fast_polling: Optional[bool] = None
 
 
 class Status(BaseStatus):
-    bowl_status: Optional[list[BowlState]]
+    bowl_status: Optional[list[BowlState]] = None
 
 
 class FeederConnect(DeviceBase):

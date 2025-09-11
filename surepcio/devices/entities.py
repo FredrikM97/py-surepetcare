@@ -22,13 +22,13 @@ class PetTag(FlattenWrappersMixin):
 
 
 class DevicePetTag(FlattenWrappersMixin):
-    id: Optional[int]
-    device_id: Optional[int]
-    index: Optional[int]
-    profile: Optional[int]
-    version: Optional[int]
-    created_at: Optional[datetime]
-    updated_at: Optional[datetime]
+    id: Optional[int] = None
+    device_id: Optional[int] = None
+    index: Optional[int] = None
+    profile: Optional[int] = None
+    version: Optional[int] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
 
 class PetPhoto(FlattenWrappersMixin):
@@ -69,15 +69,15 @@ class BaseControl(FlattenWrappersMixin):
 
 
 class Signal(FlattenWrappersMixin):
-    device_rssi: Optional[int]
+    device_rssi: Optional[int] = None
 
 
 class BaseStatus(FlattenWrappersMixin):
-    battery: Optional[float]
-    learn_mode: Optional[bool]
-    signal: Optional[Signal]
-    version: Optional[Any]
-    online: Optional[bool]
+    battery: Optional[float] = None
+    learn_mode: Optional[bool] = None
+    signal: Optional[Signal] = None
+    version: Optional[Any] = None
+    online: Optional[bool] = None
 
     @model_validator(mode="before")
     def extract_status(cls, values):

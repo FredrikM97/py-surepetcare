@@ -4,7 +4,6 @@
     'control': dict({
       'bowls': dict({
         'food_type': <FoodType.DRY: 2>,
-        'full_weight': 0,
       }),
       'fast_polling': False,
       'lid': dict({
@@ -34,7 +33,6 @@
         }),
         dict({
           'current_weight': -27.2,
-          'fill_percent': 0,
           'food_type': <FoodType.WET: 1>,
           'last_fill_weight': -27.2,
           'last_filled_at': datetime.datetime(2025, 7, 7, 10, 29, 29, tzinfo=TzInfo(UTC)),
