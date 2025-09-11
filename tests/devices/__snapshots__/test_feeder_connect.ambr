@@ -3,19 +3,108 @@
   dict({
     'control': dict({
       'bowls': dict({
-        'food_type': <FoodType.DRY: 2>,
+        'settings': list([
+          dict({
+            'food_type': <FoodType.WET: 1>,
+            'target': 0,
+          }),
+          dict({
+            'food_type': <FoodType.DRY: 2>,
+            'target': 0,
+          }),
+        ]),
+        'type': <BowlType.TWO_SMALL: 4>,
       }),
       'fast_polling': False,
       'lid': dict({
         'close_delay': <CloseDelay.FAST: 0>,
       }),
       'tare': 2,
-      'training_mode': 0,
+      'training_mode': <FeederTrainingMode.DISABLED: 0>,
     }),
     'entity_info': dict({
       'household_id': 222527,
       'id': 269654,
       'name': 'Maui matlåda (old) ',
+      'product_id': 4,
+    }),
+    'status': dict({
+      'battery': 5.046,
+      'bowl_status': list([
+        dict({
+          'current_weight': 32.16,
+          'fill_percent': 100,
+          'food_type': <FoodType.WET: 1>,
+          'last_fill_weight': 32.16,
+          'last_filled_at': datetime.datetime(2025, 7, 7, 10, 29, 29, tzinfo=TzInfo(UTC)),
+          'last_zeroed_at': datetime.datetime(2025, 5, 23, 10, 25, 29, tzinfo=TzInfo(UTC)),
+          'position': <BowlPosition.LEFT: 0>,
+          'substance_type': 2,
+        }),
+        dict({
+          'current_weight': -27.2,
+          'food_type': <FoodType.WET: 1>,
+          'last_fill_weight': -27.2,
+          'last_filled_at': datetime.datetime(2025, 7, 7, 10, 29, 29, tzinfo=TzInfo(UTC)),
+          'last_zeroed_at': datetime.datetime(2025, 5, 23, 10, 25, 29, tzinfo=TzInfo(UTC)),
+          'position': <BowlPosition.LEFT: 0>,
+          'substance_type': 2,
+        }),
+      ]),
+      'learn_mode': False,
+      'online': True,
+      'signal': dict({
+        'device_rssi': -79,
+      }),
+      'version': dict({
+        'device': dict({
+          'firmware': '406.437',
+          'hardware': '9',
+        }),
+      }),
+    }),
+    'tags': list([
+      dict({
+        'created_at': datetime.datetime(2023, 10, 1, 14, 34, 49, tzinfo=TzInfo(UTC)),
+        'device_id': 269654,
+        'id': 60978,
+        'index': 1,
+        'profile': 2,
+        'updated_at': datetime.datetime(2023, 10, 1, 14, 34, 49, tzinfo=TzInfo(UTC)),
+        'version': 0,
+      }),
+    ]),
+    'timezone': 'Europe/Stockholm',
+  })
+# ---
+# name: test_snapshot.1
+  dict({
+    'control': dict({
+      'bowls': dict({
+        'settings': list([
+          dict({
+            'food_type': <FoodType.WET: 1>,
+            'target': 0,
+          }),
+          dict({
+            'food_type': <FoodType.DRY: 2>,
+            'target': 0,
+          }),
+        ]),
+        'type': <BowlType.TWO_SMALL: 4>,
+      }),
+      'fast_polling': False,
+      'lid': dict({
+        'close_delay': <CloseDelay.FAST: 0>,
+      }),
+      'tare': 2,
+      'training_mode': <FeederTrainingMode.DISABLED: 0>,
+    }),
+    'entity_info': dict({
+      'household_id': 222527,
+      'id': 269654,
+      'name': 'Cat with only one Bowl',
+      'parent_device_id': 1204444,
       'product_id': 4,
     }),
     'status': dict({

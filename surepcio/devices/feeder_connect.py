@@ -10,7 +10,9 @@ from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.entities import DevicePetTag
 from surepcio.devices.entities import FlattenWrappersMixin
 from surepcio.enums import BowlPosition
+from surepcio.enums import BowlType
 from surepcio.enums import CloseDelay
+from surepcio.enums import FeederTrainingMode
 from surepcio.enums import FoodType
 from surepcio.enums import ProductId
 
@@ -28,9 +30,14 @@ class BowlState(FlattenWrappersMixin):
     fill_percent: Optional[int] = None
 
 
-class BowlTargetWeight(FlattenWrappersMixin):
-    food_type: FoodType = FoodType.DRY
-    full_weight: Optional[int] = None
+class BowlSetting(FlattenWrappersMixin):
+    food_type: FoodType
+    target: int
+
+
+class Bowls(FlattenWrappersMixin):
+    settings: list[BowlSetting]
+    type: Optional[BowlType] = None
 
 
 class Lid(FlattenWrappersMixin):
@@ -39,9 +46,9 @@ class Lid(FlattenWrappersMixin):
 
 class Control(BaseControl):
     lid: Optional[Lid] = None
-    bowls: Optional[BowlTargetWeight] = None
+    bowls: Optional[Bowls] = None
     tare: Optional[int] = None
-    training_mode: Optional[int] = None
+    training_mode: Optional[FeederTrainingMode] = None
     fast_polling: Optional[bool] = None
 
 

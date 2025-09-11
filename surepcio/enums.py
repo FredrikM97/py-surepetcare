@@ -58,3 +58,15 @@ class FoodType(SureEnum):
     DRY = 2
     BOTH = 3
     UNKNOWN = -1
+
+
+class BowlType(SureEnum):
+    """Number of Bowls in Feeder"""
+
+    LARGE_BOWL = 1
+    TWO_SMALL = 4
+
+
+class FeederTrainingMode(SureEnum):
+    DISABLED = 0
+    ENABLED = 1
