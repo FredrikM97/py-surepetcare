@@ -3,7 +3,6 @@ from typing import Any
 from typing import Optional
 
 from pydantic import ConfigDict
-from pydantic import Field
 
 from .device import BaseControl
 from .device import BaseStatus
@@ -19,8 +18,8 @@ logger = logging.getLogger(__name__)
 
 
 class BowlState(FlattenWrappersMixin):
-    position: BowlPosition = Field(default=BowlPosition(0))
-    food_type: FoodType = Field(default=FoodType(-1))
+    position: BowlPosition = BowlPosition.LEFT
+    food_type: FoodType = FoodType.UNKNOWN
     substance_type: int = 0
     current_weight: float = 0.0
     last_filled_at: str = ""
@@ -31,7 +30,7 @@ class BowlState(FlattenWrappersMixin):
 
 
 class BowlTargetWeight(FlattenWrappersMixin):
-    food_type: FoodType = Field(default=FoodType.DRY)
+    food_type: FoodType = FoodType.DRY
     full_weight: int = 0
     model_config = ConfigDict(extra="allow")
 
