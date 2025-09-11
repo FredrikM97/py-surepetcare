@@ -3,69 +3,6 @@
     "data": [
       {
         "id": 123455,
-        "name": "Lilo",
-        "gender": 0,
-        "date_of_birth": "2015-02-26T00:00:00+00:00",
-        "weight": "4900",
-        "comments": "",
-        "breed_id": 368,
-        "food_type_id": 2,
-        "household_id": 7777,
-        "photo_id": 623736,
-        "species_id": 1,
-        "spayed": 1,
-        "tag_id": 55555,
-        "version": 4,
-        "created_at": "2023-10-01T14:32:41+00:00",
-        "updated_at": "2023-12-01T09:13:05+00:00",
-        "photo": {
-          "id": 765433,
-          "title": "1696346417336-cropped.jpg?1696346420372",
-          "location": "https://userimages.production.surehub.io/thm/3139194472/mkihFWCERyEfJ0v9PA1IPqhxfWtM7kr9ug8JTN4.jpg",
-          "hash": "mkihFWCERyEfJ0v9PA1IPqhxfWtM7kr9ug8JTN4",
-          "uploading_user_id": 1425437568,
-          "version": 0,
-          "created_at": "2023-10-03T15:20:26+00:00",
-          "updated_at": "2023-10-03T15:20:26+00:00"
-        },
-        "conditions": [
-          {
-            "id": 25,
-            "version": 0,
-            "created_at": "2023-10-01T14:39:42+00:00",
-            "updated_at": "2023-10-01T14:39:42+00:00"
-          }
-        ],
-        "tag": {
-          "id": 60972,
-          "tag": "752.098100829842",
-          "supported_product_ids": [
-            3,
-            4,
-            6,
-            8,
-            10,
-            32
-          ],
-          "version": 1,
-          "created_at": "2019-09-04T19:47:39+00:00",
-          "updated_at": "2020-03-11T14:21:07+00:00"
-        },
-        "status": {
-          "feeding": {
-            "id": 720390815,
-            "tag_id": 60972,
-            "device_id": 271836,
-            "change": [
-              -2.24,
-              0
-            ],
-            "at": "2024-03-13T17:47:17+00:00"
-          }
-        }
-      },
-      {
-        "id": 123456,
         "name": "Maui",
         "gender": 1,
         "date_of_birth": "2016-10-15T00:00:00+00:00",
@@ -119,6 +56,80 @@
             "at": "2025-05-22T07:20:39+00:00"
           }
         }
+      },
+      {
+        "id": 629768,
+        "name": "Fionna",
+        "gender": 0,
+        "date_of_birth": "2024-07-01T00:00:00+00:00",
+        "weight": "3000",
+        "breed_id": 382,
+        "food_type_id": 3,
+        "household_id": 7777,
+        "photo_id": 820465,
+        "species_id": 1,
+        "spayed": 1,
+        "tag_id": 1725049,
+        "version": 3,
+        "created_at": "2025-02-28T13:34:40+00:00",
+        "updated_at": "2025-03-19T14:43:58+00:00",
+        "photo": {
+          "id": 820465,
+          "location": "https://userimages.production.surehub.io/thm/XXXXXXXXX/R01qBHfrNHNkeMiNQrtfgoWlOtUGj8TqTCzgyUZPsI.jpg",
+          "hash": "R01qBHfrNHNkeMiNQrtfgoWlOtUGj8TqTCzgyUZPsI",
+          "uploading_user_id": 9999999,
+          "version": 0,
+          "created_at": "2025-02-28T15:34:12+00:00"
+        },
+        "conditions": [
+          {
+            "id": 25,
+            "version": 0,
+            "created_at": "2025-03-19T14:43:58+00:00"
+          }
+        ],
+        "tag": {
+          "id": 1725049,
+          "tag": "756.098101172569",
+          "supported_product_ids": [
+            3,
+            4,
+            6,
+            8,
+            10,
+            32
+          ],
+          "version": 0,
+          "created_at": "2025-02-28T13:34:39+00:00"
+        },
+        "status": {
+          "activity": {
+            "id": 5045077041,
+            "pet_id": 629768,
+            "tag_id": 1725049,
+            "user_id": 9999999,
+            "where": 2,
+            "since": "2025-09-11T10:36:59+00:00"
+          },
+          "feeding": {
+            "id": 1205291192,
+            "tag_id": 1725049,
+            "device_id": 1184438,
+            "change": [
+              -16.13,
+              0
+            ],
+            "at": "2025-09-11T06:35:56+00:00"
+          }
+        },
+        "position": {
+          "id": 5045077041,
+          "pet_id": 629768,
+          "tag_id": 1725049,
+          "user_id": 9999999,
+          "where": 2,
+          "since": "2025-09-11T10:36:59+00:00"
+        }
       }
     ],
     "meta": {
@@ -129,235 +140,359 @@
     }
   },
   "https://app-api.production.surehub.io/api/report/household/7777/pet/123455/aggregate": {
-    "data":{
-    "movement": {
-      "datapoints": []
-    },
-    "feeding": {
-      "datapoints": [
-        {
-          "from": "2025-05-27T22:37:30+00:00",
-          "to": "2025-05-27T22:38:14+00:00",
-          "duration": 44,
-          "context": 1,
-          "bowl_count": 2,
-          "device_id": 269654,
-          "weights": [
-            {
-              "index": 0,
-              "weight": 24,
-              "change": -4,
-              "food_type_id": 1,
-              "target_weight": 0
-            },
-            {
-              "index": 1,
-              "weight": 0,
-              "change": 0,
-              "food_type_id": 1,
-              "target_weight": 0
-            }
-          ],
-          "actual_weight": -1
-        },
-        {
-          "from": "2025-05-27T01:43:35+00:00",
-          "to": "2025-05-27T01:45:04+00:00",
-          "duration": 89,
-          "context": 1,
-          "bowl_count": 1,
-          "device_id": 1181149,
-          "weights": [
-            {
-              "index": 0,
-              "weight": 71,
-              "change": -4,
-              "food_type_id": 2,
-              "target_weight": 0
-            },
-            {
-              "index": 1,
-              "weight": 0,
-              "change": 0,
-              "target_weight": 0
-            }
-          ],
-          "actual_weight": 159
-        },
-        {
-          "from": "2025-05-27T03:50:44+00:00",
-          "to": "2025-05-27T03:51:51+00:00",
-          "duration": 67,
-          "context": 1,
-          "bowl_count": 1,
-          "device_id": 1181149,
-          "weights": [
-            {
-              "index": 0,
-              "weight": 68,
-              "change": -3,
-              "food_type_id": 2,
-              "target_weight": 0
-            },
-            {
-              "index": 1,
-              "weight": 0,
-              "change": 0,
-              "target_weight": 0
-            }
-          ],
-          "actual_weight": 159
-        },
-        {
-          "from": "2025-05-27T09:28:56+00:00",
-          "to": "2025-05-27T09:30:21+00:00",
-          "duration": 85,
-          "context": 1,
-          "bowl_count": 1,
-          "device_id": 1181149,
-          "weights": [
-            {
-              "index": 0,
-              "weight": 65,
-              "change": -3,
-              "food_type_id": 2,
-              "target_weight": 0
-            },
-            {
-              "index": 1,
-              "weight": 0,
-              "change": 0,
-              "target_weight": 0
-            }
-          ],
-          "actual_weight": 159
-        },
-        {
-          "from": "2025-05-27T10:03:25+00:00",
-          "to": "2025-05-27T10:04:36+00:00",
-          "duration": 71,
-          "context": 1,
-          "bowl_count": 1,
-          "device_id": 1181149,
-          "weights": [
-            {
-              "index": 0,
-              "weight": 63,
-              "change": -2,
-              "food_type_id": 2,
-              "target_weight": 0
-            },
-            {
-              "index": 1,
-              "weight": 0,
-              "change": 0,
-              "target_weight": 0
-            }
-          ],
-          "actual_weight": 159
-        },
-        {
-          "from": "2025-05-27T16:21:43+00:00",
-          "to": "2025-05-27T16:23:45+00:00",
-          "duration": 122,
-          "context": 1,
-          "bowl_count": 1,
-          "device_id": 1181149,
-          "weights": [
-            {
-              "index": 0,
-              "weight": 56,
-              "change": -6,
-              "food_type_id": 2,
-              "target_weight": 0
-            },
-            {
-              "index": 1,
-              "weight": 0,
-              "change": 0,
-              "target_weight": 0
-            }
-          ],
-          "actual_weight": 159
-        },
-        {
-          "from": "2025-05-27T18:24:10+00:00",
-          "to": "2025-05-27T18:25:30+00:00",
-          "duration": 80,
-          "context": 1,
-          "bowl_count": 1,
-          "device_id": 1181149,
-          "weights": [
-            {
-              "index": 0,
-              "weight": 54,
-              "change": -3,
-              "food_type_id": 2,
-              "target_weight": 0
-            },
-            {
-              "index": 1,
-              "weight": 0,
-              "change": 0,
-              "target_weight": 0
-            }
-          ],
-          "actual_weight": 159
-        },
-        {
-          "from": "2025-05-27T19:28:49+00:00",
-          "to": "2025-05-27T19:29:54+00:00",
-          "duration": 65,
-          "context": 1,
-          "bowl_count": 1,
-          "device_id": 1181149,
-          "weights": [
-            {
-              "index": 0,
-              "weight": 51,
-              "change": -2,
-              "food_type_id": 2,
-              "target_weight": 0
-            },
-            {
-              "index": 1,
-              "weight": 0,
-              "change": 0,
-              "target_weight": 0
-            }
-          ],
-          "actual_weight": 159
-        },
-        {
-          "from": "2025-05-27T20:24:56+00:00",
-          "to": "2025-05-27T20:26:17+00:00",
-          "duration": 81,
-          "context": 1,
-          "bowl_count": 1,
-          "device_id": 1181149,
-          "weights": [
-            {
-              "index": 0,
-              "weight": 47,
-              "change": -5,
-              "food_type_id": 2,
-              "target_weight": 0
-            },
-            {
-              "index": 1,
-              "weight": 0,
-              "change": 0,
-              "target_weight": 0
-            }
-          ],
-          "actual_weight": 159
-        }
-      ]
-    },
-    "drinking": {
-      "datapoints": []
-    },
-    "consumption_habit": [],
-    "consumption_alert": []
+    "data": {
+      "movement": {
+        "datapoints": []
+      },
+      "feeding": {
+        "datapoints": [
+          {
+            "from": "2025-05-27T22:37:30+00:00",
+            "to": "2025-05-27T22:38:14+00:00",
+            "duration": 44,
+            "context": 1,
+            "bowl_count": 2,
+            "device_id": 269654,
+            "weights": [
+              {
+                "index": 0,
+                "weight": 24,
+                "change": -4,
+                "food_type_id": 1,
+                "target_weight": 0
+              },
+              {
+                "index": 1,
+                "weight": 0,
+                "change": 0,
+                "food_type_id": 1,
+                "target_weight": 0
+              }
+            ],
+            "actual_weight": -1
+          },
+          {
+            "from": "2025-05-27T01:43:35+00:00",
+            "to": "2025-05-27T01:45:04+00:00",
+            "duration": 89,
+            "context": 1,
+            "bowl_count": 1,
+            "device_id": 1181149,
+            "weights": [
+              {
+                "index": 0,
+                "weight": 71,
+                "change": -4,
+                "food_type_id": 2,
+                "target_weight": 0
+              },
+              {
+                "index": 1,
+                "weight": 0,
+                "change": 0,
+                "target_weight": 0
+              }
+            ],
+            "actual_weight": 159
+          },
+          {
+            "from": "2025-05-27T03:50:44+00:00",
+            "to": "2025-05-27T03:51:51+00:00",
+            "duration": 67,
+            "context": 1,
+            "bowl_count": 1,
+            "device_id": 1181149,
+            "weights": [
+              {
+                "index": 0,
+                "weight": 68,
+                "change": -3,
+                "food_type_id": 2,
+                "target_weight": 0
+              },
+              {
+                "index": 1,
+                "weight": 0,
+                "change": 0,
+                "target_weight": 0
+              }
+            ],
+            "actual_weight": 159
+          },
+          {
+            "from": "2025-05-27T09:28:56+00:00",
+            "to": "2025-05-27T09:30:21+00:00",
+            "duration": 85,
+            "context": 1,
+            "bowl_count": 1,
+            "device_id": 1181149,
+            "weights": [
+              {
+                "index": 0,
+                "weight": 65,
+                "change": -3,
+                "food_type_id": 2,
+                "target_weight": 0
+              },
+              {
+                "index": 1,
+                "weight": 0,
+                "change": 0,
+                "target_weight": 0
+              }
+            ],
+            "actual_weight": 159
+          },
+          {
+            "from": "2025-05-27T10:03:25+00:00",
+            "to": "2025-05-27T10:04:36+00:00",
+            "duration": 71,
+            "context": 1,
+            "bowl_count": 1,
+            "device_id": 1181149,
+            "weights": [
+              {
+                "index": 0,
+                "weight": 63,
+                "change": -2,
+                "food_type_id": 2,
+                "target_weight": 0
+              },
+              {
+                "index": 1,
+                "weight": 0,
+                "change": 0,
+                "target_weight": 0
+              }
+            ],
+            "actual_weight": 159
+          },
+          {
+            "from": "2025-05-27T16:21:43+00:00",
+            "to": "2025-05-27T16:23:45+00:00",
+            "duration": 122,
+            "context": 1,
+            "bowl_count": 1,
+            "device_id": 1181149,
+            "weights": [
+              {
+                "index": 0,
+                "weight": 56,
+                "change": -6,
+                "food_type_id": 2,
+                "target_weight": 0
+              },
+              {
+                "index": 1,
+                "weight": 0,
+                "change": 0,
+                "target_weight": 0
+              }
+            ],
+            "actual_weight": 159
+          },
+          {
+            "from": "2025-05-27T18:24:10+00:00",
+            "to": "2025-05-27T18:25:30+00:00",
+            "duration": 80,
+            "context": 1,
+            "bowl_count": 1,
+            "device_id": 1181149,
+            "weights": [
+              {
+                "index": 0,
+                "weight": 54,
+                "change": -3,
+                "food_type_id": 2,
+                "target_weight": 0
+              },
+              {
+                "index": 1,
+                "weight": 0,
+                "change": 0,
+                "target_weight": 0
+              }
+            ],
+            "actual_weight": 159
+          },
+          {
+            "from": "2025-05-27T19:28:49+00:00",
+            "to": "2025-05-27T19:29:54+00:00",
+            "duration": 65,
+            "context": 1,
+            "bowl_count": 1,
+            "device_id": 1181149,
+            "weights": [
+              {
+                "index": 0,
+                "weight": 51,
+                "change": -2,
+                "food_type_id": 2,
+                "target_weight": 0
+              },
+              {
+                "index": 1,
+                "weight": 0,
+                "change": 0,
+                "target_weight": 0
+              }
+            ],
+            "actual_weight": 159
+          },
+          {
+            "from": "2025-05-27T20:24:56+00:00",
+            "to": "2025-05-27T20:26:17+00:00",
+            "duration": 81,
+            "context": 1,
+            "bowl_count": 1,
+            "device_id": 1181149,
+            "weights": [
+              {
+                "index": 0,
+                "weight": 47,
+                "change": -5,
+                "food_type_id": 2,
+                "target_weight": 0
+              },
+              {
+                "index": 1,
+                "weight": 0,
+                "change": 0,
+                "target_weight": 0
+              }
+            ],
+            "actual_weight": 159
+          }
+        ]
+      },
+      "drinking": {
+        "datapoints": []
+      },
+      "consumption_habit": [],
+      "consumption_alert": []
+    }
+  },
+  "https://app-api.production.surehub.io/api/report/household/7777/pet/629768/aggregate": {
+    "data": {
+      "movement": {
+        "datapoints": [
+          {
+            "from": "2025-09-11T05:44:02+00:00",
+            "to": "2025-09-11T06:33:16+00:00",
+            "duration": 2954,
+            "entry_device_id": 1299999,
+            "exit_device_id": 1299999,
+            "exit_movement_id": 0,
+            "entry_movement_id": 0
+          },
+          {
+            "from": "2025-09-11T06:43:51+00:00",
+            "to": "2025-09-11T07:31:40+00:00",
+            "duration": 2869,
+            "entry_device_id": 1299999,
+            "exit_device_id": 1299999,
+            "exit_movement_id": 0,
+            "entry_movement_id": 0
+          },
+          {
+            "from": "2025-09-11T07:32:20+00:00",
+            "to": "2025-09-11T07:48:23+00:00",
+            "duration": 963,
+            "entry_device_id": 1299999,
+            "exit_device_id": 1299999,
+            "exit_movement_id": 0,
+            "entry_movement_id": 0
+          },
+          {
+            "from": "2025-09-11T10:35:57+00:00",
+            "active": true,
+            "exit_movement_id": 0,
+            "entry_movement_id": 0
+          }
+        ]
+      },
+      "feeding": {
+        "datapoints": [
+          {
+            "from": "2025-09-11T04:07:14+00:00",
+            "to": "2025-09-11T05:35:58+00:00",
+            "duration": 5324,
+            "context": 5,
+            "bowl_count": 1,
+            "device_id": 1184438,
+            "weights": [
+              {
+                "index": 0,
+                "weight": 120,
+                "change": 41,
+                "food_type_id": 1,
+                "target_weight": 0
+              },
+              {
+                "index": 1,
+                "weight": 0,
+                "change": 0,
+                "food_type_id": 2,
+                "target_weight": 0
+              }
+            ],
+            "actual_weight": 76
+          },
+          {
+            "from": "2025-09-11T05:36:31+00:00",
+            "to": "2025-09-11T05:40:12+00:00",
+            "duration": 221,
+            "context": 1,
+            "bowl_count": 1,
+            "device_id": 1184438,
+            "weights": [
+              {
+                "index": 0,
+                "weight": 92,
+                "change": -26,
+                "food_type_id": 1,
+                "target_weight": 0
+              },
+              {
+                "index": 1,
+                "weight": 0,
+                "change": 0,
+                "food_type_id": 2,
+                "target_weight": 0
+              }
+            ],
+            "actual_weight": 76
+          },
+          {
+            "from": "2025-09-11T06:33:27+00:00",
+            "to": "2025-09-11T06:35:56+00:00",
+            "duration": 149,
+            "context": 1,
+            "bowl_count": 1,
+            "device_id": 1184438,
+            "weights": [
+              {
+                "index": 0,
+                "weight": 76,
+                "change": -16,
+                "food_type_id": 1,
+                "target_weight": 0
+              },
+              {
+                "index": 1,
+                "weight": 0,
+                "change": 0,
+                "food_type_id": 2,
+                "target_weight": 0
+              }
+            ],
+            "actual_weight": 76
+          }
+        ]
+      },
+      "drinking": {
+        "datapoints": []
+      }
+    }
   }
-}}
+}

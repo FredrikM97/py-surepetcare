@@ -23,7 +23,11 @@ async def test_snapshot(snapshot: SnapshotAssertion, household_file, device_file
     client.set_mock_response(household_file)
     household = await client.api(Household.get_household(7777))
     client.reset()
-    device = (await client.api(household.get_devices()))[0]
-    await client.api(device.refresh())
+    
+    devices = (await client.api(household.get_devices()))
+    for device in devices:
+        await client.api(device.refresh())
+        data = recursive_dump(device)
+        assert data == snapshot
 
-    assert recursive_dump(device) == snapshot
+    
