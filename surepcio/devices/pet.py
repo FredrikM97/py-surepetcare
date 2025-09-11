@@ -11,6 +11,7 @@ from .device import PetBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.entities import FlattenWrappersMixin
+from surepcio.enums import BowlPosition
 from surepcio.enums import FoodType
 from surepcio.enums import ProductId
 
@@ -26,8 +27,8 @@ class ReportHouseholdMovementResource(FlattenWrappersMixin):
     device_id: Optional[int] = None
     tag_id: Optional[int] = None
     user_id: Optional[int] = None
-    from_: Optional[str] = Field(default=None, alias="from")
-    to: Optional[str] = None
+    from_: Optional[datetime] = Field(default=None, alias="from")
+    to: Optional[datetime] = None
     duration: Optional[int] = None
     entry_device_id: Optional[int] = None
     entry_user_id: Optional[int] = None
@@ -36,12 +37,12 @@ class ReportHouseholdMovementResource(FlattenWrappersMixin):
     active: Optional[bool] = None
     exit_movement_id: Optional[int] = None
     entry_movement_id: Optional[int] = None
-            
+
 
 class ReportWeightFrame(FlattenWrappersMixin):
     """Represents a weight frame in the household report."""
 
-    index: Optional[int] = None
+    index: Optional[BowlPosition] = None
     weight: Optional[float] = None
     change: Optional[float] = None
     food_type_id: Optional[FoodType] = None
@@ -51,8 +52,8 @@ class ReportWeightFrame(FlattenWrappersMixin):
 class ReportHouseholdFeedingResource(FlattenWrappersMixin):
     """Represents a feeding resource in the household report."""
 
-    from_: str = Field(alias="from")
-    to: str
+    from_: datetime = Field(alias="from")
+    to: datetime
     duration: int
     context: int
     bowl_count: int
@@ -63,8 +64,8 @@ class ReportHouseholdFeedingResource(FlattenWrappersMixin):
 class ReportHouseholdDrinkingResource(FlattenWrappersMixin):
     """Represents a drinking resource in the household report."""
 
-    from_: Optional[str] = Field(default=None, alias="from")
-    to: Optional[str] = None
+    from_: Optional[datetime] = Field(default=None, alias="from")
+    to: Optional[datetime] = None
     duration: Optional[int] = None
     context: Optional[str] = None
     bowl_count: Optional[int] = None
@@ -73,9 +74,9 @@ class ReportHouseholdDrinkingResource(FlattenWrappersMixin):
     actual_weight: Optional[float] = None
     entry_user_id: Optional[int] = None
     exit_user_id: Optional[int] = None
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
-    deleted_at: Optional[str] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    deleted_at: Optional[datetime] = None
     tag_id: Optional[int] = None
     user_id: Optional[int] = None
 

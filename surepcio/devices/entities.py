@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 from typing import Optional
 
@@ -20,6 +21,16 @@ class PetTag(FlattenWrappersMixin):
     updated_at: Optional[str] = None
 
 
+class DevicePetTag(FlattenWrappersMixin):
+    id: Optional[int] = None
+    device_id: Optional[int] = None
+    index: Optional[int] = None
+    profile: Optional[int] = None
+    version: Optional[int] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+
 class PetPhoto(FlattenWrappersMixin):
     id: int
     title: Optional[str] = None
@@ -27,8 +38,8 @@ class PetPhoto(FlattenWrappersMixin):
     hash: str
     uploading_user_id: int
     version: int
-    created_at: str
-    updated_at: Optional[str] = None
+    created_at: datetime
+    updated_at: Optional[datetime] = None
 
 
 class EntityInfo(FlattenWrappersMixin):

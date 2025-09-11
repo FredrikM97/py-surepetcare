@@ -10,6 +10,7 @@ from surepcio.command import Command
 from surepcio.devices.entities import BaseControl
 from surepcio.devices.entities import BaseStatus
 from surepcio.devices.entities import EntityInfo
+from surepcio.devices.entities import PetTag
 from surepcio.entities.battery_mixin import BatteryMixin
 from surepcio.enums import ProductId
 
@@ -47,6 +48,8 @@ class SurePetCareBase(ABC):
 
 
 class DeviceBase(SurePetCareBase, BatteryMixin):
+    tags: Optional[list[PetTag]]
+
     def __init__(self, data: dict[Any, Any], **kwargs):
         super().__init__(data, **kwargs)
 
