@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 class BowlState(FlattenWrappersMixin):
-    position: BowlPosition = BowlPosition.LEFT
+    position: BowlPosition = BowlPosition.UNKNOWN
     food_type: FoodType = FoodType.UNKNOWN
     substance_type: Optional[int] = None
     current_weight: Optional[float] = None

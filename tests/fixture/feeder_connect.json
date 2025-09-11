@@ -7,84 +7,12 @@
                 "household_id": 222527,
                 "name": "Maui matlåda (old) "
             },
-            {
-                "id": 269654,
-                "product_id": 4,
-                "household_id": 222527,
-                "name": "Cat with only one Bowl",
-                "parent_device_id": 1204444,
-                "index": 2,
-                "serial_number": "U004-0308105",
-                "mac_address": "89B304C0F9D5B370",
-                "version": 3,
-                "updated_at": "2025-09-10T07:05:16+00:00",
-                "pairing_at": "2025-06-21T19:32:49+00:00",
-                "last_new_event_at": "2025-09-11T10:50:29+00:00",
-                "control": {
-                    "bowls": {
-                        "settings": [
-                            {
-                                "food_type": 1,
-                                "target": 0
-                            }
-                        ],
-                        "type": 1
-                    },
-                    "lid": {
-                        "close_delay": 0
-                    },
-                    "training_mode": 0,
-                    "fast_polling": false
-                },
-                "status": {
-                    "battery": 5.779,
-                    "learn_mode": false,
-                    "signal": {
-                        "device_rssi": -73
-                    },
-                    "bowl_status": [
-                        {
-                            "index": 0,
-                            "food_type": 1,
-                            "substance_type": 2,
-                            "current_weight": 75.6,
-                            "last_filled_at": "2025-09-11T05:35:58+00:00",
-                            "last_zeroed_at": "2025-06-24T05:16:32+00:00",
-                            "last_fill_weight": 119.66,
-                            "fill_percent": 63
-                        },
-                        {
-                            "index": 1,
-                            "food_type": 2,
-                            "substance_type": 2,
-                            "current_weight": 0,
-                            "last_filled_at": "2025-09-11T05:35:58+00:00",
-                            "last_zeroed_at": "2025-06-24T05:16:32+00:00",
-                            "last_fill_weight": 0
-                        }
-                    ],
-                    "version": {
-                        "device": {
-                            "hardware": "12",
-                            "firmware": "406.437"
-                        }
-                    },
-                    "online": true
-                },
-                "tags": [
-                    {
-                        "id": 1725049,
-                        "device_id": 1184438,
-                        "index": 1,
-                        "profile": 2,
-                        "version": 1,
-                        "created_at": "2025-06-21T19:33:19+00:00",
-                        "updated_at": "2025-06-21T19:33:19+00:00"
-                    }
-                ]
-            }
+            {"id": 1187564, "parent_device_id": 1204444, "product_id": 4, "household_id": 287000, "name": "Cat with only one Bowl"}
+   
         ]
     },
+    "https://app-api.production.surehub.io/api/device/1187564":{"data": {"id": 1187564, "parent_device_id": 1204444, "product_id": 4, "household_id": 287000, "index": 3, "name": "Maurice Futter", "serial_number": "U004-0311231", "mac_address": "BFBF04C0F9D5B370", "version": 3, "updated_at": "2025-09-10T07:05:10+00:00", "pairing_at": "2025-08-20T16:02:21+00:00", "last_new_event_at": "2025-09-11T10:51:21+00:00", "control": {"bowls": {"settings": [{"food_type": 2, "target": 65}], "type": 1}, "lid": {"close_delay": 0}, "training_mode": 0, "fast_polling": true}, "status": {"battery": 6.11, "learn_mode": false, "signal": {"device_rssi": -64}, "bowl_status": [{"index": 0, "food_type": 2, "substance_type": 2, "current_weight": -40.34, "last_filled_at": "2025-09-11T07:29:36+00:00", "last_zeroed_at": "2025-08-20T16:04:37+00:00", "last_fill_weight": -22.73}, {"index": 1, "substance_type": 2, "current_weight": 0, "last_filled_at": "2025-09-11T07:29:36+00:00", "last_zeroed_at": "2025-08-20T16:04:37+00:00", "last_fill_weight": 0}], "version": {"device": {"hardware": "12", "firmware": "406.437"}}, "online": true}, "tags": [{"id": 1725064, "device_id": 1187564, "index": 1, "profile": 2, "version": 1, "created_at": "2025-08-20T16:03:55+00:00", "updated_at": "2025-08-20T16:03:55+00:00"}]}
+},
     "https://app-api.production.surehub.io/api/device/269654": {
         "data": {
             "id": 269654,
@@ -168,5 +96,5 @@
                 }
             ]
         }
-    }
+ }
 }
