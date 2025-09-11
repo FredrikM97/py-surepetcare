@@ -51,14 +51,14 @@
             'weights': list([
               dict({
                 'change': -4.0,
-                'food_type_id': 1,
+                'food_type_id': <FoodType.WET: 1>,
                 'index': 0,
                 'target_weight': 0.0,
                 'weight': 24.0,
               }),
               dict({
                 'change': 0.0,
-                'food_type_id': 1,
+                'food_type_id': <FoodType.WET: 1>,
                 'index': 1,
                 'target_weight': 0.0,
                 'weight': 0.0,
@@ -75,7 +75,7 @@
             'weights': list([
               dict({
                 'change': -4.0,
-                'food_type_id': 2,
+                'food_type_id': <FoodType.DRY: 2>,
                 'index': 0,
                 'target_weight': 0.0,
                 'weight': 71.0,
@@ -98,7 +98,7 @@
             'weights': list([
               dict({
                 'change': -3.0,
-                'food_type_id': 2,
+                'food_type_id': <FoodType.DRY: 2>,
                 'index': 0,
                 'target_weight': 0.0,
                 'weight': 68.0,
@@ -121,7 +121,7 @@
             'weights': list([
               dict({
                 'change': -3.0,
-                'food_type_id': 2,
+                'food_type_id': <FoodType.DRY: 2>,
                 'index': 0,
                 'target_weight': 0.0,
                 'weight': 65.0,
@@ -144,7 +144,7 @@
             'weights': list([
               dict({
                 'change': -2.0,
-                'food_type_id': 2,
+                'food_type_id': <FoodType.DRY: 2>,
                 'index': 0,
                 'target_weight': 0.0,
                 'weight': 63.0,
@@ -167,7 +167,7 @@
             'weights': list([
               dict({
                 'change': -6.0,
-                'food_type_id': 2,
+                'food_type_id': <FoodType.DRY: 2>,
                 'index': 0,
                 'target_weight': 0.0,
                 'weight': 56.0,
@@ -190,7 +190,7 @@
             'weights': list([
               dict({
                 'change': -3.0,
-                'food_type_id': 2,
+                'food_type_id': <FoodType.DRY: 2>,
                 'index': 0,
                 'target_weight': 0.0,
                 'weight': 54.0,
@@ -213,7 +213,7 @@
             'weights': list([
               dict({
                 'change': -2.0,
-                'food_type_id': 2,
+                'food_type_id': <FoodType.DRY: 2>,
                 'index': 0,
                 'target_weight': 0.0,
                 'weight': 51.0,
@@ -236,7 +236,7 @@
             'weights': list([
               dict({
                 'change': -5.0,
-                'food_type_id': 2,
+                'food_type_id': <FoodType.DRY: 2>,
                 'index': 0,
                 'target_weight': 0.0,
                 'weight': 47.0,

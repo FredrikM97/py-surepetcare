@@ -3,21 +3,12 @@
   dict({
     'control': dict({
       'bowls': dict({
-        'settings': list([
-          dict({
-            'food_type': 1,
-            'target': 0,
-          }),
-          dict({
-            'food_type': 1,
-            'target': 0,
-          }),
-        ]),
-        'type': 4,
+        'food_type': <FoodType.DRY: 2>,
+        'full_weight': 0,
       }),
       'fast_polling': False,
       'lid': dict({
-        'close_delay': 0,
+        'close_delay': <CloseDelay.FAST: 0>,
       }),
       'tare': 2,
       'training_mode': 0,
@@ -34,20 +25,21 @@
         dict({
           'current_weight': 32.16,
           'fill_percent': 100,
-          'food_type': 1,
-          'index': 0,
+          'food_type': <FoodType.WET: 1>,
           'last_fill_weight': 32.16,
           'last_filled_at': '2025-07-07T10:29:29+00:00',
           'last_zeroed_at': '2025-05-23T10:25:29+00:00',
+          'position': <BowlPosition.LEFT: 0>,
           'substance_type': 2,
         }),
         dict({
           'current_weight': -27.2,
-          'food_type': 1,
-          'index': 1,
+          'fill_percent': 0,
+          'food_type': <FoodType.WET: 1>,
           'last_fill_weight': -27.2,
           'last_filled_at': '2025-07-07T10:29:29+00:00',
           'last_zeroed_at': '2025-05-23T10:25:29+00:00',
+          'position': <BowlPosition.LEFT: 0>,
           'substance_type': 2,
         }),
       ]),

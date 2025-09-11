@@ -11,6 +11,7 @@ from .device import PetBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.entities import FlattenWrappersMixin
+from surepcio.enums import FoodType
 from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
@@ -43,7 +44,7 @@ class ReportWeightFrame(FlattenWrappersMixin):
     index: Optional[int] = None
     weight: Optional[float] = None
     change: Optional[float] = None
-    food_type_id: Optional[int] = None
+    food_type_id: Optional[FoodType] = None
     target_weight: Optional[float] = None
 
 

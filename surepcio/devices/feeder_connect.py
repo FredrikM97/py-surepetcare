@@ -1,8 +1,5 @@
 import logging
-from typing import Any
 from typing import Optional
-
-from pydantic import ConfigDict
 
 from .device import BaseControl
 from .device import BaseStatus
@@ -11,6 +8,7 @@ from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.entities import FlattenWrappersMixin
 from surepcio.enums import BowlPosition
+from surepcio.enums import CloseDelay
 from surepcio.enums import FoodType
 from surepcio.enums import ProductId
 
@@ -26,25 +24,27 @@ class BowlState(FlattenWrappersMixin):
     last_zeroed_at: str = ""
     last_fill_weight: float = 0.0
     fill_percent: int = 0
-    model_config = ConfigDict(extra="allow")
 
 
 class BowlTargetWeight(FlattenWrappersMixin):
     food_type: FoodType = FoodType.DRY
     full_weight: int = 0
-    model_config = ConfigDict(extra="allow")
+
+
+class Lid(FlattenWrappersMixin):
+    close_delay: CloseDelay
 
 
 class Control(BaseControl):
-    lid: Optional[dict[str, Any]] = None
-    bowls: Optional[dict[str, Any]] = None
+    lid: Optional[Lid] = None
+    bowls: Optional[BowlTargetWeight] = None
     tare: Optional[int] = None
     training_mode: Optional[int] = None
     fast_polling: Optional[bool] = None
 
 
 class Status(BaseStatus):
-    bowl_status: Optional[list[dict[str, Any]]] = None
+    bowl_status: Optional[list[BowlState]] = None
 
 
 class FeederConnect(DeviceBase):
