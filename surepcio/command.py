@@ -21,9 +21,8 @@ class Command:
         self.reuse = reuse
 
     def __str__(self) -> str:
-        return (
-            f"Command(method={self.method!r}, endpoint={self.endpoint!r}, "
-            f"params={self.params!r}, response_type={self.response_type!r})"
+        return "Command(method={!r}, endpoint={!r}, params={!r}, response_type={!r})".format(
+            self.method, self.endpoint, self.params, self.response_type
         )
 
     def __repr__(self) -> str:
