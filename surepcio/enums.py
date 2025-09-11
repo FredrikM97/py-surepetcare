@@ -37,6 +37,12 @@ class BowlPosition(SureEnum):
     RIGHT = 1
 
 
+class CloseDelay(SureEnum):
+    FAST = 0
+    MEDIUM = 1
+    SLOW = 2
+
+
 class Location(SureEnum):
     """Locations."""
 
