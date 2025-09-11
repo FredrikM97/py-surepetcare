@@ -7,6 +7,7 @@ from .device import BaseStatus
 from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
+from surepcio.devices.entities import DevicePetTag
 from surepcio.devices.entities import FlattenWrappersMixin
 from surepcio.enums import ProductId
 
@@ -19,15 +20,15 @@ class Curfew(FlattenWrappersMixin):
     unlock_time: time
 
 
+class Locking(FlattenWrappersMixin):
+    mode: int = 0
+
+
 class Control(BaseControl):
     curfew: Optional[list[Curfew]] = None
     locking: Optional[int] = None
     fail_safe: Optional[int] = None
     fast_polling: Optional[bool] = None
-
-
-class Locking(FlattenWrappersMixin):
-    mode: int = 0
 
 
 class Status(BaseStatus):
@@ -54,6 +55,7 @@ class DualScanConnect(DeviceBase):
                 return self
             self.status = Status(**{**self.status.model_dump(), **response["data"]})
             self.control = Control(**{**self.control.model_dump(), **response["data"]})
+            self.tags = [DevicePetTag(**tag) for tag in response["data"].get("tags", [])]
             return self
 
         return Command(

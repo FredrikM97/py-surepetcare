@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from typing import Optional
 
 from .device import BaseControl
@@ -6,6 +7,7 @@ from .device import BaseStatus
 from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
+from surepcio.devices.entities import DevicePetTag
 from surepcio.devices.entities import FlattenWrappersMixin
 from surepcio.enums import BowlPosition
 from surepcio.enums import CloseDelay
@@ -18,17 +20,17 @@ logger = logging.getLogger(__name__)
 class BowlState(FlattenWrappersMixin):
     position: BowlPosition = BowlPosition.LEFT
     food_type: FoodType = FoodType.UNKNOWN
-    substance_type: int = 0
-    current_weight: float = 0.0
-    last_filled_at: str = ""
-    last_zeroed_at: str = ""
-    last_fill_weight: float = 0.0
-    fill_percent: int = 0
+    substance_type: Optional[int]
+    current_weight: Optional[float]
+    last_filled_at: datetime
+    last_zeroed_at: datetime
+    last_fill_weight: Optional[float]
+    fill_percent: Optional[int]
 
 
 class BowlTargetWeight(FlattenWrappersMixin):
     food_type: FoodType = FoodType.DRY
-    full_weight: int = 0
+    full_weight: Optional[int]
 
 
 class Lid(FlattenWrappersMixin):
@@ -36,15 +38,15 @@ class Lid(FlattenWrappersMixin):
 
 
 class Control(BaseControl):
-    lid: Optional[Lid] = None
-    bowls: Optional[BowlTargetWeight] = None
-    tare: Optional[int] = None
-    training_mode: Optional[int] = None
-    fast_polling: Optional[bool] = None
+    lid: Optional[Lid]
+    bowls: Optional[BowlTargetWeight]
+    tare: Optional[int]
+    training_mode: Optional[int]
+    fast_polling: Optional[bool]
 
 
 class Status(BaseStatus):
-    bowl_status: Optional[list[BowlState]] = None
+    bowl_status: Optional[list[BowlState]]
 
 
 class FeederConnect(DeviceBase):
@@ -71,6 +73,7 @@ class FeederConnect(DeviceBase):
                 return self
             self.status = Status(**{**self.status.model_dump(), **response["data"]})
             self.control = Control(**{**self.control.model_dump(), **response["data"]})
+            self.tags = [DevicePetTag(**tag) for tag in response["data"].get("tags", [])]
             return self
 
         command = Command(

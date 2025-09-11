@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 from typing import Optional
 
@@ -20,6 +21,16 @@ class PetTag(FlattenWrappersMixin):
     updated_at: Optional[str] = None
 
 
+class DevicePetTag(FlattenWrappersMixin):
+    id: Optional[int]
+    device_id: Optional[int]
+    index: Optional[int]
+    profile: Optional[int]
+    version: Optional[int]
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
+
+
 class PetPhoto(FlattenWrappersMixin):
     id: int
     title: Optional[str] = None
@@ -27,8 +38,8 @@ class PetPhoto(FlattenWrappersMixin):
     hash: str
     uploading_user_id: int
     version: int
-    created_at: str
-    updated_at: Optional[str] = None
+    created_at: datetime
+    updated_at: Optional[datetime] = None
 
 
 class EntityInfo(FlattenWrappersMixin):
@@ -58,15 +69,15 @@ class BaseControl(FlattenWrappersMixin):
 
 
 class Signal(FlattenWrappersMixin):
-    device_rssi: Optional[int] = None
+    device_rssi: Optional[int]
 
 
 class BaseStatus(FlattenWrappersMixin):
-    battery: Optional[float] = None
-    learn_mode: Optional[bool] = None
-    signal: Optional[Signal] = None
-    version: Optional[Any] = None
-    online: Optional[bool] = None
+    battery: Optional[float]
+    learn_mode: Optional[bool]
+    signal: Optional[Signal]
+    version: Optional[Any]
+    online: Optional[bool]
 
     @model_validator(mode="before")
     def extract_status(cls, values):
