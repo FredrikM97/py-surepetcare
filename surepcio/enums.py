@@ -55,6 +55,7 @@ class Location(SureEnum):
 class FoodType(SureEnum):
     """Food Types."""
 
+    NOT_SET = 0
     WET = 1
     DRY = 2
     BOTH = 3
