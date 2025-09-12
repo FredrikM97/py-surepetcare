@@ -150,3 +150,36 @@
     'timezone': 'Europe/Stockholm',
   })
 # ---
+# name: test_snapshot_set_bowls_command
+  dict({
+    'control': dict({
+      'bowls': dict({
+        'settings': list([
+          dict({
+            'food_type': <FoodType.WET: 1>,
+            'target': 50,
+          }),
+          dict({
+            'food_type': <FoodType.WET: 1>,
+            'target': 100,
+          }),
+        ]),
+        'type': <BowlType.TWO_SMALL: 4>,
+      }),
+      'fast_polling': False,
+      'lid': dict({
+        'close_delay': <CloseDelay.SLOWER: 20>,
+      }),
+      'training_mode': <FeederTrainingMode.STEP_1: 1>,
+    }),
+    'entity_info': dict({
+      'household_id': 222527,
+      'id': 269654,
+      'name': 'Maui matlåda (old) ',
+      'product_id': 4,
+    }),
+    'status': dict({
+    }),
+    'timezone': 'Europe/Stockholm',
+  })
+# ---

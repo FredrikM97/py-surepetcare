@@ -11,7 +11,15 @@ from surepcio.enums import ProductId
 logger = logging.getLogger(__name__)
 
 
-class PetDoor(DeviceBase):
+class Control(BaseControl):
+    pass
+
+
+class Status(BaseStatus):
+    pass
+
+
+class PetDoor(DeviceBase[Control, Status]):
     @property
     def product(self) -> ProductId:
         return ProductId.PET_DOOR

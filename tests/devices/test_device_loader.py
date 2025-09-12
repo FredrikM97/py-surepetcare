@@ -2,6 +2,9 @@ import pytest
 
 from surepcio.devices import DEVICE_CLASS_REGISTRY
 from surepcio.devices import load_device_class
+from surepcio.devices.device import DeviceBase
+from surepcio.devices.entities import BaseControl
+from surepcio.devices.entities import BaseStatus
 from surepcio.enums import ProductId
 
 
@@ -22,7 +25,7 @@ def test_load_device_class_dynamic():
 
 def test_load_device_class_invalid():
     # Should return None for unknown ProductId
-    class FakeProductId:
+    class FakeProductId(DeviceBase[BaseControl, BaseStatus]):
         pass
 
     assert load_device_class(9999) is None

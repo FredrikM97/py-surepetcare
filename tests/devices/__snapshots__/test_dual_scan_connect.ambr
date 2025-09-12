@@ -80,35 +80,6 @@
         }),
       }),
     }),
-    'tags': list([
-      dict({
-        'created_at': datetime.datetime(2025, 8, 22, 12, 4, tzinfo=TzInfo(UTC)),
-        'device_id': 1334025,
-        'id': 1570310,
-        'index': 1,
-        'profile': 2,
-        'updated_at': datetime.datetime(2025, 8, 22, 12, 5, 39, tzinfo=TzInfo(UTC)),
-        'version': 3,
-      }),
-      dict({
-        'created_at': datetime.datetime(2025, 8, 22, 16, 17, 11, tzinfo=TzInfo(UTC)),
-        'device_id': 1334025,
-        'id': 1959332,
-        'index': 2,
-        'profile': 3,
-        'updated_at': datetime.datetime(2025, 8, 22, 16, 17, 23, tzinfo=TzInfo(UTC)),
-        'version': 2,
-      }),
-      dict({
-        'created_at': datetime.datetime(2025, 9, 1, 6, 13, 25, tzinfo=TzInfo(UTC)),
-        'device_id': 1334025,
-        'id': 2007261,
-        'index': 3,
-        'profile': 3,
-        'updated_at': datetime.datetime(2025, 9, 1, 6, 13, 35, tzinfo=TzInfo(UTC)),
-        'version': 2,
-      }),
-    ]),
     'timezone': 'Europe/Stockholm',
   })
 # ---

@@ -1,6 +1,9 @@
 import json
+import logging
 
 from surepcio.client import SurePetcareClient
+
+logger = logging.getLogger(__name__)
 
 
 def load_mock_data_for_endpoint(fixture_file="tests/fixture/pet.json"):
@@ -10,18 +13,36 @@ def load_mock_data_for_endpoint(fixture_file="tests/fixture/pet.json"):
 
 
 class MockClient(SurePetcareClient):
-    def __init__(self, fixture_file, modify_hook=None):
+    def __init__(self, fixture_file, modify_hook=None, use_method=None):
         super().__init__()
         self.fixture_file = fixture_file
         self.modify_hook = modify_hook
-        self.session = DummySession()  # Use your DummySession
+        self.session = DummySession()
+        self.use_method = use_method
         self.set_mock_response()
 
-    def set_mock_response(self, file=None):
+    def set_mock_response(self, file=None, use_method=None):
+        if use_method is None:
+            use_method = self.use_method
         mock_data = load_mock_data_for_endpoint(self.fixture_file if file is None else file)
         if self.modify_hook:
             mock_data = self.modify_hook(mock_data)
-        self.session._json_data = mock_data
+        self._fixture = mock_data
+
+        def drilldown(data, key):
+            if "data" in data:
+                return data
+            if key in data:
+                return drilldown(data[key], None)
+            logger.warning("Could not find key '%s' in data during drilldown. Data: %s", key, data)
+            return None
+
+        flat_data = {}
+        for key, entry in mock_data.items():
+            v = drilldown(entry, use_method)
+            if v is not None:
+                flat_data[key] = v
+        self.session._json_data = flat_data
 
     def reset(self):
         self.set_mock_response(self.fixture_file)
@@ -113,12 +134,6 @@ class DummySession:
         return self._get_response(endpoint, response)
 
     def post(self, endpoint, *args, response=None, **kwargs):
-        return self._get_response(endpoint, response)
-
-    def put(self, endpoint, *args, response=None, **kwargs):
-        return self._get_response(endpoint, response)
-
-    def delete(self, endpoint, *args, response=None, **kwargs):
         return self._get_response(endpoint, response)
 
     def request(self, *args, response=None, **kwargs):

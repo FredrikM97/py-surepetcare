@@ -49,7 +49,7 @@ async def test_api_put(client_file):
         callback = None
 
     result = await client.api(DummyCommand())
-    assert result == {"foo": "bar"}
+    assert result == {"data": {"foo": "bar"}}
 
 
 @pytest.mark.asyncio
@@ -66,7 +66,7 @@ async def test_api_delete(client_file):
         callback = None
 
     result = await client.api(DummyCommand())
-    assert result == {"foo": "bar"}
+    assert result == {"data": {"foo": "bar"}}
 
 
 @pytest.mark.asyncio
@@ -83,7 +83,7 @@ async def test_api_callback_none(client_file):
         callback = None
 
     result = await client.api(DummyCommand())
-    assert result == {"foo": "bar"}
+    assert result == {"data": {"foo": "bar"}}
 
 
 @pytest.mark.asyncio
@@ -100,7 +100,7 @@ async def test_api_post(client_file):
         callback = None
 
     result = await client.api(DummyCommand())
-    assert result == {"foo": "bar"}
+    assert result == {"data": {"foo": "bar"}}
 
 
 @pytest.mark.asyncio
@@ -114,7 +114,7 @@ async def test_api_callback_custom(client_file):
         endpoint = "https://example.com/endpoint"
         params = None
         reuse = True
-        callback = staticmethod(lambda resp: resp["foo"])
+        callback = staticmethod(lambda resp: resp["data"]["foo"])
 
     result = await client.api(DummyCommand())
     assert result == "bar"
@@ -151,7 +151,7 @@ async def test_api_method_case_insensitive(client_file):
         callback = None
 
     result = await client.api(DummyCommand())
-    assert result == {"foo": "bar"}
+    assert result == {"data": {"foo": "bar"}}
 
 
 @pytest.mark.asyncio
@@ -168,7 +168,7 @@ async def test_api_post_with_params(client_file):
         callback = None
 
     result = await client.api(DummyCommand())
-    assert result == {"foo": "bar"}
+    assert result == {"data": {"foo": "bar"}}
 
 
 @pytest.mark.asyncio
