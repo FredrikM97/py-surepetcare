@@ -2,17 +2,12 @@ from datetime import datetime
 from typing import Any
 from typing import Optional
 
-from pydantic import ConfigDict
 from pydantic import model_validator
 
 from surepcio.entities.error_mixin import ImprovedErrorMixin
 
 
-class FlattenWrappersMixin(ImprovedErrorMixin):
-    model_config = ConfigDict(extra="ignore")
-
-
-class PetTag(FlattenWrappersMixin):
+class PetTag(ImprovedErrorMixin):
     id: int
     tag: str
     supported_product_ids: Optional[list[int]] = None
@@ -21,7 +16,7 @@ class PetTag(FlattenWrappersMixin):
     updated_at: Optional[str] = None
 
 
-class DevicePetTag(FlattenWrappersMixin):
+class DevicePetTag(ImprovedErrorMixin):
     id: Optional[int] = None
     device_id: Optional[int] = None
     index: Optional[int] = None
@@ -31,7 +26,7 @@ class DevicePetTag(FlattenWrappersMixin):
     updated_at: Optional[datetime] = None
 
 
-class PetPhoto(FlattenWrappersMixin):
+class PetPhoto(ImprovedErrorMixin):
     id: int
     title: Optional[str] = None
     location: str
@@ -42,7 +37,7 @@ class PetPhoto(FlattenWrappersMixin):
     updated_at: Optional[datetime] = None
 
 
-class EntityInfo(FlattenWrappersMixin):
+class EntityInfo(ImprovedErrorMixin):
     id: int
     name: str
     household_id: int
@@ -60,19 +55,27 @@ class EntityInfo(FlattenWrappersMixin):
         return values
 
 
-class BaseControl(FlattenWrappersMixin):
+class BaseControl(ImprovedErrorMixin):
+    tags: Optional[list[DevicePetTag]] = None
+
     @model_validator(mode="before")
     def extract_control(cls, values):
-        if "control" in values and isinstance(values["control"], dict):
-            return values["control"]
-        return values
+        merged = {}
+        if "control" not in values and "tags" not in values:
+            return values
+        if "control" in values:
+            merged.update(values["control"])
+        if "tags" in values and values["tags"]:
+            merged["tags"] = values["tags"]
+        # Return None if merged is empty (length 0), else merged
+        return merged if len(merged) > 0 else {}
 
 
-class Signal(FlattenWrappersMixin):
+class Signal(ImprovedErrorMixin):
     device_rssi: Optional[int] = None
 
 
-class BaseStatus(FlattenWrappersMixin):
+class BaseStatus(ImprovedErrorMixin):
     battery: Optional[float] = None
     learn_mode: Optional[bool] = None
     signal: Optional[Signal] = None

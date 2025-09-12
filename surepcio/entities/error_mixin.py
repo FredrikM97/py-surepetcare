@@ -29,3 +29,7 @@ class ImprovedErrorMixin(BaseModel):
         return values
 
     model_config = ConfigDict(extra="ignore")
+
+    def model_dump(self, *args, **kwargs):
+        kwargs.setdefault("exclude_none", True)
+        return super().model_dump(*args, **kwargs)

@@ -7,7 +7,8 @@ from .device import BaseStatus
 from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.devices.entities import FlattenWrappersMixin
+from surepcio.const import API_ENDPOINT_V1
+from surepcio.entities.error_mixin import ImprovedErrorMixin
 from surepcio.enums import BowlPosition
 from surepcio.enums import BowlType
 from surepcio.enums import CloseDelay
@@ -18,7 +19,7 @@ from surepcio.enums import ProductId
 logger = logging.getLogger(__name__)
 
 
-class BowlState(FlattenWrappersMixin):
+class BowlState(ImprovedErrorMixin):
     position: BowlPosition = BowlPosition.UNKNOWN
     food_type: FoodType = FoodType.UNKNOWN
     substance_type: Optional[int] = None
@@ -29,17 +30,17 @@ class BowlState(FlattenWrappersMixin):
     fill_percent: Optional[int] = None
 
 
-class BowlSetting(FlattenWrappersMixin):
+class BowlSetting(ImprovedErrorMixin):
     food_type: FoodType
     target: int
 
 
-class Bowls(FlattenWrappersMixin):
+class Bowls(ImprovedErrorMixin):
     settings: list[BowlSetting]
     type: Optional[BowlType] = None
 
 
-class Lid(FlattenWrappersMixin):
+class Lid(ImprovedErrorMixin):
     close_delay: CloseDelay
 
 
@@ -92,3 +93,71 @@ class FeederConnect(DeviceBase):
     def rssi(self) -> Optional[int]:
         """Return the RSSI value."""
         return self.status.signal.device_rssi if self.status.signal else None
+
+    def set_bowls(self, bowls: Bowls) -> Command:
+        """Set bowls settings"""
+
+        def parse(response):
+            if not response:
+                return self
+            # Unclear what to do with the data.. Should we refresh or is there any callback info?
+            logger.info("Parse callback from set_bowls on device")
+            return self
+
+        return Command(
+            "PUT",
+            f"{API_ENDPOINT_V1}/device/{self.id}/control",
+            params=Control(bowls=bowls).model_dump(),
+            callback=parse,
+        )
+
+    def set_lid(self, lid: Lid) -> Command:
+        """Set lid settings"""
+
+        def parse(response):
+            if not response:
+                return self
+            # Unclear what to do with the data.. Should we refresh or is there any callback info?
+            logger.info("Parse callback from set_lid on device")
+            return self
+
+        return Command(
+            "PUT",
+            f"{API_ENDPOINT_V1}/device/{self.id}/control",
+            params=Control(lid=lid).model_dump(),
+            callback=parse,
+        )
+
+    def set_tare(self, tare: int) -> Command:
+        """Set tare settings"""
+
+        def parse(response):
+            if not response:
+                return self
+            # Unclear what to do with the data.. Should we refresh or is there any callback info?
+            logger.info("Parse callback from set_tare on device")
+            return self
+
+        return Command(
+            "PUT",
+            f"{API_ENDPOINT_V1}/device/{self.id}/control",
+            params=Control(tare=tare).model_dump(),
+            callback=parse,
+        )
+
+    def set_training_mode(self, training_mode: int) -> Command:
+        """Set training_mode settings"""
+
+        def parse(response):
+            if not response:
+                return self
+            # Unclear what to do with the data.. Should we refresh or is there any callback info?
+            logger.info("Parse callback from set_training_mode on device")
+            return self
+
+        return Command(
+            "PUT",
+            f"{API_ENDPOINT_V1}/device/{self.id}/control",
+            params=Control(training_mode=training_mode).model_dump(),
+            callback=parse,
+        )

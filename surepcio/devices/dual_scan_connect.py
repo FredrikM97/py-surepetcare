@@ -7,20 +7,21 @@ from .device import BaseStatus
 from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
+from surepcio.const import API_ENDPOINT_V1
 from surepcio.devices.entities import DevicePetTag
-from surepcio.devices.entities import FlattenWrappersMixin
+from surepcio.entities.error_mixin import ImprovedErrorMixin
 from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
 
 
-class Curfew(FlattenWrappersMixin):
+class Curfew(ImprovedErrorMixin):
     enabled: bool
     lock_time: time
     unlock_time: time
 
 
-class Locking(FlattenWrappersMixin):
+class Locking(ImprovedErrorMixin):
     mode: int = 0
 
 
@@ -42,7 +43,7 @@ class DualScanConnect(DeviceBase):
             self.status: Status = Status(**data)
             self.control: Control = Control(**data)
         except Exception as e:
-            logger.warning("Error while storing data %s", data)
+            logger.warning("Error while storing data %s Error: %s", data, e)
             raise e
 
     @property
@@ -61,5 +62,56 @@ class DualScanConnect(DeviceBase):
         return Command(
             method="GET",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}",
+            callback=parse,
+        )
+
+    def set_curfew(self, curfew: list[Curfew]) -> Command:
+        """Set the flap curfew times, using the household's timezone"""
+
+        def parse(response):
+            if not response:
+                return self
+            # Unclear what to do with the data.. Should we refresh or is there any callback info?
+            logger.info("Parse callback from curfew on device")
+            return self
+
+        return Command(
+            "PUT",
+            f"{API_ENDPOINT_V1}/device/{self.id}/control",
+            params=Control(curfew=curfew).model_dump(),
+            callback=parse,
+        )
+
+    def set_locking(self, locking: int) -> Command:
+        """Set locking mode"""
+
+        def parse(response):
+            if not response:
+                return self
+            # Unclear what to do with the data.. Should we refresh or is there any callback info?
+            logger.info("Parse callback from locking on device")
+            return self
+
+        return Command(
+            "PUT",
+            f"{API_ENDPOINT_V1}/device/{self.id}/control",
+            params=Control(locking=locking).model_dump(),
+            callback=parse,
+        )
+
+    def set_failsafe(self, failsafe: int) -> Command:
+        """Set failsafe mode"""
+
+        def parse(response):
+            if not response:
+                return self
+            # Unclear what to do with the data.. Should we refresh or is there any callback info?
+            logger.info("Parse callback from failsafe on device")
+            return self
+
+        return Command(
+            "PUT",
+            f"{API_ENDPOINT_V1}/device/{self.id}/control",
+            params=Control(fail_safe=failsafe).model_dump(),
             callback=parse,
         )

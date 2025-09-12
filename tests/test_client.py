@@ -18,7 +18,7 @@ async def test_get_none_status(status, client_file):
     client.session = DummySession(ok=True, status=status)
     # {"/endpoint": {"foo": "bar"}}
     client._token = "dummy-token"
-    result = await client.get("/endpoint")
+    result = await client.get("https://example.com/endpoint")
     assert result is None
 
 
@@ -28,28 +28,46 @@ async def test_get_and_post_raises_on_error(ok, status):
     """Test GET/POST raises on error status."""
     client = SurePetcareClient()
     client.session = DummySession(ok=ok, status=status)
-    client.session._json_data = {"/endpoint": {"foo": "bar"}}
+    client.session._json_data = {"https://example.com/endpoint": {"foo": "bar"}}
     client._token = "dummy-token"
     with pytest.raises(Exception):
-        await client.get("/endpoint")
+        await client.get("https://example.com/endpoint")
     with pytest.raises(Exception):
-        await client.post("/endpoint", data={})
+        await client.post("https://example.com/endpoint", data={})
 
 
 @pytest.mark.asyncio
-async def test_api_not_implemented():
+async def test_api_put(client_file):
     """Test api() raises for unsupported method."""
-    client = SurePetcareClient()
+    client = MockClient(client_file)
+    client._token = "dummy-token"
 
     class DummyCommand:
-        method = "put"
-        endpoint = "/endpoint"
+        method = "PUT"
+        endpoint = "https://example.com/endpoint"
         params = None
         reuse = True
         callback = None
 
-    with pytest.raises(NotImplementedError):
-        await client.api(DummyCommand())
+    result = await client.api(DummyCommand())
+    assert result == {"foo": "bar"}
+
+
+@pytest.mark.asyncio
+async def test_api_delete(client_file):
+    """Test api() raises for unsupported method."""
+    client = MockClient(client_file)
+    client._token = "dummy-token"
+
+    class DummyCommand:
+        method = "DELETE"
+        endpoint = "https://example.com/endpoint"
+        params = None
+        reuse = True
+        callback = None
+
+    result = await client.api(DummyCommand())
+    assert result == {"foo": "bar"}
 
 
 @pytest.mark.asyncio
@@ -60,7 +78,7 @@ async def test_api_callback_none(client_file):
 
     class DummyCommand:
         method = "get"
-        endpoint = "/endpoint"
+        endpoint = "https://example.com/endpoint"
         params = None
         reuse = True
         callback = None
@@ -77,7 +95,7 @@ async def test_api_post(client_file):
 
     class DummyCommand:
         method = "post"
-        endpoint = "/endpoint"
+        endpoint = "https://example.com/endpoint"
         params = {"bar": 1}
         reuse = True
         callback = None
@@ -94,7 +112,7 @@ async def test_api_callback_custom(client_file):
 
     class DummyCommand:
         method = "get"
-        endpoint = "/endpoint"
+        endpoint = "https://example.com/endpoint"
         params = None
         reuse = True
         callback = staticmethod(lambda resp: resp["foo"])
@@ -110,7 +128,7 @@ async def test_api_callback_raises(client_file):
 
     class DummyCommand:
         method = "get"
-        endpoint = "/endpoint"
+        endpoint = "https://example.com/endpoint"
         params = None
         reuse = True
         # Callback raises an error
@@ -127,8 +145,8 @@ async def test_api_method_case_insensitive(client_file):
     client._token = "dummy-token"
 
     class DummyCommand:
-        method = "GET"  # uppercase
-        endpoint = "/endpoint"
+        method = "GET"
+        endpoint = "https://example.com/endpoint"
         params = None
         reuse = True
         callback = None
@@ -145,7 +163,7 @@ async def test_api_post_with_params(client_file):
 
     class DummyCommand:
         method = "post"
-        endpoint = "/endpoint"
+        endpoint = "https://example.com/endpoint"
         params = {"bar": 1}
         reuse = True
         callback = None
@@ -162,7 +180,7 @@ async def test_api_callback_returns_none(client_file):
 
     class DummyCommand:
         method = "get"
-        endpoint = "/endpoint"
+        endpoint = "https://example.com/endpoint"
         params = None
         reuse = True
         callback = staticmethod(lambda resp: None)
