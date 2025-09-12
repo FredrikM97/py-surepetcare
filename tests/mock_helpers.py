@@ -115,6 +115,12 @@ class DummySession:
     def post(self, endpoint, *args, response=None, **kwargs):
         return self._get_response(endpoint, response)
 
+    def put(self, endpoint, *args, response=None, **kwargs):
+        return self._get_response(endpoint, response)
+
+    def delete(self, endpoint, *args, response=None, **kwargs):
+        return self._get_response(endpoint, response)
+
     def request(self, *args, response=None, **kwargs):
         return self._get_response(response=response)
 

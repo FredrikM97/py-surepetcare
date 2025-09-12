@@ -16,7 +16,6 @@ async def test_get_none_status(status, client_file):
     """Test GET returns None for 204/304 status."""
     client = MockClient(client_file)
     client.session = DummySession(ok=True, status=status)
-    # {"/endpoint": {"foo": "bar"}}
     client._token = "dummy-token"
     result = await client.get("https://example.com/endpoint")
     assert result is None
@@ -38,7 +37,7 @@ async def test_get_and_post_raises_on_error(ok, status):
 
 @pytest.mark.asyncio
 async def test_api_put(client_file):
-    """Test api() raises for unsupported method."""
+    """Test api() for Put"""
     client = MockClient(client_file)
     client._token = "dummy-token"
 
@@ -55,7 +54,7 @@ async def test_api_put(client_file):
 
 @pytest.mark.asyncio
 async def test_api_delete(client_file):
-    """Test api() raises for unsupported method."""
+    """Test api() for DELETE"""
     client = MockClient(client_file)
     client._token = "dummy-token"
 
