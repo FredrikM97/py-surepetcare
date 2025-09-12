@@ -7,7 +7,6 @@ from .device import BaseStatus
 from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.devices.entities import DevicePetTag
 from surepcio.devices.entities import FlattenWrappersMixin
 from surepcio.enums import BowlPosition
 from surepcio.enums import BowlType
@@ -24,8 +23,8 @@ class BowlState(FlattenWrappersMixin):
     food_type: FoodType = FoodType.UNKNOWN
     substance_type: Optional[int] = None
     current_weight: Optional[float] = None
-    last_filled_at: datetime
-    last_zeroed_at: datetime
+    last_filled_at: Optional[datetime] = None
+    last_zeroed_at: Optional[datetime] = None
     last_fill_weight: Optional[float] = None
     fill_percent: Optional[int] = None
 
@@ -80,7 +79,6 @@ class FeederConnect(DeviceBase):
                 return self
             self.status = Status(**{**self.status.model_dump(), **response["data"]})
             self.control = Control(**{**self.control.model_dump(), **response["data"]})
-            self.tags = [DevicePetTag(**tag) for tag in response["data"].get("tags", [])]
             return self
 
         command = Command(

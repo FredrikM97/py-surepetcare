@@ -53,6 +53,7 @@ class DummyResponse:
         self.headers = {}
         self.url = DummyUrl(path)
         self.text = text or "OK"
+        self.content_length = len(json.dumps(self._json_data)) if self._json_data else 0
 
     def get(self, key, default=None):
         return self._json_data.get(key, default)
@@ -106,6 +107,12 @@ class DummySession:
         return self._get_response(endpoint, response)
 
     def post(self, endpoint, *args, response=None, **kwargs):
+        return self._get_response(endpoint, response)
+
+    def put(self, endpoint, *args, response=None, **kwargs):
+        return self._get_response(endpoint, response)
+
+    def delete(self, endpoint, *args, response=None, **kwargs):
         return self._get_response(endpoint, response)
 
     def request(self, *args, response=None, **kwargs):
