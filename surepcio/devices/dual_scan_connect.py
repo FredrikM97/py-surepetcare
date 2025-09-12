@@ -37,14 +37,8 @@ class Status(BaseStatus):
 
 
 class DualScanConnect(DeviceBase):
-    def __init__(self, data: dict, **kwargs) -> None:
-        try:
-            super().__init__(data, **kwargs)
-            self.status: Status = Status(**data)
-            self.control: Control = Control(**data)
-        except Exception as e:
-            logger.warning("Error while storing data %s Error: %s", data, e)
-            raise e
+    controlCls = Control
+    statusCls = Status
 
     @property
     def product(self) -> ProductId:

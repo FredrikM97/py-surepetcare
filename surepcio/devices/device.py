@@ -17,13 +17,22 @@ from surepcio.enums import ProductId
 logger = logging.getLogger(__name__)
 
 
-class SurePetCareBase(ABC):
+class ModelFactoryMixin:
+    controlCls: type[BaseControl] = BaseControl
+    statusCls: type[BaseStatus] = BaseStatus
+
+
+class SurePetCareBase(ABC, ModelFactoryMixin):
     entity_info: EntityInfo = Field(default_factory=EntityInfo)
-    status: BaseStatus = Field(default_factory=BaseStatus)
-    control: BaseControl = Field(default_factory=BaseControl)
 
     def __init__(self, data: dict, timezone=None, **kwargs) -> None:
-        self.entity_info = EntityInfo(**{**data, "product_id": self.product_id})
+        try:
+            self.entity_info = EntityInfo(**{**data, "product_id": self.product_id})
+            self.status: type[BaseStatus] = self.statusCls(**data)
+            self.control: type[BaseControl] = self.controlCls(**data)
+        except Exception as e:
+            logger.warning("Error while storing data %s", data)
+            raise e
         self.timezone = timezone
 
     @property
@@ -48,9 +57,6 @@ class SurePetCareBase(ABC):
 
 
 class DeviceBase(SurePetCareBase, BatteryMixin):
-    def __init__(self, data: dict[Any, Any], **kwargs):
-        super().__init__(data, **kwargs)
-
     @property
     def parent_device_id(self) -> Optional[int]:
         return self.entity_info.parent_device_id
@@ -86,11 +92,16 @@ class DeviceBase(SurePetCareBase, BatteryMixin):
         """Remove tag/microchip to device."""
         return Command("DELETE", f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}")
 
+    def set_control(self, **control_settings: dict[str, Any]) -> Command:
+        """Universal setter for control settings. Inherit the self.control type and can take any input."""
+        return Command(
+            "PUT",
+            f"{API_ENDPOINT_V1}/device/{self.id}/control",
+            params=self.controlCls(**control_settings).model_dump(),
+        )
+
 
 class PetBase(SurePetCareBase):
-    def __init__(self, data: dict[Any, Any], **kwargs):
-        super().__init__(data, **kwargs)
-
     @property
     def available(self) -> Optional[bool]:
         return self.status.online

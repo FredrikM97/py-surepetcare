@@ -108,15 +108,11 @@ class Status(ImprovedErrorMixin):
 
 
 class Pet(PetBase):
-    def __init__(self, data: dict, **kwargs) -> None:
-        try:
-            super().__init__(data, **kwargs)
-            self.control: Control = Control(**data)
-            self.status: Status = Status(**data)
+    controlCls = Control
+    statusCls = Status
 
-        except Exception as e:
-            logger.warning("Error while storing data %s", data)
-            raise e
+    def __init__(self, data: dict, **kwargs) -> None:
+        super().__init__(data, **kwargs)
         self.last_fetched_datetime: str | None = None
 
     @property

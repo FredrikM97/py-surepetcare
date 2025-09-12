@@ -12,15 +12,6 @@ logger = logging.getLogger(__name__)
 
 
 class PetDoor(DeviceBase):
-    def __init__(self, data: dict, **kwargs) -> None:
-        try:
-            super().__init__(data, **kwargs)
-            self.status: BaseStatus = BaseStatus(**data)
-            self.control: BaseControl = BaseControl(**data)
-        except Exception as e:
-            logger.warning("Error while storing data %s", data)
-            raise e
-
     @property
     def product(self) -> ProductId:
         return ProductId.PET_DOOR
