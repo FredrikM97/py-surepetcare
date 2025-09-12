@@ -86,18 +86,43 @@ class DeviceBase(SurePetCareBase, BatteryMixin):
 
     def add_tag(self, tag_id: int) -> Command:
         """Add tag/microchip to device."""
-        return Command("PUT", f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}")
+
+        def parse(response):
+            if not response:
+                return self
+            # Unclear what to do with the data.. Should we refresh or is there any callback info?
+            logger.info("Parse callback from add_tag on device")
+            return self
+
+        return Command("PUT", f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}", callback=parse)
 
     def remove_tag(self, tag_id: int) -> Command:
         """Remove tag/microchip to device."""
-        return Command("DELETE", f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}")
+
+        def parse(response):
+            if not response:
+                return self
+            # Unclear what to do with the data.. Should we refresh or is there any callback info?
+            logger.info("Parse callback from remove_tag on device")
+            return self
+
+        return Command("DELETE", f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}", callback=parse)
 
     def set_control(self, **control_settings: dict[str, Any]) -> Command:
         """Universal setter for control settings. Inherit the self.control type and can take any input."""
+
+        def parse(response):
+            if not response:
+                return self
+            # Unclear what to do with the data.. Should we refresh or is there any callback info?
+            logger.info("Parse callback from set_control on device")
+            return self
+
         return Command(
             "PUT",
             f"{API_ENDPOINT_V1}/device/{self.id}/control",
             params=self.controlCls(**control_settings).model_dump(),
+            callback=parse,
         )
 
 
