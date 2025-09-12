@@ -17,8 +17,19 @@
       }),
       'fast_polling': False,
       'lid': dict({
-        'close_delay': <CloseDelay.FAST: 0>,
+        'close_delay': <CloseDelay.FASTER: 0>,
       }),
+      'tags': list([
+        dict({
+          'created_at': datetime.datetime(2023, 10, 1, 14, 34, 49, tzinfo=TzInfo(UTC)),
+          'device_id': 269654,
+          'id': 60978,
+          'index': 1,
+          'profile': 2,
+          'updated_at': datetime.datetime(2023, 10, 1, 14, 34, 49, tzinfo=TzInfo(UTC)),
+          'version': 0,
+        }),
+      ]),
       'tare': 2,
       'training_mode': <FeederTrainingMode.DISABLED: 0>,
     }),
@@ -80,8 +91,19 @@
       }),
       'fast_polling': True,
       'lid': dict({
-        'close_delay': <CloseDelay.FAST: 0>,
+        'close_delay': <CloseDelay.FASTER: 0>,
       }),
+      'tags': list([
+        dict({
+          'created_at': datetime.datetime(2025, 8, 20, 16, 3, 55, tzinfo=TzInfo(UTC)),
+          'device_id': 1187564,
+          'id': 1725064,
+          'index': 1,
+          'profile': 2,
+          'updated_at': datetime.datetime(2025, 8, 20, 16, 3, 55, tzinfo=TzInfo(UTC)),
+          'version': 1,
+        }),
+      ]),
       'training_mode': <FeederTrainingMode.DISABLED: 0>,
     }),
     'entity_info': dict({

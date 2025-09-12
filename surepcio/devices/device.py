@@ -7,10 +7,10 @@ from typing import Optional
 from pydantic import Field
 
 from surepcio.command import Command
+from surepcio.const import API_ENDPOINT_V1
 from surepcio.devices.entities import BaseControl
 from surepcio.devices.entities import BaseStatus
 from surepcio.devices.entities import EntityInfo
-from surepcio.devices.entities import PetTag
 from surepcio.entities.battery_mixin import BatteryMixin
 from surepcio.enums import ProductId
 
@@ -48,8 +48,6 @@ class SurePetCareBase(ABC):
 
 
 class DeviceBase(SurePetCareBase, BatteryMixin):
-    tags: Optional[list[PetTag]]
-
     def __init__(self, data: dict[Any, Any], **kwargs):
         super().__init__(data, **kwargs)
 
@@ -79,6 +77,14 @@ class DeviceBase(SurePetCareBase, BatteryMixin):
     @property
     def name(self) -> str:
         return self.entity_info.name
+
+    def add_tag(self, tag_id: int) -> Command:
+        """Add tag/microchip to device."""
+        return Command("PUT", f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}")
+
+    def remove_tag(self, tag_id: int) -> Command:
+        """Remove tag/microchip to device."""
+        return Command("DELETE", f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}")
 
 
 class PetBase(SurePetCareBase):

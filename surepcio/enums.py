@@ -39,9 +39,9 @@ class BowlPosition(SureEnum):
 
 
 class CloseDelay(SureEnum):
-    FAST = 0
-    MEDIUM = 1
-    SLOW = 2
+    FASTER = 0
+    NORMAL = 4
+    SLOWER = 20
 
 
 class Location(SureEnum):
@@ -70,4 +70,7 @@ class BowlType(SureEnum):
 
 class FeederTrainingMode(SureEnum):
     DISABLED = 0
-    ENABLED = 1
+    STEP_1 = 1
+    STEP_2 = 2
+    STEP_3 = 3
+    STEP_4 = 4

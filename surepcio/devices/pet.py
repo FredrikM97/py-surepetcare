@@ -10,7 +10,7 @@ from pydantic import model_validator
 from .device import PetBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.devices.entities import FlattenWrappersMixin
+from surepcio.entities.error_mixin import ImprovedErrorMixin
 from surepcio.enums import BowlPosition
 from surepcio.enums import FoodType
 from surepcio.enums import ProductId
@@ -18,7 +18,7 @@ from surepcio.enums import ProductId
 logger = logging.getLogger(__name__)
 
 
-class ReportHouseholdMovementResource(FlattenWrappersMixin):
+class ReportHouseholdMovementResource(ImprovedErrorMixin):
     """Represents a movement resource in the household report."""
 
     created_at: Optional[str] = None
@@ -39,7 +39,7 @@ class ReportHouseholdMovementResource(FlattenWrappersMixin):
     entry_movement_id: Optional[int] = None
 
 
-class ReportWeightFrame(FlattenWrappersMixin):
+class ReportWeightFrame(ImprovedErrorMixin):
     """Represents a weight frame in the household report."""
 
     index: Optional[BowlPosition] = None
@@ -49,7 +49,7 @@ class ReportWeightFrame(FlattenWrappersMixin):
     target_weight: Optional[float] = None
 
 
-class ReportHouseholdFeedingResource(FlattenWrappersMixin):
+class ReportHouseholdFeedingResource(ImprovedErrorMixin):
     """Represents a feeding resource in the household report."""
 
     from_: datetime = Field(alias="from")
@@ -61,7 +61,7 @@ class ReportHouseholdFeedingResource(FlattenWrappersMixin):
     weights: list[ReportWeightFrame] = Field(default_factory=list)
 
 
-class ReportHouseholdDrinkingResource(FlattenWrappersMixin):
+class ReportHouseholdDrinkingResource(ImprovedErrorMixin):
     """Represents a drinking resource in the household report."""
 
     from_: Optional[datetime] = Field(default=None, alias="from")
@@ -81,7 +81,7 @@ class ReportHouseholdDrinkingResource(FlattenWrappersMixin):
     user_id: Optional[int] = None
 
 
-class ReportHouseholdResource(FlattenWrappersMixin):
+class ReportHouseholdResource(ImprovedErrorMixin):
     movement: list[ReportHouseholdMovementResource] = Field(default_factory=list)
     feeding: list[ReportHouseholdFeedingResource] = Field(default_factory=list)
     drinking: list[ReportHouseholdDrinkingResource] = Field(default_factory=list)
@@ -99,11 +99,11 @@ class ReportHouseholdResource(FlattenWrappersMixin):
         return new_values
 
 
-class Control(FlattenWrappersMixin):
+class Control(ImprovedErrorMixin):
     pass
 
 
-class Status(FlattenWrappersMixin):
+class Status(ImprovedErrorMixin):
     report: ReportHouseholdResource = Field(default_factory=ReportHouseholdResource)
 
 

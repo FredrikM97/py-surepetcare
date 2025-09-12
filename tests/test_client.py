@@ -144,7 +144,7 @@ async def test_api_method_case_insensitive(client_file):
     client._token = "dummy-token"
 
     class DummyCommand:
-        method = "GET"  # uppercase
+        method = "GET"
         endpoint = "https://example.com/endpoint"
         params = None
         reuse = True
