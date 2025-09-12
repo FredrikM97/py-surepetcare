@@ -107,7 +107,7 @@ class Status(ImprovedErrorMixin):
     report: ReportHouseholdResource = Field(default_factory=ReportHouseholdResource)
 
 
-class Pet(PetBase):
+class Pet(PetBase[Control, Status]):
     controlCls = Control
     statusCls = Status
 

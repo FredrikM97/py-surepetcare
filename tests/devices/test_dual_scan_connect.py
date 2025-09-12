@@ -12,6 +12,11 @@ def device_file():
 
 
 @pytest.fixture
+def device_control_file():
+    return "tests/fixture/dual_scan_connect_control.json"
+
+
+@pytest.fixture
 def household_file():
     return "tests/fixture/household.json"
 

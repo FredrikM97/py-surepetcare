@@ -2,7 +2,9 @@ import logging
 from abc import ABC
 from abc import abstractmethod
 from typing import Any
+from typing import Generic
 from typing import Optional
+from typing import TypeVar
 
 from pydantic import Field
 
@@ -16,20 +18,23 @@ from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
 
-
-class ModelFactoryMixin:
-    controlCls: type[BaseControl] = BaseControl
-    statusCls: type[BaseStatus] = BaseStatus
+C = TypeVar("C", bound=BaseControl)
+S = TypeVar("S", bound=BaseStatus)
 
 
-class SurePetCareBase(ABC, ModelFactoryMixin):
+class ModelFactoryMixin(Generic[C, S]):
+    controlCls: type[C] = BaseControl
+    statusCls: type[S] = BaseStatus
+
+
+class SurePetCareBase(ABC, ModelFactoryMixin[C, S]):
     entity_info: EntityInfo = Field(default_factory=EntityInfo)
 
     def __init__(self, data: dict, timezone=None, **kwargs) -> None:
         try:
             self.entity_info = EntityInfo(**{**data, "product_id": self.product_id})
-            self.status: type[BaseStatus] = self.statusCls(**data)
-            self.control: type[BaseControl] = self.controlCls(**data)
+            self.status: S = self.statusCls(**data)
+            self.control: C = self.controlCls(**data)
         except Exception as e:
             logger.warning("Error while storing data %s", data)
             raise e
@@ -56,7 +61,7 @@ class SurePetCareBase(ABC, ModelFactoryMixin):
         raise NotImplementedError("Subclasses must implement refresh method")
 
 
-class DeviceBase(SurePetCareBase, BatteryMixin):
+class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
     @property
     def parent_device_id(self) -> Optional[int]:
         return self.entity_info.parent_device_id
@@ -108,14 +113,14 @@ class DeviceBase(SurePetCareBase, BatteryMixin):
 
         return Command("DELETE", f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}", callback=parse)
 
-    def set_control(self, **control_settings: dict[str, Any]) -> Command:
+    def set_control(self, **control_settings: Any) -> Command:
         """Universal setter for control settings. Inherit the self.control type and can take any input."""
 
         def parse(response):
             if not response:
                 return self
-            # Unclear what to do with the data.. Should we refresh or is there any callback info?
-            logger.info("Parse callback from set_control on device")
+            # Basic attempt to update data from response.
+            self.control = self.controlCls(**{**self.control.model_dump(), **response["data"]})
             return self
 
         return Command(
@@ -126,7 +131,7 @@ class DeviceBase(SurePetCareBase, BatteryMixin):
         )
 
 
-class PetBase(SurePetCareBase):
+class PetBase(SurePetCareBase[C, S]):
     @property
     def available(self) -> Optional[bool]:
         return self.status.online

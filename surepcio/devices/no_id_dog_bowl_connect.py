@@ -10,7 +10,15 @@ from surepcio.enums import ProductId
 logger = logging.getLogger(__name__)
 
 
-class NoIdDogBowlConnect(DeviceBase):
+class Control(BaseControl):
+    pass
+
+
+class Status(BaseStatus):
+    pass
+
+
+class NoIdDogBowlConnect(DeviceBase[Control, Status]):
     @property
     def product(self) -> ProductId:
         return ProductId.NO_ID_DOG_BOWL_CONNECT

@@ -11,7 +11,15 @@ from surepcio.enums import ProductId
 logger = logging.getLogger(__name__)
 
 
-class PoseidonConnect(DeviceBase):
+class Control(BaseControl):
+    pass
+
+
+class Status(BaseStatus):
+    pass
+
+
+class PoseidonConnect(DeviceBase[Control, Status]):
     def refresh(self):
         def parse(response):
             if not response:

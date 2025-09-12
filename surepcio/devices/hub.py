@@ -22,7 +22,7 @@ class Status(BaseStatus):
     pairing_mode: Optional[int] = None
 
 
-class Hub(DeviceBase):
+class Hub(DeviceBase[Control, Status]):
     controlCls = Control
     statusCls = Status
 
