@@ -8,7 +8,8 @@ from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.entities.error_mixin import ImprovedErrorMixin
-from surepcio.enums import FlapLocking, ProductId
+from surepcio.enums import FlapLocking
+from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ class Curfew(ImprovedErrorMixin):
 
 
 class Locking(ImprovedErrorMixin):
-    mode: FlapLocking = 0
+    mode: Optional[FlapLocking] = None
 
 
 class Control(BaseControl):
