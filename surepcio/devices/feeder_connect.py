@@ -2,6 +2,8 @@ import logging
 from datetime import datetime
 from typing import Optional
 
+from pydantic import Field
+
 from .device import BaseControl
 from .device import BaseStatus
 from .device import DeviceBase
@@ -19,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class BowlState(ImprovedErrorMixin):
-    position: BowlPosition = BowlPosition.UNKNOWN
+    position: BowlPosition = Field(default=BowlPosition.UNKNOWN, alias="index")
     food_type: FoodType = FoodType.UNKNOWN
     substance_type: Optional[int] = None
     current_weight: Optional[float] = None
