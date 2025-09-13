@@ -71,7 +71,23 @@ class FeederConnect(DeviceBase[Control, Status]):
         def parse(response):
             if not response:
                 return self
-            self.status = Status(**{**self.status.model_dump(), **response["data"]})
+            status = self.statusCls(**{**self.status.model_dump(), **response["data"]})
+            control = self.controlCls(**{**self.control.model_dump(), **response["data"]})
+
+            # Post-process bowl_status based on bowls.type
+            bowls_type = None
+            if control and control.bowls and control.bowls.type:
+                bowls_type = control.bowls.type
+
+            if bowls_type is not None and status.bowl_status:
+                if bowls_type == BowlType.LARGE_BOWL:
+                    # Use only the first bowl (assume it's the left bowl), set its position to MIDDLE
+                    if status.bowl_status:
+                        bowl = status.bowl_status[0]
+                        bowl.position = BowlPosition.MIDDLE
+                        status.bowl_status = [bowl]
+
+            self.status = status
             self.control = Control(**{**self.control.model_dump(), **response["data"]})
             return self
 

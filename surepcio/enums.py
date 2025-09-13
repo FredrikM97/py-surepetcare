@@ -36,6 +36,7 @@ class BowlPosition(SureEnum):
     UNKNOWN = -1
     LEFT = 0
     RIGHT = 1
+    MIDDLE = 2  # Does not really exist but made for large bowls
 
 
 class CloseDelay(SureEnum):
