@@ -8,7 +8,7 @@ from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.entities.error_mixin import ImprovedErrorMixin
-from surepcio.enums import ProductId
+from surepcio.enums import FlapLocking, ProductId
 
 logger = logging.getLogger(__name__)
 
@@ -20,12 +20,12 @@ class Curfew(ImprovedErrorMixin):
 
 
 class Locking(ImprovedErrorMixin):
-    mode: int = 0
+    mode: FlapLocking = 0
 
 
 class Control(BaseControl):
     curfew: Optional[list[Curfew]] = None
-    locking: Optional[int] = None
+    locking: Optional[FlapLocking] = None
     fail_safe: Optional[int] = None
     fast_polling: Optional[bool] = None
 
@@ -60,7 +60,7 @@ class DualScanConnect(DeviceBase[Control, Status]):
         """Set the flap curfew times, using the household's timezone"""
         return self.set_control(curfew=curfew)
 
-    def set_locking(self, locking: int) -> Command:
+    def set_locking(self, locking: FlapLocking) -> Command:
         """Set locking mode"""
         return self.set_control(locking=locking)
 
