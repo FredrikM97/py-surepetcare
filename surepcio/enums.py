@@ -77,7 +77,8 @@ class FeederTrainingMode(SureEnum):
     STEP_4 = 4
 
 class FlapLocking(SureEnum):
-    UNKNOWN = 0
-    TOTAL_LOCKOUT = 1
-    LOCK_IN = 2
-    LOCK_OUT = 3
+    UNLOCKED = 0
+    ALLOW_IN = 1
+    ALLOW_OUT = 2
+    LOCKED = 3
+    
