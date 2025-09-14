@@ -1,6 +1,5 @@
 import logging
 from datetime import datetime
-from datetime import timedelta
 from typing import Optional
 from zoneinfo import ZoneInfo
 
@@ -113,7 +112,7 @@ class Pet(PetBase[Control, Status]):
 
     def __init__(self, data: dict, **kwargs) -> None:
         super().__init__(data, **kwargs)
-        self.last_fetched_datetime: str =  datetime.now(ZoneInfo(self.timezone)).isoformat()
+        self.last_fetched_datetime: str = datetime.now(ZoneInfo(self.timezone)).isoformat()
 
     @property
     def available(self) -> bool:
