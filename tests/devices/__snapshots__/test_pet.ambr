@@ -19,7 +19,7 @@
       }),
       'product_id': 0,
       'tag': dict({
-        'created_at': '2019-09-04T20:28:11+00:00',
+        'created_at': datetime.datetime(2019, 9, 4, 20, 28, 11, tzinfo=TzInfo(UTC)),
         'id': 60978,
         'supported_product_ids': list([
           3,
@@ -30,7 +30,7 @@
           32,
         ]),
         'tag': '752.093200030403',
-        'updated_at': '2020-03-11T14:21:07+00:00',
+        'updated_at': datetime.datetime(2020, 3, 11, 14, 21, 7, tzinfo=TzInfo(UTC)),
         'version': 1,
       }),
       'tag_id': 60978,
@@ -275,7 +275,7 @@
       }),
       'product_id': 0,
       'tag': dict({
-        'created_at': '2025-02-28T13:34:39+00:00',
+        'created_at': datetime.datetime(2025, 2, 28, 13, 34, 39, tzinfo=TzInfo(UTC)),
         'id': 1725049,
         'supported_product_ids': list([
           3,

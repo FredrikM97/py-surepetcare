@@ -12,8 +12,8 @@ class PetTag(ImprovedErrorMixin):
     tag: str
     supported_product_ids: Optional[list[int]] = None
     version: Optional[int] = None
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
 
 class DevicePetTag(ImprovedErrorMixin):

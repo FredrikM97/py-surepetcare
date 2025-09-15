@@ -4,7 +4,7 @@ from typing import Optional
 from zoneinfo import ZoneInfo
 
 from pydantic import Field
-from pydantic import model_validator
+from pydantic import field_validator
 
 from .device import PetBase
 from surepcio.command import Command
@@ -20,9 +20,9 @@ logger = logging.getLogger(__name__)
 class ReportHouseholdMovementResource(ImprovedErrorMixin):
     """Represents a movement resource in the household report."""
 
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
-    deleted_at: Optional[str] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    deleted_at: Optional[datetime] = None
     device_id: Optional[int] = None
     tag_id: Optional[int] = None
     user_id: Optional[int] = None
@@ -85,17 +85,11 @@ class ReportHouseholdResource(ImprovedErrorMixin):
     feeding: list[ReportHouseholdFeedingResource] = Field(default_factory=list)
     drinking: list[ReportHouseholdDrinkingResource] = Field(default_factory=list)
 
-    @model_validator(mode="before")
-    def flatmap_datapoints(cls, values):
-        if not values:
-            return values
-        new_values = {}
-        for key in ("movement", "feeding", "drinking"):
-            section = values.get(key)
-            if isinstance(section, dict) and "datapoints" in section:
-                new_values[key] = section["datapoints"]
-
-        return new_values
+    @field_validator("movement", "feeding", "drinking", mode="before")
+    def extract_datapoints(v):
+        if isinstance(v, dict) and "datapoints" in v:
+            return v["datapoints"]
+        return v
 
 
 class Control(ImprovedErrorMixin):
@@ -133,7 +127,9 @@ class Pet(PetBase[Control, Status]):
         self, from_date: str | None = None, to_date: str | None = None, event_type: int | None = None
     ) -> Command:
         def parse(response):
-            self.status.report = ReportHouseholdResource(**response["data"])
+            self.status = Status(
+                **{**self.status.model_dump(), "report": ReportHouseholdResource(**response["data"])}
+            )
             self.control = Control(**{**self.control.model_dump(), **response["data"]})
             self.last_fetched_datetime = datetime.now(ZoneInfo(self.timezone)).isoformat()
             return self
