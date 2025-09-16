@@ -54,6 +54,7 @@ class Control(BaseControl):
 
 
 class Status(BaseStatus):
+    # pet_status: Optional[dict] = None
     bowl_status: Optional[list[BowlState]] = None
 
 
@@ -70,27 +71,27 @@ class FeederConnect(DeviceBase[Control, Status]):
         return "https://www.surepetcare.io/assets/assets/products/feeder.7ff330c9e368df01d256156b6fc797bb.png"
 
     def refresh(self):
+        return self._refresh_device_status()
+
+    def _refresh_device_status(self):
         def parse(response):
             if not response:
                 return self
-            status = self.statusCls(**{**self.status.model_dump(), **response["data"]})
-            control = self.controlCls(**{**self.control.model_dump(), **response["data"]})
+            self.status = self.statusCls(**{**self.status.model_dump(), **response["data"]})
+            self.control = control = self.controlCls(**{**self.control.model_dump(), **response["data"]})
 
             # Post-process bowl_status based on bowls.type
             bowls_type = None
-            if control and control.bowls and control.bowls.type:
+            if self.control and self.control.bowls and self.control.bowls.type:
                 bowls_type = control.bowls.type
 
-            if bowls_type is not None and status.bowl_status:
+            if bowls_type is not None and self.status.bowl_status:
                 if bowls_type == BowlType.LARGE_BOWL:
                     # Use only the first bowl (assume it's the left bowl), set its position to MIDDLE
-                    if status.bowl_status:
-                        bowl = status.bowl_status[0]
+                    if self.status.bowl_status:
+                        bowl = self.status.bowl_status[0]
                         bowl.position = BowlPosition.MIDDLE
-                        status.bowl_status = [bowl]
-
-            self.status = status
-            self.control = Control(**{**self.control.model_dump(), **response["data"]})
+                        self.status.bowl_status = [bowl]
             return self
 
         command = Command(

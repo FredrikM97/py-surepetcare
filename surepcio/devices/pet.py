@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from datetime import timezone
 from typing import Optional
 from zoneinfo import ZoneInfo
 
@@ -106,7 +107,8 @@ class Pet(PetBase[Control, Status]):
 
     def __init__(self, data: dict, **kwargs) -> None:
         super().__init__(data, **kwargs)
-        self.last_fetched_datetime: str = datetime.now(ZoneInfo(self.timezone)).isoformat()
+        # DateTime from user datetime to UTC timezone
+        self.last_fetched_datetime: datetime = datetime.now(ZoneInfo(self.timezone)).astimezone(timezone.utc)
 
     @property
     def available(self) -> bool:
@@ -124,25 +126,28 @@ class Pet(PetBase[Control, Status]):
         return self.fetch_report()
 
     def fetch_report(
-        self, from_date: str | None = None, to_date: str | None = None, event_type: int | None = None
+        self,
+        from_date: datetime | None = None,
+        to_date: datetime | None = None,
+        event_type: int | None = None,
     ) -> Command:
         def parse(response):
             self.status = Status(
                 **{**self.status.model_dump(), "report": ReportHouseholdResource(**response["data"])}
             )
             self.control = Control(**{**self.control.model_dump(), **response["data"]})
-            self.last_fetched_datetime = datetime.now(ZoneInfo(self.timezone)).isoformat()
+            self.last_fetched_datetime = datetime.now(ZoneInfo(self.timezone))
             return self
 
         params = {}
 
         if not from_date:
             from_date = self.last_fetched_datetime
-        params["From"] = from_date
+        params["From"] = from_date.isoformat()
 
         if not to_date:
-            to_date = datetime.now(ZoneInfo(self.timezone)).isoformat()
-        params["To"] = to_date
+            to_date = datetime.now(ZoneInfo(self.timezone)).astimezone(timezone.utc)
+        params["To"] = to_date.isoformat()
 
         if event_type is not None:
             if event_type not in [1, 2, 3]:

@@ -33,7 +33,7 @@ class PetPhoto(ImprovedErrorMixin):
     hash: str
     uploading_user_id: int
     version: int
-    created_at: datetime
+    created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
 

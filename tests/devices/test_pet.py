@@ -49,10 +49,10 @@ async def test_fetch_same_from_date_should_make_datapoints_empty(
     pet_refresh_1 = pet.refresh()
 
     pet_from = pet_refresh_1.params["From"]
-    assert pet_from == previous_last_fetched_date
+    assert pet_from == previous_last_fetched_date.isoformat()
     await client.api(pet.refresh())
     pet_refresh_2 = pet.refresh()
-    assert pet_refresh_2.params["From"] == pet.last_fetched_datetime
+    assert pet_refresh_2.params["From"] == pet.last_fetched_datetime.isoformat()
     assert previous_last_fetched_date != pet.last_fetched_datetime
 
     assert (
