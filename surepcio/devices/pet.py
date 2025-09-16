@@ -69,7 +69,6 @@ class Pet(PetBase[Control, Status]):
 
     def fetch_report(self) -> Command:
         def parse(response):
-            print(response)
             self.status = Status(**response["data"]["status"])
             return self
 
