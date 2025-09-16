@@ -32,4 +32,5 @@ class ImprovedErrorMixin(BaseModel):
 
     def model_dump(self, *args, **kwargs):
         kwargs.setdefault("exclude_none", True)
+        kwargs.setdefault("by_alias", True)
         return super().model_dump(*args, **kwargs)
