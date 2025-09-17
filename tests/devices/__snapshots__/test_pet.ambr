@@ -96,7 +96,7 @@
         'since': datetime.datetime(2025, 9, 11, 10, 36, 59, tzinfo=TzInfo(UTC)),
         'tag_id': 1725049,
         'user_id': 9999999,
-        'where': 2,
+        'where': <PetLocation.OUTSIDE: 1>,
       }),
       'drinking': dict({
       }),

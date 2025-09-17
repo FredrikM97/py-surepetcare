@@ -28,6 +28,7 @@ class ModelFactoryMixin(Generic[C, S]):
 
 
 class SurePetCareBase(ABC, ModelFactoryMixin[C, S]):
+    """Base class for Sure PetCare entities."""
     entity_info: EntityInfo = Field(default_factory=EntityInfo)
 
     def __init__(self, data: dict, timezone=None, **kwargs) -> None:
@@ -65,6 +66,7 @@ class SurePetCareBase(ABC, ModelFactoryMixin[C, S]):
 
 
 class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
+    """Representation of a Sure PetCare Device."""
     @property
     def parent_device_id(self) -> Optional[int]:
         return self.entity_info.parent_device_id
@@ -135,6 +137,7 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
 
 
 class PetBase(SurePetCareBase[C, S]):
+    """Representation of a Sure PetCare Pet."""
     @property
     def available(self) -> Optional[bool]:
         return self.status.online

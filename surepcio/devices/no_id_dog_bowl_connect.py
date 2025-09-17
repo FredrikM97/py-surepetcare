@@ -19,11 +19,13 @@ class Status(BaseStatus):
 
 
 class NoIdDogBowlConnect(DeviceBase[Control, Status]):
+    """Representation of a No ID Dog Bowl Connect device."""
     @property
     def product(self) -> ProductId:
         return ProductId.NO_ID_DOG_BOWL_CONNECT
 
     def refresh(self):
+        """Refresh the device status and control settings from the API."""
         def parse(response):
             if not response:
                 return self

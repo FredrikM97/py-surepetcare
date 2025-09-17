@@ -7,7 +7,9 @@ logger = logging.getLogger(__name__)
 
 
 class SurePetcareClient(AuthClient):
+    """SurePetcare API client. Main object to interact with the API."""
     async def get(self, endpoint: str, params: dict | None = None, headers=None) -> dict | None:
+        """Perform a GET request to the Sure Petcare API."""
         await self.set_session()
         async with self.session.get(endpoint, params=params, headers=headers) as response:
             if not response.ok:
@@ -23,6 +25,7 @@ class SurePetcareClient(AuthClient):
             return await response.json()
 
     async def post(self, endpoint: str, data: dict | None = None, headers=None, reuse=True) -> dict:
+        """Perform a POST request to the Sure Petcare API."""
         await self.set_session()
         async with self.session.post(endpoint, json=data, headers=headers) as response:
             if not response.ok:
@@ -34,6 +37,7 @@ class SurePetcareClient(AuthClient):
             return await response.json()
 
     async def put(self, endpoint: str, data: dict | None = None, headers=None, reuse=True) -> dict:
+        """Perform a PUT request to the Sure Petcare API."""
         await self.set_session()
         async with self.session.put(endpoint, json=data, headers=headers) as response:
             if not response.ok:
@@ -46,6 +50,7 @@ class SurePetcareClient(AuthClient):
             return await response.json()
 
     async def delete(self, endpoint: str, data: dict | None = None, headers=None, reuse=True) -> dict:
+        """Perform a DELETE request to the Sure Petcare API."""
         await self.set_session()
         async with self.session.delete(endpoint, json=data, headers=headers) as response:
             if not response.ok:
@@ -62,6 +67,7 @@ class SurePetcareClient(AuthClient):
             return await response.json()
 
     async def api(self, command: Command):
+        """Execute a Command against the Sure Petcare API."""
         headers = self._generate_headers(headers=self.headers(command.endpoint) if command.reuse else {})
         method = command.method.lower()
         if method == "get":

@@ -27,6 +27,7 @@ class AuthClient(CacheHeaders):
         token: str | None = None,
         device_id: str | None = None,
     ) -> "AuthClient":
+        """Authenticate with the Sure Petcare API using either email/password or token/device_id."""
         await self.set_session()
         self.clear_resources()
 
@@ -77,33 +78,40 @@ class AuthClient(CacheHeaders):
         return all_headers
 
     async def close(self):
+        """Close the aiohttp session."""
         if self.session:
             logger.info("Closing session")
             await self.session.close()
 
     async def set_session(self) -> None:
+        """Set the aiohttp session."""
         if not self.session or self.session.closed:
             self.session = aiohttp.ClientSession()
 
     @property
     def token(self):
+        """Return the authentication token."""
         if not self._token:
             raise Exception("Authentication token is missing")
         return self._token
 
     @property
     def device_id(self):
+        """Return the device ID."""
         if not self._device_id:
             raise Exception("Device ID is missing")
         return self._device_id
 
     async def __aenter__(self):
+        """Enter the async context manager."""
         return self
 
     async def __aexit__(self, exc_type, exc, tb):
+        """Exit the async context manager."""
         await self.close()
 
     def __del__(self):
+        """Warn if the aiohttp session is not closed."""
         if self.session is not None and not self.session.closed:
             warnings.warn(
                 f"{self.__class__.__name__} was deleted without closing the aiohttp session. "
@@ -113,6 +121,7 @@ class AuthClient(CacheHeaders):
 
 
 def get_formatted_header(user_agent=None, token=None, device_id=None):
+    """Return a formatted header for the API requests."""
     formatted_header = {
         key: value.format(user_agent=user_agent, token=token, device_id=device_id)
         for key, value in HEADER_TEMPLATE.items()

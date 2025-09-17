@@ -71,6 +71,7 @@ class FeederConnect(DeviceBase[Control, Status]):
         return "https://www.surepetcare.io/assets/assets/products/feeder.7ff330c9e368df01d256156b6fc797bb.png"
 
     def refresh(self):
+        """Refresh the device status and control settings from the API."""
         return self._refresh_device_status()
 
     def _refresh_device_status(self):
@@ -78,12 +79,12 @@ class FeederConnect(DeviceBase[Control, Status]):
             if not response:
                 return self
             self.status = self.statusCls(**{**self.status.model_dump(), **response["data"]})
-            self.control = control = self.controlCls(**{**self.control.model_dump(), **response["data"]})
+            self.control = self.controlCls(**{**self.control.model_dump(), **response["data"]})
 
             # Post-process bowl_status based on bowls.type
             bowls_type = None
             if self.control and self.control.bowls and self.control.bowls.type:
-                bowls_type = control.bowls.type
+                bowls_type = self.control.bowls.type
 
             if bowls_type is not None and self.status.bowl_status:
                 if bowls_type == BowlType.LARGE_BOWL:

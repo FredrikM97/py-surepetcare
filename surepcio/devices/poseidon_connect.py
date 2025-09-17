@@ -19,7 +19,9 @@ class Status(BaseStatus):
 
 
 class PoseidonConnect(DeviceBase[Control, Status]):
+    """Representation of a Poseidon Connect device."""
     def refresh(self):
+        """Refresh the device status and control settings from the API."""
         def parse(response):
             if not response:
                 return self

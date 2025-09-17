@@ -42,6 +42,7 @@ class Status(BaseStatus):
 
 
 class DualScanConnect(DeviceBase[Control, Status]):
+    """Representation of a Dual Scan Connect device."""
     controlCls = Control
     statusCls = Status
 
@@ -50,6 +51,7 @@ class DualScanConnect(DeviceBase[Control, Status]):
         return ProductId.DUAL_SCAN_CONNECT
 
     def refresh(self):
+        """Refresh the device status and control settings from the API."""
         def parse(response):
             if not response:
                 return self

@@ -23,6 +23,7 @@ class Status(BaseStatus):
 
 
 class Hub(DeviceBase[Control, Status]):
+    """Representation of a Hub device."""
     controlCls = Control
     statusCls = Status
 
@@ -37,6 +38,7 @@ class Hub(DeviceBase[Control, Status]):
         )
 
     def refresh(self):
+        """Refresh the device status and control settings from the API."""
         def parse(response):
             if not response:
                 return self

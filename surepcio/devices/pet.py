@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from pydantic import Field
@@ -8,7 +8,7 @@ from .device import PetBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.entities.error_mixin import ImprovedErrorMixin
-from surepcio.enums import ProductId
+from surepcio.enums import PetLocation, ProductId
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ class PetPositionResource(ImprovedErrorMixin):
     tag_id: Optional[int] = None
     device_id: Optional[int] = None
     user_id: Optional[int] = None
-    where: Optional[int] = None
+    where: Optional[PetLocation] = None
     since: Optional[datetime] = None
 
 
@@ -46,6 +46,7 @@ class Status(ImprovedErrorMixin):
 
 
 class Pet(PetBase[Control, Status]):
+    """Representation of a Pet."""
     controlCls = Control
     statusCls = Status
 
@@ -88,3 +89,16 @@ class Pet(PetBase[Control, Status]):
             logger.warning("Pet tag is not set")
             return None
         return self.entity_info.tag.id
+
+    def set_position(self, location: PetLocation) -> Command:
+        """Set the pet's current position (inside or outside)."""
+        
+        data = {
+            "where": int(location.value),
+            "since": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
+        }
+        return Command(
+            method="POST",
+            endpoint=f"{API_ENDPOINT_PRODUCTION}/pet/{self.id}/position",
+            params=data
+        )
