@@ -41,6 +41,7 @@ class BowlPosition(SureEnum):
 
 class CloseDelay(SureEnum):
     """Feeder Close Delay."""
+
     FASTER = 0
     NORMAL = 4
     SLOWER = 20
@@ -73,6 +74,7 @@ class BowlType(SureEnum):
 
 class FeederTrainingMode(SureEnum):
     """Feeder Training Modes."""
+
     DISABLED = 0
     STEP_1 = 1
     STEP_2 = 2
@@ -82,12 +84,22 @@ class FeederTrainingMode(SureEnum):
 
 class FlapLocking(SureEnum):
     """Flap Locking Modes."""
+
     UNLOCKED = 0
     ALLOW_IN = 1
     ALLOW_OUT = 2
     LOCKED = 3
 
+
 class PetLocation(SureEnum):
     """Pet Location."""
+
     INSIDE = 0
     OUTSIDE = 1
+
+
+class PetDeviceLocationProfile(SureEnum):
+    """Pet Location."""
+
+    NO_RESTRICTION = 2
+    INDOOR_ONLY = 3

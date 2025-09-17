@@ -9,6 +9,7 @@ from surepcio.entities.error_mixin import ImprovedErrorMixin
 
 class PetTag(ImprovedErrorMixin):
     """Represents a Pet Tag."""
+
     id: int
     tag: str
     supported_product_ids: Optional[list[int]] = None
@@ -19,6 +20,7 @@ class PetTag(ImprovedErrorMixin):
 
 class DevicePetTag(ImprovedErrorMixin):
     """Represents a Pet Tag assigned to a Device."""
+
     id: Optional[int] = None
     device_id: Optional[int] = None
     index: Optional[int] = None
@@ -30,6 +32,7 @@ class DevicePetTag(ImprovedErrorMixin):
 
 class PetPhoto(ImprovedErrorMixin):
     """Represents a Pet Photo."""
+
     id: int
     title: Optional[str] = None
     location: str
@@ -42,6 +45,7 @@ class PetPhoto(ImprovedErrorMixin):
 
 class EntityInfo(ImprovedErrorMixin):
     """Represents basic information about an entity."""
+
     id: int
     name: str
     household_id: int
@@ -61,6 +65,7 @@ class EntityInfo(ImprovedErrorMixin):
 
 class BaseControl(ImprovedErrorMixin):
     """Base class for device control settings."""
+
     tags: Optional[list[DevicePetTag]] = None
 
     @model_validator(mode="before")
@@ -78,11 +83,13 @@ class BaseControl(ImprovedErrorMixin):
 
 class Signal(ImprovedErrorMixin):
     """Represents signal information."""
+
     device_rssi: Optional[int] = None
 
 
 class BaseStatus(ImprovedErrorMixin):
     """Base class for device status information."""
+
     battery: Optional[float] = None
     learn_mode: Optional[bool] = None
     signal: Optional[Signal] = None

@@ -20,12 +20,14 @@ class Status(BaseStatus):
 
 class DualScanPetDoor(DeviceBase[Control, Status]):
     """Representation of a Dual Scan Pet Door device."""
+
     @property
     def product(self) -> ProductId:
         return ProductId.DUAL_SCAN_PET_DOOR
 
     def refresh(self):
         """Refresh the device status and control settings from the API."""
+
         def parse(response):
             if not response:
                 return self

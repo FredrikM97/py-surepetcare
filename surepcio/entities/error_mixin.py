@@ -10,6 +10,7 @@ from surepcio.security.exceptions import ValidationMissingFieldsError
 
 class ImprovedErrorMixin(BaseModel):
     """A mixin class that improves error handling and serialization for Pydantic models."""
+
     @model_validator(mode="after")
     def check_required_fields(cls, values):
         missing = []

@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 class Household:
     """Represents a Household."""
+
     def __init__(self, data: dict):
         self.data = data
         self.id = data["id"]
@@ -20,6 +21,7 @@ class Household:
 
     def get_pets(self):
         """Get all pets in the household."""
+
         def parse(response):
             if not response:
                 return self.data.get("pets", [])
@@ -33,6 +35,7 @@ class Household:
 
     def get_devices(self):
         """Get all devices in the household."""
+
         def parse(response):
             if not response:
                 logger.info("Returning cached devices")
@@ -58,6 +61,7 @@ class Household:
     @staticmethod
     def get_households():
         """Get all households for the user."""
+
         def parse(response):
             if not response:
                 return []
@@ -76,6 +80,7 @@ class Household:
     @staticmethod
     def get_household(household_id: int):
         """Get a specific household by ID."""
+
         def parse(response):
             if not response:
                 return None
@@ -93,6 +98,7 @@ class Household:
     @staticmethod
     def get_product(product_id: ProductId, device_id: int):
         """Get control settings for a specific product and device ID."""
+
         def parse(response):
             if not response:
                 return None

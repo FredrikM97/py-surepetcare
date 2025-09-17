@@ -5,6 +5,7 @@ from typing import Optional
 
 class Command:
     """Represents a command to be sent to the Sure Petcare API."""
+
     def __init__(
         self,
         method: str,

@@ -7,7 +7,11 @@ logger = logging.getLogger(__name__)
 
 
 class CacheHeaders:
-    """Manages caching headers for API requests. Stored the apt/* endpoint as hashed keys with eTag to determine if request already provided up-to-date data."""
+    """Manages caching headers for API requests.
+    Stored the apt/* endpoint as hashed keys with eTag.
+    To determine if request already provided up-to-date data.
+    """
+
     resources: dict[str, dict] = {}
 
     def __init__(self):
@@ -23,6 +27,7 @@ class CacheHeaders:
             self.resources[resource_id] = {}
 
         self.eTag(response.headers, resource_id)
+
     def headers(self, endpoint):
         """Return the headers of the response."""
         resource_id = self.endpoint_to_resource_id(endpoint)
@@ -38,6 +43,7 @@ class CacheHeaders:
             logger.debug("Reading ETag header %s. New generated for resource_id %s", etag, resource_id)
             self.resources[resource_id]["If-None-Match"] = etag
         logger.debug("Reading ETag header %s. Using existing ETag for resource_id %s", etag, resource_id)
+
     def endpoint_to_resource_id(self, endpoint):
         """Convert an endpoint to a resource ID by hashing the endpoint path."""
         if "/api" in endpoint:

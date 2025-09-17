@@ -9,6 +9,7 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 class BatteryMixin:
     """Mixin class to add battery level calculation to devices."""
+
     @property
     def battery_level(self) -> int | None:
         """Return battery level in percent."""

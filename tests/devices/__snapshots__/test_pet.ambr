@@ -51,6 +51,32 @@
         'id': 1210761432,
         'tag_id': 2039802,
       }),
+      'tags': list([
+        dict({
+          'created_at': datetime.datetime(2025, 9, 17, 17, 12, 47, tzinfo=TzInfo(UTC)),
+          'id': 269654,
+          'index': 2,
+          'profile': 2,
+          'updated_at': datetime.datetime(2025, 9, 17, 17, 12, 47, tzinfo=TzInfo(UTC)),
+          'version': 1,
+        }),
+        dict({
+          'created_at': datetime.datetime(2025, 7, 13, 11, 14, 42, tzinfo=TzInfo(UTC)),
+          'id': 271836,
+          'index': 2,
+          'profile': 2,
+          'updated_at': datetime.datetime(2025, 7, 13, 11, 14, 42, tzinfo=TzInfo(UTC)),
+          'version': 1,
+        }),
+        dict({
+          'created_at': datetime.datetime(2025, 4, 25, 19, 0, 40, tzinfo=TzInfo(UTC)),
+          'id': 1181149,
+          'index': 1,
+          'profile': 2,
+          'updated_at': datetime.datetime(2025, 4, 25, 19, 0, 40, tzinfo=TzInfo(UTC)),
+          'version': 1,
+        }),
+      ]),
     }),
     'timezone': 'Europe/Stockholm',
   })
@@ -110,6 +136,16 @@
         'id': 1210761432,
         'tag_id': 2039802,
       }),
+      'tags': list([
+        dict({
+          'created_at': datetime.datetime(2025, 9, 17, 17, 12, 47, tzinfo=TzInfo(UTC)),
+          'id': 269654,
+          'index': 2,
+          'profile': 2,
+          'updated_at': datetime.datetime(2025, 9, 17, 17, 12, 47, tzinfo=TzInfo(UTC)),
+          'version': 1,
+        }),
+      ]),
     }),
     'timezone': 'Europe/Stockholm',
   })
