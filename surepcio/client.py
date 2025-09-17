@@ -1,4 +1,6 @@
+import asyncio
 import logging
+from typing import Union
 
 from surepcio.command import Command
 from surepcio.security.auth import AuthClient
@@ -8,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 class SurePetcareClient(AuthClient):
     """SurePetcare API client. Main object to interact with the API."""
+
     async def get(self, endpoint: str, params: dict | None = None, headers=None) -> dict | None:
         """Perform a GET request to the Sure Petcare API."""
         await self.set_session()
@@ -66,8 +69,13 @@ class SurePetcareClient(AuthClient):
 
             return await response.json()
 
-    async def api(self, command: Command):
+    async def api(self, command: Union[Command, list[Command]]):
         """Execute a Command against the Sure Petcare API."""
+
+        if isinstance(command, list):
+            # Run all commands and return results as a list
+            return await asyncio.gather(*(self.api(cmd) for cmd in command))
+
         headers = self._generate_headers(headers=self.headers(command.endpoint) if command.reuse else {})
         method = command.method.lower()
         if method == "get":

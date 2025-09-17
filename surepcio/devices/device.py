@@ -29,6 +29,7 @@ class ModelFactoryMixin(Generic[C, S]):
 
 class SurePetCareBase(ABC, ModelFactoryMixin[C, S]):
     """Base class for Sure PetCare entities."""
+
     entity_info: EntityInfo = Field(default_factory=EntityInfo)
 
     def __init__(self, data: dict, timezone=None, **kwargs) -> None:
@@ -60,13 +61,14 @@ class SurePetCareBase(ABC, ModelFactoryMixin[C, S]):
     def __repr__(self):
         return f"<{self.__class__.__name__} id={self.id} name={self.name}>"
 
-    def refresh(self) -> Command:
+    def refresh(self) -> Command | list[Command]:
         """Refresh the device data."""
         raise NotImplementedError("Subclasses must implement refresh method")
 
 
 class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
     """Representation of a Sure PetCare Device."""
+
     @property
     def parent_device_id(self) -> Optional[int]:
         return self.entity_info.parent_device_id
@@ -138,6 +140,7 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
 
 class PetBase(SurePetCareBase[C, S]):
     """Representation of a Sure PetCare Pet."""
+
     @property
     def available(self) -> Optional[bool]:
         return self.status.online
