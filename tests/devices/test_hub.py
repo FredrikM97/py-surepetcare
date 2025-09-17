@@ -1,7 +1,7 @@
 import pytest
 from syrupy.assertion import SnapshotAssertion
 
-from surepcio.household import Household
+from surepcio import Household
 from tests.mock_helpers import MockClient
 from tests.mock_helpers import recursive_dump
 

@@ -2,7 +2,7 @@ import pytest
 
 import surepcio
 from surepcio.enums import ProductId
-from surepcio.household import Household
+from surepcio import Household
 from tests.mock_helpers import MockClient
 
 

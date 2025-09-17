@@ -1,7 +1,7 @@
 import json
 import logging
 
-from surepcio.client import SurePetcareClient
+from surepcio import SurePetcareClient
 
 logger = logging.getLogger(__name__)
 

@@ -6,7 +6,7 @@ from surepcio.devices.feeder_connect import BowlSetting
 from surepcio.devices.feeder_connect import FeederConnect
 from surepcio.enums import BowlType
 from surepcio.enums import FoodType
-from surepcio.household import Household
+from surepcio import Household
 from tests.mock_helpers import MockClient
 from tests.mock_helpers import recursive_dump
 
