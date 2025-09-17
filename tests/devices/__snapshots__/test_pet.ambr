@@ -39,19 +39,7 @@
     'status': dict({
       'activity': dict({
       }),
-      'drinking': dict({
-      }),
-      'feeding': dict({
-        'at': datetime.datetime(2025, 9, 16, 19, 42, 53, tzinfo=TzInfo(UTC)),
-        'change': list([
-          -3.23,
-          0,
-        ]),
-        'device_id': 269654,
-        'id': 1210761432,
-        'tag_id': 2039802,
-      }),
-      'tags': list([
+      'devices': list([
         dict({
           'created_at': datetime.datetime(2025, 9, 17, 17, 12, 47, tzinfo=TzInfo(UTC)),
           'id': 269654,
@@ -77,6 +65,18 @@
           'version': 1,
         }),
       ]),
+      'drinking': dict({
+      }),
+      'feeding': dict({
+        'at': datetime.datetime(2025, 9, 16, 19, 42, 53, tzinfo=TzInfo(UTC)),
+        'change': list([
+          -3.23,
+          0,
+        ]),
+        'device_id': 269654,
+        'id': 1210761432,
+        'tag_id': 2039802,
+      }),
     }),
     'timezone': 'Europe/Stockholm',
   })
@@ -124,6 +124,16 @@
         'user_id': 9999999,
         'where': <PetLocation.OUTSIDE: 1>,
       }),
+      'devices': list([
+        dict({
+          'created_at': datetime.datetime(2025, 9, 17, 17, 12, 47, tzinfo=TzInfo(UTC)),
+          'id': 269654,
+          'index': 2,
+          'profile': 2,
+          'updated_at': datetime.datetime(2025, 9, 17, 17, 12, 47, tzinfo=TzInfo(UTC)),
+          'version': 1,
+        }),
+      ]),
       'drinking': dict({
       }),
       'feeding': dict({
@@ -136,16 +146,6 @@
         'id': 1210761432,
         'tag_id': 2039802,
       }),
-      'tags': list([
-        dict({
-          'created_at': datetime.datetime(2025, 9, 17, 17, 12, 47, tzinfo=TzInfo(UTC)),
-          'id': 269654,
-          'index': 2,
-          'profile': 2,
-          'updated_at': datetime.datetime(2025, 9, 17, 17, 12, 47, tzinfo=TzInfo(UTC)),
-          'version': 1,
-        }),
-      ]),
     }),
     'timezone': 'Europe/Stockholm',
   })
