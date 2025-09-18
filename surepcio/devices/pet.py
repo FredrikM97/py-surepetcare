@@ -103,8 +103,8 @@ class Pet(PetBase[Control, Status]):
         def parse(response):
             if "status" in response and response["status"] == 403:
                 logger.warning(
-                    "Pet %s - %s returned 403 when fetching assigned devices. \
-                        Could be due to missing assigned devices!",
+                    "Pet %s - %s returned 403 when fetching assigned devices."
+                    "Could be due to missing assigned devices!",
                     self.id,
                     self.name,
                 )
