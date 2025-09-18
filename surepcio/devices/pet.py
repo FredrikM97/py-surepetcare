@@ -72,7 +72,8 @@ class Pet(PetBase[Control, Status]):
 
     def refresh(self) -> list[Command]:
         """Refresh the pet's report data."""
-        return [self.fetch_assigned_devices(), self.fetch_report()]
+        # Important that fetch report is first to be updated!
+        return [self.fetch_report(), self.fetch_assigned_devices()]
 
     def fetch_report(self) -> Command:
         def parse(response):
@@ -100,6 +101,14 @@ class Pet(PetBase[Control, Status]):
         """Fetch devices assigned to this pet."""
 
         def parse(response):
+            if "status" in response and response["status"] == 403:
+                logger.warning(
+                    "Pet %s - %s returned 403 when fetching assigned devices. \
+                        Could be due to missing assigned devices!",
+                    self.id,
+                    self.name,
+                )
+                return None
             self.status.devices = [DevicePetTag(**item) for item in response["data"]]
             return self
 
