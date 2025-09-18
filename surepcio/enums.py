@@ -94,8 +94,8 @@ class FlapLocking(SureEnum):
 class PetLocation(SureEnum):
     """Pet Location."""
 
-    INSIDE = 0
-    OUTSIDE = 1
+    INSIDE = 1
+    OUTSIDE = 2
 
 
 class PetDeviceLocationProfile(SureEnum):
