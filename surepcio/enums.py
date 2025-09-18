@@ -94,6 +94,7 @@ class FlapLocking(SureEnum):
 class PetLocation(SureEnum):
     """Pet Location."""
 
+    UNKNOWN = 0
     INSIDE = 1
     OUTSIDE = 2
 
