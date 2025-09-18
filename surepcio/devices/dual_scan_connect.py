@@ -54,7 +54,7 @@ class DualScanConnect(DeviceBase[Control, Status]):
     def refresh(self):
         """Refresh the device status and control settings from the API."""
 
-        def parse(response):
+        def parse(response) -> "DualScanConnect":
             if not response:
                 return self
             self.status = Status(**{**self.status.model_dump(), **response["data"]})

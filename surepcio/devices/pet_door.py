@@ -28,7 +28,7 @@ class PetDoor(DeviceBase[Control, Status]):
     def refresh(self):
         """Refresh the device status and control settings from the API."""
 
-        def parse(response):
+        def parse(response) -> "PetDoor":
             if not response:
                 return self
             self.status = BaseStatus(**{**self.status.model_dump(), **response["data"]})

@@ -75,7 +75,7 @@ class FeederConnect(DeviceBase[Control, Status]):
         return self._refresh_device_status()
 
     def _refresh_device_status(self):
-        def parse(response):
+        def parse(response) -> "FeederConnect":
             if not response:
                 return self
             self.status = self.statusCls(**{**self.status.model_dump(), **response["data"]})

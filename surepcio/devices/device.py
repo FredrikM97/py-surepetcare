@@ -99,7 +99,7 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
     def add_tag(self, tag_id: int) -> Command:
         """Add tag/microchip to device."""
 
-        def parse(response):
+        def parse(response) -> "DeviceBase":
             if not response:
                 return self
             # Unclear what to do with the data.. Should we refresh or is there any callback info?
@@ -111,7 +111,7 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
     def remove_tag(self, tag_id: int) -> Command:
         """Remove tag/microchip to device."""
 
-        def parse(response):
+        def parse(response) -> "DeviceBase":
             if not response:
                 return self
             # Unclear what to do with the data.. Should we refresh or is there any callback info?
@@ -123,7 +123,7 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
     def set_control(self, **control_settings: Any) -> Command:
         """Universal setter for control settings. Inherit the self.control type and can take any input."""
 
-        def parse(response):
+        def parse(response) -> "DeviceBase":
             if not response:
                 return self
             # Basic attempt to update data from response.

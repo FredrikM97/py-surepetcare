@@ -41,7 +41,7 @@ class Hub(DeviceBase[Control, Status]):
     def refresh(self):
         """Refresh the device status and control settings from the API."""
 
-        def parse(response):
+        def parse(response) -> "Hub":
             if not response:
                 return self
 
@@ -58,7 +58,7 @@ class Hub(DeviceBase[Control, Status]):
     def set_led_mode(self, led_mode: int) -> Command:
         """Set let_mode settings"""
 
-        def parse(response):
+        def parse(response) -> "Hub":
             if not response:
                 return self
             # Unclear what to do with the data.. Should we refresh or is there any callback info?
@@ -75,7 +75,7 @@ class Hub(DeviceBase[Control, Status]):
     def set_pairing_mode(self, pairing_mode: int) -> Command:
         """Set pairing_mode settings"""
 
-        def parse(response):
+        def parse(response) -> "Hub":
             if not response:
                 return self
             # Unclear what to do with the data.. Should we refresh or is there any callback info?

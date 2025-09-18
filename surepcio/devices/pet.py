@@ -76,7 +76,7 @@ class Pet(PetBase[Control, Status]):
         return [self.fetch_report(), self.fetch_assigned_devices()]
 
     def fetch_report(self) -> Command:
-        def parse(response):
+        def parse(response) -> "Pet":
             self.status = Status(**{**self.status.model_dump(), **response["data"]["status"]})
             return self
 
@@ -100,7 +100,7 @@ class Pet(PetBase[Control, Status]):
     def fetch_assigned_devices(self) -> Command:
         """Fetch devices assigned to this pet."""
 
-        def parse(response):
+        def parse(response) -> "Pet":
             if "status" in response and response["status"] == 403:
                 logger.warning(
                     "Pet %s - %s returned 403 when fetching assigned devices."
@@ -108,7 +108,7 @@ class Pet(PetBase[Control, Status]):
                     self.id,
                     self.name,
                 )
-                return None
+                return self
             self.status.devices = [DevicePetTag(**item) for item in response["data"]]
             return self
 

@@ -79,7 +79,13 @@ class SurePetcareClient(AuthClient):
             return None
         if isinstance(command, list):
             # Run all commands and return results as a list
-            return [await self.api(cmd) for cmd in command]
+            results = [await self.api(cmd) for cmd in command]
+            # Verify if all results are the same, if so return single result
+            if all(result == results[-1] for result in results):
+                return results[-1]
+            else:
+                logger.warning("Not all results are equal: %s", results)
+                return results
 
         headers = self._generate_headers(headers=self.headers(command.endpoint) if command.reuse else {})
         method = command.method.lower()
