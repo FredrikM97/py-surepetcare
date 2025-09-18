@@ -71,7 +71,9 @@ class SurePetcareClient(AuthClient):
 
     async def api(self, command: Union[Command, list[Command]]):
         """Execute a Command against the Sure Petcare API."""
-
+        if command is None:
+            logger.debug("No command to execute")
+            return None
         if isinstance(command, list):
             # Run all commands and return results as a list
             return await asyncio.gather(*(self.api(cmd) for cmd in command))
