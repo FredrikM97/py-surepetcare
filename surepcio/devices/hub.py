@@ -6,7 +6,6 @@ from .device import BaseStatus
 from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.const import API_ENDPOINT_V1
 from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
@@ -57,34 +56,8 @@ class Hub(DeviceBase[Control, Status]):
 
     def set_led_mode(self, led_mode: int) -> Command:
         """Set let_mode settings"""
-
-        def parse(response) -> "Hub":
-            if not response:
-                return self
-            # Unclear what to do with the data.. Should we refresh or is there any callback info?
-            logger.info("Parse callback from set_led_mode on device")
-            return self
-
-        return Command(
-            "PUT",
-            f"{API_ENDPOINT_V1}/device/{self.id}/control",
-            params=Control(led_mode=led_mode).model_dump(),
-            callback=parse,
-        )
+        return self.set_control(led_mode=led_mode)
 
     def set_pairing_mode(self, pairing_mode: int) -> Command:
         """Set pairing_mode settings"""
-
-        def parse(response) -> "Hub":
-            if not response:
-                return self
-            # Unclear what to do with the data.. Should we refresh or is there any callback info?
-            logger.info("Parse callback from set_pairing_mode on device")
-            return self
-
-        return Command(
-            "PUT",
-            f"{API_ENDPOINT_V1}/device/{self.id}/control",
-            params=Control(pairing_mode=pairing_mode).model_dump(),
-            callback=parse,
-        )
+        return self.set_control(pairing_mode=pairing_mode)
