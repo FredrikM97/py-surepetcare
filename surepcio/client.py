@@ -1,4 +1,3 @@
-import asyncio
 import logging
 from typing import Union
 
@@ -16,7 +15,8 @@ class SurePetcareClient(AuthClient):
         await self.set_session()
         async with self.session.get(endpoint, params=params, headers=headers) as response:
             if not response.ok:
-                raise Exception(f"Error {endpoint} {response.status}: {await response.text()}")
+                logger.warning(f"Error {endpoint} {response.status}: {await response.text()}")
+                return {"status": response.status}
             if response.status == 204:
                 logger.info(f"GET {endpoint} returned 204 No Content")
                 return None
@@ -32,7 +32,8 @@ class SurePetcareClient(AuthClient):
         await self.set_session()
         async with self.session.post(endpoint, json=data, headers=headers) as response:
             if not response.ok:
-                raise Exception(f"Error {response.status}: {await response.text()}")
+                logger.warning(f"Error {endpoint} {response.status}: {await response.text()}")
+                return {"status": response.status}
             if response.status == 204:
                 logger.info(f"POST {endpoint} returned 204 No Content")
                 return {"status": response.status}
@@ -44,7 +45,8 @@ class SurePetcareClient(AuthClient):
         await self.set_session()
         async with self.session.put(endpoint, json=data, headers=headers) as response:
             if not response.ok:
-                raise Exception(f"Error {response.status}: {await response.text()}")
+                logger.warning(f"Error {endpoint} {response.status}: {await response.text()}")
+                return {"status": response.status}
             if response.status == 204:
                 logger.info("PUT {endpoint} returned 204 No Content")
                 return {"status": response.status}
@@ -57,7 +59,8 @@ class SurePetcareClient(AuthClient):
         await self.set_session()
         async with self.session.delete(endpoint, json=data, headers=headers) as response:
             if not response.ok:
-                raise Exception(f"Error {response.status}: {await response.text()}")
+                logger.warning(f"Error {endpoint} {response.status}: {await response.text()}")
+                return {"status": response.status}
             if response.status == 204:
                 logger.info(f"DELETE {endpoint} returned 204 No Content")
                 return {"status": response.status}
@@ -76,7 +79,7 @@ class SurePetcareClient(AuthClient):
             return None
         if isinstance(command, list):
             # Run all commands and return results as a list
-            return await asyncio.gather(*(self.api(cmd) for cmd in command))
+            return [await self.api(cmd) for cmd in command]
 
         headers = self._generate_headers(headers=self.headers(command.endpoint) if command.reuse else {})
         method = command.method.lower()
