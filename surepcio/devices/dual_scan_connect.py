@@ -1,33 +1,17 @@
 import logging
-from datetime import time
 from typing import Optional
-
-from pydantic import field_serializer
 
 from .device import BaseControl
 from .device import BaseStatus
 from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.entities.error_mixin import ImprovedErrorMixin
+from surepcio.devices.entities import Curfew
+from surepcio.devices.entities import Locking
 from surepcio.enums import FlapLocking
 from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
-
-
-class Curfew(ImprovedErrorMixin):
-    enabled: bool
-    lock_time: time
-    unlock_time: time
-
-    @field_serializer("lock_time", "unlock_time")
-    def serialize_time(self, value: time, _info):
-        return value.strftime("%H:%M")
-
-
-class Locking(ImprovedErrorMixin):
-    mode: Optional[FlapLocking] = None
 
 
 class Control(BaseControl):

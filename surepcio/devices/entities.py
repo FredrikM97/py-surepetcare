@@ -1,10 +1,13 @@
 from datetime import datetime
+from datetime import time
 from typing import Any
 from typing import Optional
 
+from pydantic import field_serializer
 from pydantic import model_validator
 
 from surepcio.entities.error_mixin import ImprovedErrorMixin
+from surepcio.enums import FlapLocking
 
 
 class PetTag(ImprovedErrorMixin):
@@ -101,3 +104,17 @@ class BaseStatus(ImprovedErrorMixin):
         if "status" in values and isinstance(values["status"], dict):
             return values["status"]
         return values
+
+
+class Curfew(ImprovedErrorMixin):
+    enabled: bool
+    lock_time: time
+    unlock_time: time
+
+    @field_serializer("lock_time", "unlock_time")
+    def serialize_time(self, value: time, _info):
+        return value.strftime("%H:%M")
+
+
+class Locking(ImprovedErrorMixin):
+    mode: Optional[FlapLocking] = None
