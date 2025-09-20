@@ -14,6 +14,7 @@ from surepcio.devices.entities import BaseControl
 from surepcio.devices.entities import BaseStatus
 from surepcio.devices.entities import EntityInfo
 from surepcio.entities.battery_mixin import BatteryMixin
+from surepcio.enums import ModifyDeviceTag
 from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
@@ -96,29 +97,9 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
     def name(self) -> str:
         return self.entity_info.name
 
-    def add_tag(self, tag_id: int) -> Command:
+    def set_tag(self, tag_id: int, action: ModifyDeviceTag) -> Command:
         """Add tag/microchip to device."""
-
-        def parse(response) -> "DeviceBase":
-            if not response:
-                return self
-            # Unclear what to do with the data.. Should we refresh or is there any callback info?
-            logger.info("Parse callback from add_tag on device")
-            return self
-
-        return Command("PUT", f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}", callback=parse)
-
-    def remove_tag(self, tag_id: int) -> Command:
-        """Remove tag/microchip to device."""
-
-        def parse(response) -> "DeviceBase":
-            if not response:
-                return self
-            # Unclear what to do with the data.. Should we refresh or is there any callback info?
-            logger.info("Parse callback from remove_tag on device")
-            return self
-
-        return Command("DELETE", f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}", callback=parse)
+        return Command(action.value, f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}")
 
     def set_control(self, **control_settings: Any) -> Command:
         """Universal setter for control settings. Inherit the self.control type and can take any input."""

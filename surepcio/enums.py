@@ -1,3 +1,4 @@
+from enum import Enum
 from enum import IntEnum
 
 
@@ -104,3 +105,10 @@ class PetDeviceLocationProfile(SureEnum):
 
     NO_RESTRICTION = 2
     INDOOR_ONLY = 3
+
+
+class ModifyDeviceTag(Enum):
+    """Modify Device Tag Action."""
+
+    ADD = "PUT"
+    REMOVE = "DELETE"

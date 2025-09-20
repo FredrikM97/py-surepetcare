@@ -8,8 +8,10 @@ from pydantic import Field
 from .device import PetBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
+from surepcio.const import API_ENDPOINT_V1
 from surepcio.devices.entities import DevicePetTag
 from surepcio.entities.error_mixin import ImprovedErrorMixin
+from surepcio.enums import ModifyDeviceTag
 from surepcio.enums import PetDeviceLocationProfile
 from surepcio.enums import PetLocation
 from surepcio.enums import ProductId
@@ -145,3 +147,7 @@ class Pet(PetBase[Control, Status]):
         return Command(
             method="PUT", endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{device_id}/tag/{self.tag}", params=data
         )
+
+    def set_tag(self, device_id: int, action: ModifyDeviceTag) -> Command:
+        """Add device to pet."""
+        return Command(action.value, f"{API_ENDPOINT_V1}/device/{device_id}/tag/{self.tag}")
