@@ -1,6 +1,7 @@
 name: Feature Request
 description: Suggest a new feature or improvement for the Surepetcare Integration.
 labels: ["enhancement"]
+projects: ["FredrikM97/7"]
 assignees:
   - FredrikM97
 body:
