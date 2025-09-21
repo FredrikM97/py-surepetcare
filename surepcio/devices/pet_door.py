@@ -6,7 +6,7 @@ from .device import BaseStatus
 from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.devices.dual_scan_connect import Curfew
+from surepcio.devices.entities import Curfew
 from surepcio.devices.entities import Locking
 from surepcio.enums import FlapLocking
 from surepcio.enums import ProductId
@@ -15,9 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 class Control(BaseControl):
-    curfew: Optional[list[Curfew]] = None
+    curfew: Optional[Curfew] = None
     locking: Optional[FlapLocking] = None
-    fail_safe: Optional[int] = None
     fast_polling: Optional[bool] = None
 
 
@@ -27,6 +26,9 @@ class Status(BaseStatus):
 
 class PetDoor(DeviceBase[Control, Status]):
     """Representation of a Pet Door device."""
+
+    controlCls = Control
+    statusCls = Status
 
     @property
     def product(self) -> ProductId:
@@ -38,8 +40,8 @@ class PetDoor(DeviceBase[Control, Status]):
         def parse(response) -> "PetDoor":
             if not response:
                 return self
-            self.status = BaseStatus(**{**self.status.model_dump(), **response["data"]})
-            self.control = BaseControl(**{**self.control.model_dump(), **response["data"]})
+            self.status = self.statusCls(**{**self.status.model_dump(), **response["data"]})
+            self.control = self.controlCls(**{**self.control.model_dump(), **response["data"]})
             return self
 
         return Command(
@@ -48,14 +50,10 @@ class PetDoor(DeviceBase[Control, Status]):
             callback=parse,
         )
 
-    def set_curfew(self, curfew: list[Curfew]) -> Command:
+    def set_curfew(self, curfew: Curfew) -> Command:
         """Set the flap curfew times, using the household's timezone"""
         return self.set_control(curfew=curfew)
 
     def set_locking(self, locking: FlapLocking) -> Command:
         """Set locking mode"""
         return self.set_control(locking=locking)
-
-    def set_failsafe(self, failsafe: int) -> Command:
-        """Set failsafe mode"""
-        return self.set_control(fail_safe=failsafe)

@@ -1,0 +1,46 @@
+# serializer version: 1
+# name: test_snapshot
+  dict({
+    'control': dict({
+      'curfew': dict({
+        'enabled': False,
+        'lock_time': '08:00',
+        'unlock_time': '17:00',
+      }),
+      'fast_polling': True,
+      'locking': <FlapLocking.UNLOCKED: 0>,
+    }),
+    'entity_info': dict({
+      'household_id': 7777,
+      'id': 727608,
+      'name': 'Laundry Door',
+      'product_id': 3,
+    }),
+    'status': dict({
+      'battery': 6.0,
+      'learn_mode': False,
+      'locking': dict({
+        'mode': <FlapLocking.UNLOCKED: 0>,
+      }),
+      'online': True,
+      'signal': dict({
+        'device_rssi': -88,
+      }),
+      'version': dict({
+        'device': dict({
+          'firmware': '1.1',
+          'hardware': '1.2',
+        }),
+        'lcd': dict({
+          'firmware': '1.0',
+          'hardware': '1.0',
+        }),
+        'rf': dict({
+          'firmware': '0.16',
+          'hardware': '4.0',
+        }),
+      }),
+    }),
+    'timezone': 'Europe/Stockholm',
+  })
+# ---
