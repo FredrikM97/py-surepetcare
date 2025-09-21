@@ -1,0 +1,4 @@
+# serializer version: 1
+# name: test_logging_redacts_sensitive_data
+  "Sensitive: {'email_address': '***REDACTED***', 'share_code': '***REDACTED***', 'code': '***REDACTED***', 'feedback': 'ok data'}"
+# ---

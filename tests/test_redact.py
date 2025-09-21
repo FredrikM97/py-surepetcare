@@ -1,4 +1,3 @@
-import ast
 import json
 import logging
 
@@ -20,7 +19,7 @@ def test_redact_sensitive_fields_in_household(household_file):
         data = json.load(f)
     redacted = redact_sensitive(data)
     # Recursively check that sensitive fields are redacted
-    sensitive_keys = {"email_address", "share_code", "code", "name", "users"}
+    sensitive_keys = DEFAULT_SENSITIVE_FIELDS
 
     def check_redacted(obj):
         if isinstance(obj, dict):
@@ -42,9 +41,8 @@ def test_redact_sensitive_fields_in_household(household_file):
     check_redacted(redacted)
 
 
-def test_logging_redacts_sensitive_data(caplog):
+def test_logging_redacts_sensitive_data(caplog, snapshot):
     """Test that logging with sensitive data redacts those fields."""
-
     data = {
         "email_address": "userEmail@derp.se",
         "share_code": "supersecrettoken",
@@ -52,15 +50,12 @@ def test_logging_redacts_sensitive_data(caplog):
         "feedback": "ok data",
     }
     logger = logging.getLogger("surepcio.security.auth")
+    logger.setLevel(logging.DEBUG)
     logger.info("Sensitive: %s", data)
 
-    # Check that sensitive fields are redacted in the log output
-    for record in caplog.records:
-        msg = record.getMessage()
-        if msg.startswith("Sensitive: "):
-            logged_dict = ast.literal_eval(msg[len("Sensitive: ")])
-            for key in DEFAULT_SENSITIVE_FIELDS:
-                if key in logged_dict:
-                    assert (
-                        logged_dict[key] == "***REDACTED***"
-                    ), f"Field {key} not redacted: {logged_dict[key]}"
+    # Collect all log messages that start with "Sensitive: "
+    messages = [
+        record.getMessage() for record in caplog.records if record.getMessage().startswith("Sensitive: ")
+    ]
+    # Join messages if there are multiple, or just use the first
+    snapshot.assert_match("\n".join(messages))
