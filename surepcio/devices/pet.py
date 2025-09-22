@@ -99,6 +99,22 @@ class Pet(PetBase[Control, Status]):
             return None
         return self.entity_info.tag.id
 
+    def last_activity(self) -> Optional[tuple[datetime, int]]:
+        activities = [
+            getattr(self.status, "feeding", None),
+            getattr(self.status, "drinking", None),
+            getattr(self.status, "activity", None),
+        ]
+        valid = [
+            (at, device_id)
+            for s in activities
+            if s
+            and (at := getattr(s, "at", None)) is not None
+            and (device_id := getattr(s, "device_id", None)) is not None
+        ]
+        result = max(valid, default=None, key=lambda x: x[0])
+        return result
+
     def fetch_assigned_devices(self) -> Command:
         """Fetch devices assigned to this pet."""
 
