@@ -54,10 +54,10 @@ class Hub(DeviceBase[Control, Status]):
             callback=parse,
         )
 
-    def set_led_mode(self, led_mode: int) -> Command:
+    def set_led_mode(self, led_mode: HubLedMode) -> Command:
         """Set let_mode settings"""
         return self.set_control(led_mode=led_mode)
 
-    def set_pairing_mode(self, pairing_mode: int) -> Command:
+    def set_pairing_mode(self, pairing_mode: HubPairMode) -> Command:
         """Set pairing_mode settings"""
         return self.set_control(pairing_mode=pairing_mode)
