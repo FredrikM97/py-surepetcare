@@ -1,0 +1,63 @@
+{
+    "https://app-api.production.surehub.io/api/device": {
+        "data": [
+            {
+                "id": 727608,
+                "product_id": 3,
+                "household_id": 7777,
+                "name": "Laundry Door"
+            }
+        ]
+    },
+    "https://app-api.production.surehub.io/api/device/727608": {
+        "data": {
+            "id": 727608,
+            "parent_device_id": 659707,
+            "product_id": 3,
+            "household_id": 106003,
+            "index": 0,
+            "name": "Laundry Door",
+            "mac_address": "**REDACTED**",
+            "version": 87920,
+            "created_at": "2021-03-02T01:58:04+00:00",
+            "updated_at": "2025-09-20T09:42:26+00:00",
+            "pairing_at": "2025-06-15T00:19:32+00:00",
+            "last_new_event_at": "2025-09-20T22:41:02+00:00",
+            "control": {
+                "curfew": {
+                    "enabled": false,
+                    "lock_time": "08:00",
+                    "unlock_time": "17:00"
+                },
+                "locking": 0,
+                "fast_polling": true
+            },
+            "status": {
+                "battery": 6,
+                "learn_mode": false,
+                "locking": {
+                    "mode": 0
+                },
+                "signal": {
+                    "device_rssi": -88,
+                    "hub_rssi": -86
+                },
+                "version": {
+                    "lcd": {
+                        "hardware": "1.0",
+                        "firmware": "1.0"
+                    },
+                    "rf": {
+                        "hardware": "4.0",
+                        "firmware": "0.16"
+                    },
+                    "device": {
+                        "hardware": "1.2",
+                        "firmware": "1.1"
+                    }
+                },
+                "online": true
+            }
+        }
+    }
+}
