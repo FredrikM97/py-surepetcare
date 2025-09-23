@@ -6,7 +6,9 @@ from .device import BaseStatus
 from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.enums import Product ID, HubPairMode, HubLedMode
+from surepcio.enums import HubLedMode
+from surepcio.enums import HubPairMode
+from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
 

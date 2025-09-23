@@ -113,13 +113,13 @@ class ModifyDeviceTag(Enum):
     ADD = "PUT"
     REMOVE = "DELETE"
 
+
 class HubLedMode(SureEnum):
     NONE = 0
     WEAK = 1
     STRONG = 2
 
-class HubPairMode:
+
+class HubPairMode(SureEnum):
     OFF = 0
     ON = 1
-    
-    
