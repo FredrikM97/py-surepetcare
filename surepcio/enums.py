@@ -116,8 +116,8 @@ class ModifyDeviceTag(Enum):
 
 class HubLedMode(SureEnum):
     NONE = 0
-    WEAK = 1
-    STRONG = 2
+    WEAK = 4
+    STRONG = 1
 
 
 class HubPairMode(SureEnum):

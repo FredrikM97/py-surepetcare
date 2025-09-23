@@ -2,8 +2,8 @@
 # name: test_snapshot
   dict({
     'control': dict({
-      'led_mode': 0,
-      'pairing_mode': 0,
+      'led_mode': <HubLedMode.NONE: 0>,
+      'pairing_mode': <HubPairMode.OFF: 0>,
     }),
     'entity_info': dict({
       'household_id': 222527,
@@ -12,9 +12,9 @@
       'product_id': 1,
     }),
     'status': dict({
-      'led_mode': 0,
+      'led_mode': <HubLedMode.NONE: 0>,
       'online': True,
-      'pairing_mode': 0,
+      'pairing_mode': <HubPairMode.OFF: 0>,
       'version': dict({
         'device': dict({
           'firmware': '239.400',
