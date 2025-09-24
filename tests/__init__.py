@@ -2,7 +2,6 @@
 
 
 FIXTURES = [
-    "devices",
     "hub",
     "pet",
     "pet_door",

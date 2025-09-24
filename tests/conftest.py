@@ -8,6 +8,8 @@ import aresponses
 import pytest
 from syrupy.assertion import SnapshotAssertion
 
+from tests import FIXTURES
+
 
 def _load_device(device_name: str) -> dict:
     path = Path(f"tests/fixture/{device_name}.json")
@@ -21,6 +23,11 @@ def _load_device(device_name: str) -> dict:
 @pytest.fixture
 def mock_device(device_name: str) -> dict:
     return _load_device(device_name)
+
+
+@pytest.fixture
+def mock_all_devices() -> list[dict]:
+    return [_load_device(device_name) for device_name in FIXTURES]
 
 
 @pytest.fixture
@@ -87,4 +94,4 @@ def object_snapshot(data, snapshot: SnapshotAssertion, skip_fields=None, any_fie
         skip_fields=skip_fields,
         any_fields=any_fields,
     )
-    return serialize(data) == snapshot
+    assert serialize(data) == snapshot

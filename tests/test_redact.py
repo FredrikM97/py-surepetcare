@@ -1,11 +1,17 @@
 import json
 import logging
 
+import aresponses
 import pytest
+from syrupy.assertion import SnapshotAssertion
 
+from surepcio.client import SurePetcareClient
 from surepcio.const import DEFAULT_SENSITIVE_FIELDS
+from surepcio.const import REDACTED_STRING
+from surepcio.household import Household
 from surepcio.security.redact import redact_sensitive
 from tests.conftest import object_snapshot
+from tests.conftest import register_device_api_mocks
 
 
 @pytest.fixture
@@ -26,10 +32,9 @@ def test_redact_sensitive_fields_in_household(household_file):
         if isinstance(obj, dict):
             for k, v in obj.items():
                 if k in sensitive_keys:
-                    # Should be redacted (e.g., replaced with '***' or similar)
                     assert (
                         v is None
-                        or v == "***REDACTED***"
+                        or v == REDACTED_STRING
                         or (isinstance(v, list) and not v)
                         or (isinstance(v, dict) and not v)
                     ), f"Field {k} not redacted: {v}"
@@ -60,4 +65,25 @@ def test_logging_redacts_sensitive_data(caplog, snapshot):
     ]
     # Join messages if there are multiple, or just use the first
     object_snapshot(messages, snapshot)
-    # snapshot.assert_match("\n".join(messages))
+
+
+@pytest.mark.asyncio
+async def test_snapshot(
+    snapshot: SnapshotAssertion, aresponses: aresponses.ResponsesMockServer, mock_all_devices, caplog
+):
+    logger = logging.getLogger("surepcio")
+    logger.setLevel(logging.DEBUG)
+
+    register_device_api_mocks(aresponses, mock_all_devices)
+    async with SurePetcareClient() as client:
+        household: Household = await client.api(Household.get_household(7777))
+        pets = await client.api(household.get_pets())
+        devices = await client.api(household.get_devices())
+        for pet in pets:
+            await client.api(pet.refresh())
+        for device in devices:
+            await client.api(device.refresh())
+
+    # Collect all log messages as a list of strings
+    log_messages = [record.getMessage() for record in caplog.records]
+    object_snapshot(log_messages, snapshot)

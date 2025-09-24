@@ -24,7 +24,7 @@ async def test_snapshot(
         devices = await client.api(household.get_devices())
         for device in devices:
             await client.api(device.refresh())
-            assert object_snapshot(device, snapshot)
+            object_snapshot(device, snapshot)
 
 
 @pytest.mark.asyncio
@@ -50,4 +50,4 @@ async def test_snapshot_set_bowls_command(
             assert cmd.method == "PUT"
             await client.api(cmd)
             assert device.controlCls(**cmd.params).bowls == device.control.bowls
-            assert object_snapshot(device, snapshot)
+            object_snapshot(device, snapshot)

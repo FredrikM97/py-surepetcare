@@ -19,4 +19,4 @@ async def test_snapshot(
         pets = await client.api(household.get_pets())
         for pet in pets:
             await client.api(pet.refresh())
-            assert object_snapshot(pet, snapshot)
+            object_snapshot(pet, snapshot)
