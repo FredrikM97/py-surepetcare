@@ -34,7 +34,7 @@ async def test_snapshot_set_bowls_command(
 ):
     register_device_api_mocks(aresponses, mock_devices)
     async with SurePetcareClient() as client:
-        household = await client.api(Household.get_household(7777))
+        household: Household = await client.api(Household.get_household(7777))
         devices: list[FeederConnect] = await client.api(household.get_devices())
 
         for device in devices:

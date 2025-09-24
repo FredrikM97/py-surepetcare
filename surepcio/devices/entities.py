@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import datetime
 from datetime import time
 from typing import Any
@@ -118,3 +119,10 @@ class Curfew(ImprovedErrorMixin):
 
 class Locking(ImprovedErrorMixin):
     mode: Optional[FlapLocking] = None
+
+
+@dataclass
+class SurePetcareResponse:
+    data: Optional[dict] = None
+    status: int = 0
+    reason: Optional[str] = None

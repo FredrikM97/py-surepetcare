@@ -10,6 +10,7 @@ from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.const import API_ENDPOINT_V1
 from surepcio.devices.entities import DevicePetTag
+from surepcio.devices.entities import SurePetcareResponse
 from surepcio.entities.error_mixin import ImprovedErrorMixin
 from surepcio.enums import ModifyDeviceTag
 from surepcio.enums import PetDeviceLocationProfile
@@ -118,8 +119,8 @@ class Pet(PetBase[Control, Status]):
     def fetch_assigned_devices(self) -> Command:
         """Fetch devices assigned to this pet."""
 
-        def parse(response) -> "Pet":
-            if "status" in response and response["status"] == 403:
+        def parse(response: SurePetcareResponse) -> "Pet":
+            if response.status == 403 or response.data is None:
                 logger.debug(
                     "Pet %s - %s returned 403 when fetching assigned devices."
                     "Could be due to missing assigned devices!",
@@ -127,13 +128,14 @@ class Pet(PetBase[Control, Status]):
                     self.name,
                 )
                 return self
-            self.status.devices = [DevicePetTag(**item) for item in response["data"]]
+            self.status.devices = [DevicePetTag(**item) for item in response.data.get("data", [])]
             return self
 
         return Command(
             method="GET",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/tag/{self.tag}/device",
             callback=parse,
+            full_response=True,
         )
 
     def set_position(self, location: PetLocation) -> Command:
