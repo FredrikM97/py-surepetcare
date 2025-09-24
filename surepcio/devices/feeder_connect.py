@@ -32,8 +32,8 @@ class BowlState(ImprovedErrorMixin):
 
 
 class BowlSetting(ImprovedErrorMixin):
-    food_type: Optional[FoodType]
-    target: Optional[int]
+    food_type: Optional[FoodType] = None
+    target: Optional[int] = None
 
 
 class Bowls(ImprovedErrorMixin):
