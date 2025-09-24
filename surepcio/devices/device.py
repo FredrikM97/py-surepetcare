@@ -9,6 +9,7 @@ from typing import TypeVar
 from pydantic import Field
 
 from surepcio.command import Command
+from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.const import API_ENDPOINT_V1
 from surepcio.devices.entities import BaseControl
 from surepcio.devices.entities import BaseStatus
@@ -59,8 +60,8 @@ class SurePetCareBase(ABC, ModelFactoryMixin[C, S]):
     def __str__(self):
         return f"<{self.__class__.__name__} id={self.id} name={self.name}>"
 
-    def __repr__(self):
-        return f"<{self.__class__.__name__} id={self.id} name={self.name}>"
+    # def __repr__(self):
+    #    return f"<{self.__class__.__name__} id={self.id} name={self.name}>"
 
     def refresh(self) -> Command | list[Command]:
         """Refresh the device data."""
@@ -113,7 +114,7 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
 
         return Command(
             "PUT",
-            f"{API_ENDPOINT_V1}/device/{self.id}/control",
+            f"{API_ENDPOINT_PRODUCTION}/device/{self.id}/control",
             params=self.controlCls(**control_settings).model_dump(),
             callback=parse,
         )

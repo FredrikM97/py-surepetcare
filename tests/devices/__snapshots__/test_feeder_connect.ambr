@@ -1,5 +1,5 @@
 # serializer version: 1
-# name: test_snapshot
+# name: test_snapshot[device_names0]
   dict({
     'control': dict({
       'bowls': dict({
@@ -34,10 +34,14 @@
       'training_mode': <FeederTrainingMode.DISABLED: 0>,
     }),
     'entity_info': dict({
-      'household_id': 222527,
+      'household_id': 7777,
       'id': 269654,
       'name': 'Maui matlåda (old) ',
+      'parent_device_id': None,
+      'photo': None,
       'product_id': 4,
+      'tag': None,
+      'tag_id': None,
     }),
     'status': dict({
       'battery': 5.046,
@@ -46,19 +50,20 @@
           'current_weight': 32.16,
           'fill_percent': 100,
           'food_type': <FoodType.WET: 1>,
-          'index': <BowlPosition.LEFT: 0>,
           'last_fill_weight': 32.16,
           'last_filled_at': datetime.datetime(2025, 7, 7, 10, 29, 29, tzinfo=TzInfo(UTC)),
           'last_zeroed_at': datetime.datetime(2025, 5, 23, 10, 25, 29, tzinfo=TzInfo(UTC)),
+          'position': <BowlPosition.LEFT: 0>,
           'substance_type': 2,
         }),
         dict({
           'current_weight': -27.2,
+          'fill_percent': None,
           'food_type': <FoodType.WET: 1>,
-          'index': <BowlPosition.RIGHT: 1>,
           'last_fill_weight': -27.2,
           'last_filled_at': datetime.datetime(2025, 7, 7, 10, 29, 29, tzinfo=TzInfo(UTC)),
           'last_zeroed_at': datetime.datetime(2025, 5, 23, 10, 25, 29, tzinfo=TzInfo(UTC)),
+          'position': <BowlPosition.RIGHT: 1>,
           'substance_type': 2,
         }),
       ]),
@@ -77,71 +82,7 @@
     'timezone': 'Europe/Stockholm',
   })
 # ---
-# name: test_snapshot.1
-  dict({
-    'control': dict({
-      'bowls': dict({
-        'settings': list([
-          dict({
-            'food_type': <FoodType.DRY: 2>,
-            'target': 65,
-          }),
-        ]),
-        'type': <BowlType.LARGE_BOWL: 1>,
-      }),
-      'fast_polling': True,
-      'lid': dict({
-        'close_delay': <CloseDelay.FASTER: 0>,
-      }),
-      'tags': list([
-        dict({
-          'created_at': datetime.datetime(2025, 8, 20, 16, 3, 55, tzinfo=TzInfo(UTC)),
-          'device_id': 1187564,
-          'id': 1725064,
-          'index': 1,
-          'profile': 2,
-          'updated_at': datetime.datetime(2025, 8, 20, 16, 3, 55, tzinfo=TzInfo(UTC)),
-          'version': 1,
-        }),
-      ]),
-      'training_mode': <FeederTrainingMode.DISABLED: 0>,
-    }),
-    'entity_info': dict({
-      'household_id': 287000,
-      'id': 1187564,
-      'name': 'Cat with only one Bowl',
-      'parent_device_id': 1204444,
-      'product_id': 4,
-    }),
-    'status': dict({
-      'battery': 6.11,
-      'bowl_status': list([
-        dict({
-          'current_weight': -40.34,
-          'food_type': <FoodType.DRY: 2>,
-          'index': <BowlPosition.MIDDLE: 2>,
-          'last_fill_weight': -22.73,
-          'last_filled_at': datetime.datetime(2025, 9, 11, 7, 29, 36, tzinfo=TzInfo(UTC)),
-          'last_zeroed_at': datetime.datetime(2025, 8, 20, 16, 4, 37, tzinfo=TzInfo(UTC)),
-          'substance_type': 2,
-        }),
-      ]),
-      'learn_mode': False,
-      'online': True,
-      'signal': dict({
-        'device_rssi': -64,
-      }),
-      'version': dict({
-        'device': dict({
-          'firmware': '406.437',
-          'hardware': '12',
-        }),
-      }),
-    }),
-    'timezone': 'Europe/Stockholm',
-  })
-# ---
-# name: test_snapshot_set_bowls_command
+# name: test_snapshot_set_bowls_command[device_names0]
   dict({
     'control': dict({
       'bowls': dict({
@@ -161,15 +102,27 @@
       'lid': dict({
         'close_delay': <CloseDelay.SLOWER: 20>,
       }),
+      'tags': None,
+      'tare': None,
       'training_mode': <FeederTrainingMode.STEP_1: 1>,
     }),
     'entity_info': dict({
-      'household_id': 222527,
+      'household_id': 7777,
       'id': 269654,
       'name': 'Maui matlåda (old) ',
+      'parent_device_id': None,
+      'photo': None,
       'product_id': 4,
+      'tag': None,
+      'tag_id': None,
     }),
     'status': dict({
+      'battery': None,
+      'bowl_status': None,
+      'learn_mode': None,
+      'online': None,
+      'signal': None,
+      'version': None,
     }),
     'timezone': 'Europe/Stockholm',
   })

@@ -1,20 +1,25 @@
 # serializer version: 1
-# name: test_snapshot
+# name: test_snapshot[device_names0]
   dict({
     'control': dict({
       'curfew': dict({
         'enabled': False,
-        'lock_time': '08:00',
-        'unlock_time': '17:00',
+        'lock_time': datetime.time(8, 0),
+        'unlock_time': datetime.time(17, 0),
       }),
       'fast_polling': True,
       'locking': <FlapLocking.UNLOCKED: 0>,
+      'tags': None,
     }),
     'entity_info': dict({
       'household_id': 7777,
       'id': 727608,
       'name': 'Laundry Door',
+      'parent_device_id': None,
+      'photo': None,
       'product_id': 3,
+      'tag': None,
+      'tag_id': None,
     }),
     'status': dict({
       'battery': 6.0,

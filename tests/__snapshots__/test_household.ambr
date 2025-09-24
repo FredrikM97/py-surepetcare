@@ -1,5 +1,28 @@
 # serializer version: 1
-# name: test_snapshot
+# name: test_get_product[device_names0]
+  dict({
+    'bowls': dict({
+      'settings': list([
+        dict({
+          'food_type': 1,
+          'target': 0,
+        }),
+        dict({
+          'food_type': 1,
+          'target': 0,
+        }),
+      ]),
+      'type': 4,
+    }),
+    'fast_polling': False,
+    'lid': dict({
+      'close_delay': 0,
+    }),
+    'tare': 2,
+    'training_mode': 0,
+  })
+# ---
+# name: test_snapshot[device_names0]
   list([
     dict({
       'data': dict({

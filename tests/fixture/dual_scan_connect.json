@@ -1,5 +1,6 @@
 {
-    "https://app-api.production.surehub.io/api/device": {
+    "GET":{
+    "https://app-api.production.surehub.io/api/device?HouseholdId=7777": {
         "data": [
             {
                 "id": 1334025,
@@ -97,5 +98,6 @@
                 }
             ]
         }
+    }
     }
 }

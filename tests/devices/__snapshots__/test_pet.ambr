@@ -1,5 +1,5 @@
 # serializer version: 1
-# name: test_snapshot
+# name: test_snapshot[device_names0]
   dict({
     'control': dict({
     }),
@@ -7,6 +7,7 @@
       'household_id': 7777,
       'id': 123455,
       'name': 'Maui',
+      'parent_device_id': None,
       'photo': dict({
         'created_at': datetime.datetime(2023, 10, 3, 15, 18, 9, tzinfo=TzInfo(UTC)),
         'hash': 'UCcarrDHzX0MkjEORQqCXNLKxsdweCQPJjl3OQ7s',
@@ -35,13 +36,20 @@
       }),
       'tag_id': 60978,
     }),
-    'last_fetched_datetime': '<ANY>',
     'status': dict({
       'activity': dict({
+        'device_id': None,
+        'id': None,
+        'pet_id': None,
+        'since': None,
+        'tag_id': None,
+        'user_id': None,
+        'where': None,
       }),
       'devices': list([
         dict({
           'created_at': datetime.datetime(2025, 9, 17, 17, 12, 47, tzinfo=TzInfo(UTC)),
+          'device_id': None,
           'id': 269654,
           'index': 2,
           'profile': 2,
@@ -50,6 +58,7 @@
         }),
         dict({
           'created_at': datetime.datetime(2025, 7, 13, 11, 14, 42, tzinfo=TzInfo(UTC)),
+          'device_id': None,
           'id': 271836,
           'index': 2,
           'profile': 2,
@@ -58,6 +67,7 @@
         }),
         dict({
           'created_at': datetime.datetime(2025, 4, 25, 19, 0, 40, tzinfo=TzInfo(UTC)),
+          'device_id': None,
           'id': 1181149,
           'index': 1,
           'profile': 2,
@@ -66,6 +76,11 @@
         }),
       ]),
       'drinking': dict({
+        'at': None,
+        'change': None,
+        'device_id': None,
+        'id': None,
+        'tag_id': None,
       }),
       'feeding': dict({
         'at': datetime.datetime(2025, 9, 16, 19, 42, 53, tzinfo=TzInfo(UTC)),
@@ -81,7 +96,7 @@
     'timezone': 'Europe/Stockholm',
   })
 # ---
-# name: test_snapshot.1
+# name: test_snapshot[device_names0].1
   dict({
     'control': dict({
     }),
@@ -89,11 +104,14 @@
       'household_id': 7777,
       'id': 629768,
       'name': 'Fionna',
+      'parent_device_id': None,
       'photo': dict({
         'created_at': datetime.datetime(2025, 2, 28, 15, 34, 12, tzinfo=TzInfo(UTC)),
         'hash': 'R01qBHfrNHNkeMiNQrtfgoWlOtUGj8TqTCzgyUZPsI',
         'id': 820465,
         'location': 'https://userimages.production.surehub.io/thm/XXXXXXXXX/R01qBHfrNHNkeMiNQrtfgoWlOtUGj8TqTCzgyUZPsI.jpg',
+        'title': None,
+        'updated_at': None,
         'uploading_user_id': 9999999,
         'version': 0,
       }),
@@ -110,13 +128,14 @@
           32,
         ]),
         'tag': '756.098101172569',
+        'updated_at': None,
         'version': 0,
       }),
       'tag_id': 1725049,
     }),
-    'last_fetched_datetime': '<ANY>',
     'status': dict({
       'activity': dict({
+        'device_id': None,
         'id': 5045077041,
         'pet_id': 629768,
         'since': datetime.datetime(2025, 9, 11, 10, 36, 59, tzinfo=TzInfo(UTC)),
@@ -127,6 +146,7 @@
       'devices': list([
         dict({
           'created_at': datetime.datetime(2025, 9, 17, 17, 12, 47, tzinfo=TzInfo(UTC)),
+          'device_id': None,
           'id': 269654,
           'index': 2,
           'profile': 2,
@@ -135,6 +155,11 @@
         }),
       ]),
       'drinking': dict({
+        'at': None,
+        'change': None,
+        'device_id': None,
+        'id': None,
+        'tag_id': None,
       }),
       'feeding': dict({
         'at': datetime.datetime(2025, 9, 16, 19, 42, 53, tzinfo=TzInfo(UTC)),

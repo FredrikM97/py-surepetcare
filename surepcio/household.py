@@ -2,8 +2,6 @@ import logging
 
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.const import API_ENDPOINT_V1
-from surepcio.const import API_ENDPOINT_V2
 from surepcio.devices import load_device_class
 from surepcio.devices.pet import Pet
 from surepcio.enums import ProductId
@@ -30,7 +28,10 @@ class Household:
             return pets
 
         return Command(
-            method="GET", endpoint=f"{API_ENDPOINT_V1}/pet", params={"HouseholdId": self.id}, callback=parse
+            method="GET",
+            endpoint=f"{API_ENDPOINT_PRODUCTION}/pet",
+            params={"HouseholdId": self.id},
+            callback=parse,
         )
 
     def get_devices(self):
@@ -108,7 +109,7 @@ class Household:
 
         return Command(
             method="GET",
-            endpoint=f"{API_ENDPOINT_V2}/product/{product_id}/device/{device_id}/control",
+            endpoint=f"{API_ENDPOINT_PRODUCTION}/product/{product_id}/device/{device_id}/control",
             callback=parse,
             reuse=False,
         )

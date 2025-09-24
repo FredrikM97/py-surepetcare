@@ -1,20 +1,28 @@
 # serializer version: 1
-# name: test_snapshot
+# name: test_snapshot[device_names0]
   dict({
     'control': dict({
       'led_mode': <HubLedMode.NONE: 0>,
       'pairing_mode': <HubPairMode.OFF: 0>,
+      'tags': None,
     }),
     'entity_info': dict({
       'household_id': 222527,
       'id': 295972,
       'name': 'Hem-hub',
+      'parent_device_id': None,
+      'photo': None,
       'product_id': 1,
+      'tag': None,
+      'tag_id': None,
     }),
     'status': dict({
+      'battery': None,
+      'learn_mode': None,
       'led_mode': <HubLedMode.NONE: 0>,
       'online': True,
       'pairing_mode': <HubPairMode.OFF: 0>,
+      'signal': None,
       'version': dict({
         'device': dict({
           'firmware': '239.400',

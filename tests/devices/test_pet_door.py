@@ -1,29 +1,22 @@
+import aresponses
 import pytest
 from syrupy.assertion import SnapshotAssertion
 
 from surepcio import Household
-from tests.mock_helpers import MockClient
-from tests.mock_helpers import recursive_dump
-
-
-@pytest.fixture
-def device_file():
-    return "tests/fixture/pet_door.json"
-
-
-@pytest.fixture
-def household_file():
-    return "tests/fixture/household.json"
+from surepcio.client import SurePetcareClient
+from tests.conftest import object_snapshot
+from tests.conftest import register_device_api_mocks
 
 
 @pytest.mark.asyncio
-async def test_snapshot(snapshot: SnapshotAssertion, household_file, device_file):
-    client = MockClient(fixture_file=device_file)
-    client.set_mock_response(household_file)
-    household = await client.api(Household.get_household(7777))
-    client.reset()
-    devices = await client.api(household.get_devices())
-    for device in devices:
-        await client.api(device.refresh())
-        data = recursive_dump(device)
-        assert data == snapshot
+@pytest.mark.parametrize("device_names", [["pet_door", "household"]])
+async def test_snapshot(
+    snapshot: SnapshotAssertion, aresponses: aresponses.ResponsesMockServer, mock_devices
+):
+    register_device_api_mocks(aresponses, mock_devices)
+    async with SurePetcareClient() as client:
+        household: Household = await client.api(Household.get_household(7777))
+        devices = await client.api(household.get_devices())
+        for device in devices:
+            await client.api(device.refresh())
+            assert object_snapshot(device, snapshot)

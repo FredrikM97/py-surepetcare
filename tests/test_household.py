@@ -1,9 +1,13 @@
+import aresponses
 import pytest
+from syrupy.assertion import SnapshotAssertion
 
 import surepcio
 from surepcio import Household
+from surepcio.client import SurePetcareClient
 from surepcio.enums import ProductId
-from tests.mock_helpers import MockClient
+from tests.conftest import object_snapshot
+from tests.conftest import register_device_api_mocks
 
 
 # --- Helpers ---
@@ -80,40 +84,6 @@ def test_get_household_and_product_none_and_invalid(command_factory, none_expect
     assert command.callback({"data": [1, 2, 3]}) == invalid_expected
 
 
-# --- Main functional tests ---
-@pytest.mark.asyncio
-async def test_get_households():
-    """Test fetching list of households using MockClient and household.json as fixture."""
-    client = MockClient(fixture_file="tests/fixture/household.json")
-    command = Household.get_households()
-    result = await client.api(command)
-    assert isinstance(result, list)
-    assert result[0].id == 1
-    assert result[1].id == 2
-
-
-@pytest.mark.asyncio
-async def test_get_household():
-    """Test fetching a single household using MockClient and household.json as fixture."""
-    client = MockClient(fixture_file="tests/fixture/household.json")
-    command = Household.get_household(1)
-    result = await client.api(command)
-    assert (isinstance(result, dict) and result.get("id") == 1) or (hasattr(result, "id") and result.id == 1)
-
-
-@pytest.mark.asyncio
-async def test_get_product():
-    """Test fetching a product for a device using MockClient and household.json as fixture."""
-    from tests.mock_helpers import MockClient
-
-    client = MockClient(fixture_file="tests/fixture/household.json")
-    command = Household.get_product(1, 2)
-    result = await client.api(command)
-    # Verify a key from the returned product data
-    assert "bowls" in result
-    assert result["bowls"]["type"] == 4
-
-
 def test_get_devices_skips_invalid_product(monkeypatch):
     """Test get_devices skips devices with invalid product_id."""
 
@@ -153,3 +123,27 @@ def test_get_devices_uses_cached():
     command = household.get_devices()
     result = command.callback(None)
     assert result == ["cached"]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("device_names", [["household"]])
+async def test_snapshot(
+    snapshot: SnapshotAssertion, aresponses: aresponses.ResponsesMockServer, mock_devices
+):
+    register_device_api_mocks(aresponses, mock_devices)
+    async with SurePetcareClient() as client:
+        household = await client.api(Household.get_households())
+        object_snapshot(household, snapshot)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("device_names", [["household", "product"]])
+async def test_get_product(snapshot, aresponses, mock_devices):
+    """Test fetching a product for a device using aresponses and household fixture."""
+    register_device_api_mocks(aresponses, mock_devices)
+    async with SurePetcareClient() as client:
+        command = Household.get_product(1, 2)
+        result = await client.api(command)
+        assert "bowls" in result
+        assert result["bowls"]["type"] == 4
+        object_snapshot(result, snapshot)

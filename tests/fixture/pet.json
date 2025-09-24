@@ -1,37 +1,151 @@
 {
-  "https://app.api.surehub.io/api/pet": {
-    "data": [
-      {
-        "id": 123455,
-        "name": "Maui",
-        "gender": 1,
-        "date_of_birth": "2016-10-15T00:00:00+00:00",
-        "weight": "3600",
-        "comments": "",
-        "breed_id": 374,
-        "food_type_id": 2,
-        "household_id": 7777,
-        "photo_id": 623733,
-        "species_id": 1,
-        "spayed": 1,
-        "tag_id": 60978,
-        "version": 5,
-        "created_at": "2023-10-01T14:34:49+00:00",
-        "updated_at": "2024-12-01T23:09:13+00:00",
-        "photo": {
-          "id": 623733,
-          "title": "1696346281223-cropped.jpg?1696346286094",
-          "location": "https://userimages.production.surehub.io/thm/3139194472/UCcarrDHzX0MkjEORQqCXNLKxsdweCQPJjl3OQ7s.jpg",
-          "hash": "UCcarrDHzX0MkjEORQqCXNLKxsdweCQPJjl3OQ7s",
-          "uploading_user_id": 3139194472,
-          "version": 0,
-          "created_at": "2023-10-03T15:18:09+00:00",
-          "updated_at": "2023-10-03T15:18:09+00:00"
+  "GET": {
+    "https://app-api.production.surehub.io/api/pet?HouseholdId=7777": {
+      "data": [
+        {
+          "id": 123455,
+          "name": "Maui",
+          "gender": 1,
+          "date_of_birth": "2016-10-15T00:00:00+00:00",
+          "weight": "3600",
+          "comments": "",
+          "breed_id": 374,
+          "food_type_id": 2,
+          "household_id": 7777,
+          "photo_id": 623733,
+          "species_id": 1,
+          "spayed": 1,
+          "tag_id": 60978,
+          "version": 5,
+          "created_at": "2023-10-01T14:34:49+00:00",
+          "updated_at": "2024-12-01T23:09:13+00:00",
+          "photo": {
+            "id": 623733,
+            "title": "1696346281223-cropped.jpg?1696346286094",
+            "location": "https://userimages.production.surehub.io/thm/3139194472/UCcarrDHzX0MkjEORQqCXNLKxsdweCQPJjl3OQ7s.jpg",
+            "hash": "UCcarrDHzX0MkjEORQqCXNLKxsdweCQPJjl3OQ7s",
+            "uploading_user_id": 3139194472,
+            "version": 0,
+            "created_at": "2023-10-03T15:18:09+00:00",
+            "updated_at": "2023-10-03T15:18:09+00:00"
+          },
+          "conditions": [],
+          "tag": {
+            "id": 60978,
+            "tag": "752.093200030403",
+            "supported_product_ids": [
+              3,
+              4,
+              6,
+              8,
+              10,
+              32
+            ],
+            "version": 1,
+            "created_at": "2019-09-04T20:28:11+00:00",
+            "updated_at": "2020-03-11T14:21:07+00:00"
+          },
+          "status": {
+            "feeding": {
+              "id": 1100965231,
+              "tag_id": 60978,
+              "device_id": 1181149,
+              "change": [
+                -4.1,
+                0
+              ],
+              "at": "2025-05-22T07:20:39+00:00"
+            }
+          }
         },
+        {
+          "id": 629768,
+          "name": "Fionna",
+          "gender": 0,
+          "date_of_birth": "2024-07-01T00:00:00+00:00",
+          "weight": "3000",
+          "breed_id": 382,
+          "food_type_id": 3,
+          "household_id": 7777,
+          "photo_id": 820465,
+          "species_id": 1,
+          "spayed": 1,
+          "tag_id": 1725049,
+          "version": 3,
+          "created_at": "2025-02-28T13:34:40+00:00",
+          "updated_at": "2025-03-19T14:43:58+00:00",
+          "photo": {
+            "id": 820465,
+            "location": "https://userimages.production.surehub.io/thm/XXXXXXXXX/R01qBHfrNHNkeMiNQrtfgoWlOtUGj8TqTCzgyUZPsI.jpg",
+            "hash": "R01qBHfrNHNkeMiNQrtfgoWlOtUGj8TqTCzgyUZPsI",
+            "uploading_user_id": 9999999,
+            "version": 0,
+            "created_at": "2025-02-28T15:34:12+00:00"
+          },
+          "conditions": [
+            {
+              "id": 25,
+              "version": 0,
+              "created_at": "2025-03-19T14:43:58+00:00"
+            }
+          ],
+          "tag": {
+            "id": 1725049,
+            "tag": "756.098101172569",
+            "supported_product_ids": [
+              3,
+              4,
+              6,
+              8,
+              10,
+              32
+            ],
+            "version": 0,
+            "created_at": "2025-02-28T13:34:39+00:00"
+          },
+          "status": {
+            "activity": {
+              "id": 5045077041,
+              "pet_id": 629768,
+              "tag_id": 1725049,
+              "user_id": 9999999,
+              "where": 2,
+              "since": "2025-09-11T10:36:59+00:00"
+            },
+            "feeding": {
+              "id": 1205291192,
+              "tag_id": 1725049,
+              "device_id": 1184438,
+              "change": [
+                -16.13,
+                0
+              ],
+              "at": "2025-09-11T06:35:56+00:00"
+            }
+          },
+          "position": {
+            "id": 5045077041,
+            "pet_id": 629768,
+            "tag_id": 1725049,
+            "user_id": 9999999,
+            "where": 2,
+            "since": "2025-09-11T10:36:59+00:00"
+          }
+        }
+      ]
+    },
+    "https://app-api.production.surehub.io/api/pet/123455": {
+      "data": {
+        "id": 693226,
+        "name": "0117739848",
+        "household_id": 222527,
+        "tag_id": 2039802,
+        "version": 0,
+        "created_at": "2025-09-09T15:36:42+00:00",
         "conditions": [],
         "tag": {
-          "id": 60978,
-          "tag": "752.093200030403",
+          "id": 2039802,
+          "tag": "0117739848",
           "supported_product_ids": [
             3,
             4,
@@ -40,57 +154,35 @@
             10,
             32
           ],
-          "version": 1,
-          "created_at": "2019-09-04T20:28:11+00:00",
-          "updated_at": "2020-03-11T14:21:07+00:00"
+          "version": 0,
+          "created_at": "2025-09-09T15:31:42+00:00"
         },
         "status": {
           "feeding": {
-            "id": 1100965231,
-            "tag_id": 60978,
-            "device_id": 1181149,
+            "id": 1210761432,
+            "tag_id": 2039802,
+            "device_id": 269654,
             "change": [
-              -4.1,
+              -3.23,
               0
             ],
-            "at": "2025-05-22T07:20:39+00:00"
+            "at": "2025-09-16T19:42:53+00:00"
           }
         }
-      },
-      {
-        "id": 629768,
-        "name": "Fionna",
-        "gender": 0,
-        "date_of_birth": "2024-07-01T00:00:00+00:00",
-        "weight": "3000",
-        "breed_id": 382,
-        "food_type_id": 3,
-        "household_id": 7777,
-        "photo_id": 820465,
-        "species_id": 1,
-        "spayed": 1,
-        "tag_id": 1725049,
-        "version": 3,
-        "created_at": "2025-02-28T13:34:40+00:00",
-        "updated_at": "2025-03-19T14:43:58+00:00",
-        "photo": {
-          "id": 820465,
-          "location": "https://userimages.production.surehub.io/thm/XXXXXXXXX/R01qBHfrNHNkeMiNQrtfgoWlOtUGj8TqTCzgyUZPsI.jpg",
-          "hash": "R01qBHfrNHNkeMiNQrtfgoWlOtUGj8TqTCzgyUZPsI",
-          "uploading_user_id": 9999999,
-          "version": 0,
-          "created_at": "2025-02-28T15:34:12+00:00"
-        },
-        "conditions": [
-          {
-            "id": 25,
-            "version": 0,
-            "created_at": "2025-03-19T14:43:58+00:00"
-          }
-        ],
+      }
+    },
+    "https://app-api.production.surehub.io/api/pet/629768": {
+      "data": {
+        "id": 693226,
+        "name": "0117739848",
+        "household_id": 222527,
+        "tag_id": 2039802,
+        "version": 0,
+        "created_at": "2025-09-09T15:36:42+00:00",
+        "conditions": [],
         "tag": {
-          "id": 1725049,
-          "tag": "756.098101172569",
+          "id": 2039802,
+          "tag": "0117739848",
           "supported_product_ids": [
             3,
             4,
@@ -100,7 +192,7 @@
             32
           ],
           "version": 0,
-          "created_at": "2025-02-28T13:34:39+00:00"
+          "created_at": "2025-09-09T15:31:42+00:00"
         },
         "status": {
           "activity": {
@@ -108,163 +200,67 @@
             "pet_id": 629768,
             "tag_id": 1725049,
             "user_id": 9999999,
-            "where": 2,
+            "where": 1,
             "since": "2025-09-11T10:36:59+00:00"
           },
           "feeding": {
-            "id": 1205291192,
-            "tag_id": 1725049,
-            "device_id": 1184438,
+            "id": 1210761432,
+            "tag_id": 2039802,
+            "device_id": 269654,
             "change": [
-              -16.13,
+              -3.23,
               0
             ],
-            "at": "2025-09-11T06:35:56+00:00"
+            "at": "2025-09-16T19:42:53+00:00"
           }
+        }
+      }
+    },
+    "https://app-api.production.surehub.io/api/tag/60978/device": {
+      "data": [
+        {
+          "id": 269654,
+          "index": 2,
+          "profile": 2,
+          "version": 1,
+          "created_at": "2025-09-17T17:12:47+00:00",
+          "updated_at": "2025-09-17T17:12:47+00:00"
         },
-        "position": {
-          "id": 5045077041,
-          "pet_id": 629768,
-          "tag_id": 1725049,
-          "user_id": 9999999,
-          "where": 2,
-          "since": "2025-09-11T10:36:59+00:00"
-        }
-      }
-    ],
-    "meta": {
-      "page": 1,
-      "page_size": 1000,
-      "count": 2,
-      "total_pages": 1
-    }
-  },
-  "https://app-api.production.surehub.io/api/pet/123455": {
-    "data": {
-      "id": 693226,
-      "name": "0117739848",
-      "household_id": 222527,
-      "tag_id": 2039802,
-      "version": 0,
-      "created_at": "2025-09-09T15:36:42+00:00",
-      "conditions": [],
-      "tag": {
-        "id": 2039802,
-        "tag": "0117739848",
-        "supported_product_ids": [
-          3,
-          4,
-          6,
-          8,
-          10,
-          32
-        ],
-        "version": 0,
-        "created_at": "2025-09-09T15:31:42+00:00"
-      },
-      "status": {
-        "feeding": {
-          "id": 1210761432,
-          "tag_id": 2039802,
-          "device_id": 269654,
-          "change": [
-            -3.23,
-            0
-          ],
-          "at": "2025-09-16T19:42:53+00:00"
-        }
-      }
-    }
-  },
-  "https://app-api.production.surehub.io/api/pet/629768": {
-    "data": {
-      "id": 693226,
-      "name": "0117739848",
-      "household_id": 222527,
-      "tag_id": 2039802,
-      "version": 0,
-      "created_at": "2025-09-09T15:36:42+00:00",
-      "conditions": [],
-      "tag": {
-        "id": 2039802,
-        "tag": "0117739848",
-        "supported_product_ids": [
-          3,
-          4,
-          6,
-          8,
-          10,
-          32
-        ],
-        "version": 0,
-        "created_at": "2025-09-09T15:31:42+00:00"
-      },
-      "status": {
-        "activity": {
-          "id": 5045077041,
-          "pet_id": 629768,
-          "tag_id": 1725049,
-          "user_id": 9999999,
-          "where": 1,
-          "since": "2025-09-11T10:36:59+00:00"
+        {
+          "id": 271836,
+          "index": 2,
+          "profile": 2,
+          "version": 1,
+          "created_at": "2025-07-13T11:14:42+00:00",
+          "updated_at": "2025-07-13T11:14:42+00:00"
         },
-        "feeding": {
-          "id": 1210761432,
-          "tag_id": 2039802,
-          "device_id": 269654,
-          "change": [
-            -3.23,
-            0
-          ],
-          "at": "2025-09-16T19:42:53+00:00"
+        {
+          "id": 1181149,
+          "index": 1,
+          "profile": 2,
+          "version": 1,
+          "created_at": "2025-04-25T19:00:40+00:00",
+          "updated_at": "2025-04-25T19:00:40+00:00"
         }
+      ],
+      "meta": {
+        "page": 1,
+        "page_size": 1000,
+        "count": 3,
+        "total_pages": 1
       }
+    },
+    "https://app-api.production.surehub.io/api/tag/1725049/device": {
+      "data": [
+        {
+          "id": 269654,
+          "index": 2,
+          "profile": 2,
+          "version": 1,
+          "created_at": "2025-09-17T17:12:47+00:00",
+          "updated_at": "2025-09-17T17:12:47+00:00"
+        }
+      ]
     }
-  },
-  "https://app-api.production.surehub.io/api/tag/60978/device": {
-    "data": [
-      {
-        "id": 269654,
-        "index": 2,
-        "profile": 2,
-        "version": 1,
-        "created_at": "2025-09-17T17:12:47+00:00",
-        "updated_at": "2025-09-17T17:12:47+00:00"
-      },
-      {
-        "id": 271836,
-        "index": 2,
-        "profile": 2,
-        "version": 1,
-        "created_at": "2025-07-13T11:14:42+00:00",
-        "updated_at": "2025-07-13T11:14:42+00:00"
-      },
-      {
-        "id": 1181149,
-        "index": 1,
-        "profile": 2,
-        "version": 1,
-        "created_at": "2025-04-25T19:00:40+00:00",
-        "updated_at": "2025-04-25T19:00:40+00:00"
-      }
-    ],
-    "meta": {
-      "page": 1,
-      "page_size": 1000,
-      "count": 3,
-      "total_pages": 1
-    }
-  },
-  "https://app-api.production.surehub.io/api/tag/1725049/device":{
-    "data": [
-      {
-        "id": 269654,
-        "index": 2,
-        "profile": 2,
-        "version": 1,
-        "created_at": "2025-09-17T17:12:47+00:00",
-        "updated_at": "2025-09-17T17:12:47+00:00"
-      }
-    ]
-}
+  }
 }

@@ -5,6 +5,7 @@ import pytest
 
 from surepcio.const import DEFAULT_SENSITIVE_FIELDS
 from surepcio.security.redact import redact_sensitive
+from tests.conftest import object_snapshot
 
 
 @pytest.fixture
@@ -58,4 +59,5 @@ def test_logging_redacts_sensitive_data(caplog, snapshot):
         record.getMessage() for record in caplog.records if record.getMessage().startswith("Sensitive: ")
     ]
     # Join messages if there are multiple, or just use the first
-    snapshot.assert_match("\n".join(messages))
+    object_snapshot(messages, snapshot)
+    # snapshot.assert_match("\n".join(messages))

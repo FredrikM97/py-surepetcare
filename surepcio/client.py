@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 from typing import Union
 
 from surepcio.command import Command
@@ -10,7 +11,7 @@ logger = logging.getLogger(__name__)
 class SurePetcareClient(AuthClient):
     """SurePetcare API client. Main object to interact with the API."""
 
-    async def get(self, endpoint: str, params: dict | None = None, headers=None) -> dict | None:
+    async def get(self, endpoint: str, params: dict[str, Any] | None = None, headers=None) -> dict | None:
         """Perform a GET request to the Sure Petcare API."""
         await self.set_session()
         async with self.session.get(endpoint, params=params, headers=headers) as response:

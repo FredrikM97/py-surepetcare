@@ -1,0 +1,27 @@
+{
+    "GET": {
+        "https://app-api.production.surehub.io/api/product/1/device/2/control": {
+            "data": {
+                "bowls": {
+                    "settings": [
+                        {
+                            "food_type": 1,
+                            "target": 0
+                        },
+                        {
+                            "food_type": 1,
+                            "target": 0
+                        }
+                    ],
+                    "type": 4
+                },
+                "lid": {
+                    "close_delay": 0
+                },
+                "tare": 2,
+                "training_mode": 0,
+                "fast_polling": false
+            }
+        }
+    }
+}

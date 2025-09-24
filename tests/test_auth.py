@@ -1,21 +1,29 @@
 import pytest
 
+from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.security.auth import AuthClient
-from tests.mock_helpers import DummySession
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
-    "json_data",
+    "json_data, status",
     [
-        {"error": "invalid credentials"},
-        {"data": {}},
+        ({"error": "invalid credentials"}, 401),
+        ({"data": {}}, 401),
     ],
 )
-async def test_login_failure(json_data):
-    """Test login failure raises Exception and token is not set."""
+async def test_login_failure(aresponses, json_data, status):
+    aresponses.add(
+        API_ENDPOINT_PRODUCTION,
+        "/auth/login",
+        "POST",
+        aresponses.Response(
+            text='{"error": "invalid credentials"}',
+            status=status,
+            headers={"Content-Type": "application/json"},
+        ),
+    )
     client = AuthClient()
-    client.session = DummySession(ok=False, status=401, json_data=json_data)
     with pytest.raises(Exception):
         await client.login("user@example.com", "wrongpassword")
     with pytest.raises(Exception):
@@ -23,10 +31,16 @@ async def test_login_failure(json_data):
 
 
 @pytest.mark.asyncio
-async def test_login_token_device_id():
-    """Test login with token and device_id sets both."""
+async def test_login_token_device_id(aresponses):
+    aresponses.add(
+        "app-api.production.surehub.io",
+        "/api/auth/login",
+        "POST",
+        aresponses.Response(
+            text='{"data": {"token": "tok"}}', status=200, headers={"Content-Type": "application/json"}
+        ),
+    )
     client = AuthClient()
-    client.session = DummySession(ok=True, status=200, json_data={"data": {"token": "tok"}})
     result = await client.login(token="tok", device_id="dev")
     assert client._token == "tok"
     assert client._device_id == "dev"
@@ -34,26 +48,36 @@ async def test_login_token_device_id():
 
 
 @pytest.mark.asyncio
-async def test_login_missing_credentials():
-    """Test login raises if no credentials provided."""
+async def test_login_missing_credentials(aresponses):
+    aresponses.add(
+        "app-api.production.surehub.io",
+        "/api/auth/login",
+        "POST",
+        aresponses.Response(
+            text='{"data": {"token": "tok"}}', status=200, headers={"Content-Type": "application/json"}
+        ),
+    )
     client = AuthClient()
-    client.session = DummySession(ok=True, status=200, json_data={"data": {"token": "tok"}})
     with pytest.raises(Exception):
         await client.login()
 
 
 @pytest.mark.asyncio
-async def test_login_success_but_token_missing():
+async def test_login_success_but_token_missing(aresponses):
+    aresponses.add(
+        "app-api.production.surehub.io",
+        "/api/auth/login",
+        "POST",
+        aresponses.Response(text='{"data": {}}', status=200, headers={"Content-Type": "application/json"}),
+    )
     client = AuthClient()
-    client.session = DummySession(ok=True, status=200, json_data={"data": {}})
-    with pytest.raises(Exception, match="Token not found"):
+    with pytest.raises(Exception, match="Token not found in response"):
         await client.login("user@example.com", "password")
 
 
 def test_generate_headers():
     client = AuthClient()
     client._device_id = "dev"
-    # Do not pass token as a keyword argument
     headers = client._generate_headers()
     assert "X-Device-Id" in headers
 
@@ -85,15 +109,9 @@ async def test_close_with_and_without_session():
     await client.close()
 
     # With session
-    class DummySession:
-        closed = False
-
-        async def close(self):
-            DummySession.closed = True
-
-    client.session = DummySession()
+    await client.set_session()
     await client.close()
-    assert DummySession.closed
+    assert client.session.closed
 
 
 @pytest.mark.asyncio
@@ -131,6 +149,7 @@ def test_del_warns(monkeypatch):
 
     client = AuthClient()
 
+    # Simulate a session that is not closed
     class DummySession:
         closed = False
 
