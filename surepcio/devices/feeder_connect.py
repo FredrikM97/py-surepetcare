@@ -12,6 +12,7 @@ from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.entities.error_mixin import ImprovedErrorMixin
 from surepcio.enums import BowlPosition
 from surepcio.enums import BowlType
+from surepcio.enums import BowlTypeOptions
 from surepcio.enums import CloseDelay
 from surepcio.enums import FeederTrainingMode
 from surepcio.enums import FoodType
@@ -87,7 +88,7 @@ class FeederConnect(DeviceBase[Control, Status]):
                 bowls_type = self.control.bowls.type
 
             if bowls_type is not None and self.status.bowl_status:
-                if bowls_type == BowlType.LARGE_BOWL:
+                if bowls_type == BowlType.LARGE:
                     # Use only the first bowl (assume it's the left bowl), set its position to MIDDLE
                     if self.status.bowl_status:
                         bowl = self.status.bowl_status[0]
@@ -122,3 +123,28 @@ class FeederConnect(DeviceBase[Control, Status]):
     def set_training_mode(self, training_mode: int) -> Command:
         """Set training_mode settings"""
         return self.set_control(training_mode=training_mode)
+
+    def set_bowl_type(self, option: BowlTypeOptions) -> object:
+        """Set the bowl type/settings on the device using BowlTypeOptions enum."""
+        if not isinstance(option, BowlTypeOptions):
+            return None
+        settings = [{"food_type": ft.value, "target": 0} for ft in option.food_types]
+        return self.set_control(
+            bowls={
+                "type": option.bowl_type.value,
+                "settings": settings,
+            }
+        )
+
+    def get_bowl_type_option(self) -> str | None:
+        """Return the BowlTypeOptions name matching the current device bowl settings."""
+        bowls = self.control.bowls
+        if not bowls or not bowls.type or not bowls.settings:
+            return None
+        bowl_type = bowls.type
+        settings = bowls.settings if isinstance(bowls.settings, list) else list(bowls.settings)
+        food_types = tuple(getattr(s, "food_type", None) for s in settings)
+        for option in BowlTypeOptions:
+            if option.bowl_type == bowl_type and tuple(option.food_types) == tuple(food_types):
+                return option.name
+        return None

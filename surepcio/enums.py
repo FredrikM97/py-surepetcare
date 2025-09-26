@@ -69,8 +69,27 @@ class FoodType(SureEnum):
 class BowlType(SureEnum):
     """Number of Bowls in Feeder"""
 
-    LARGE_BOWL = 1
+    LARGE = 1
     TWO_SMALL = 4
+
+
+class BowlTypeOptions(Enum):
+    """Bowl type and food type combinations for Feeder."""
+
+    LARGE_WET = (BowlType.LARGE, [FoodType.WET])
+    LARGE_DRY = (BowlType.LARGE, [FoodType.DRY])
+    TWO_SMALL_WET_WET = (BowlType.TWO_SMALL, [FoodType.WET, FoodType.WET])
+    TWO_SMALL_WET_DRY = (BowlType.TWO_SMALL, [FoodType.WET, FoodType.DRY])
+    TWO_SMALL_DRY_WET = (BowlType.TWO_SMALL, [FoodType.DRY, FoodType.WET])
+    TWO_SMALL_DRY_DRY = (BowlType.TWO_SMALL, [FoodType.DRY, FoodType.DRY])
+
+    @property
+    def bowl_type(self):
+        return self.value[0]
+
+    @property
+    def food_types(self):
+        return self.value[1]
 
 
 class FeederTrainingMode(SureEnum):
