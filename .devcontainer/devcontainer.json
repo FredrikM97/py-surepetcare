@@ -14,10 +14,6 @@
       ]
     }
   },
-   "mounts": [
-    "type=volume,source=ha-core-containers,target=/workspaces"
-  ],
-  "workspaceFolder": "/workspaces/py-surepetcare",
   "postCreateCommand": "pip install -e . && pip install -r requirements-dev.txt",
   "overrideCommand": true
 }
