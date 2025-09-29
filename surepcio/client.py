@@ -44,6 +44,9 @@ class SurePetcareClient(AuthClient):
             logger.debug("No command to execute on command")
             return None
         if isinstance(command, list):
+            if not command:
+                logger.debug("Empty command list provided")
+                return None
             results = [await self.api(cmd) for cmd in command]
             if all(result == results[-1] for result in results):
                 return results[-1]
