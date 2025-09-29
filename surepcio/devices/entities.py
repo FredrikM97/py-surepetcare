@@ -108,9 +108,9 @@ class BaseStatus(ImprovedErrorMixin):
 
 
 class Curfew(ImprovedErrorMixin):
-    enabled: bool
-    lock_time: time
-    unlock_time: time
+    enabled: Optional[bool] = None
+    lock_time: Optional[time] = None
+    unlock_time: Optional[time] = None
 
     @field_serializer("lock_time", "unlock_time")
     def serialize_time(self, value: time, _info):
