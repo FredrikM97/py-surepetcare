@@ -38,7 +38,7 @@ class BowlSetting(ImprovedErrorMixin):
 
 
 class Bowls(ImprovedErrorMixin):
-    settings: Optional[list[BowlSetting]] = None
+    settings: Optional[list[Optional[BowlSetting]]] = None
     type: Optional[BowlType] = None
 
 
