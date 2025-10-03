@@ -13,6 +13,20 @@ on:
           - major
           - pre_n
           - pre_l
+      new-version:
+        description: 'Set an exact version (optional, overrides bump-type)'
+        required: false
+        default: ''
+      create-tag:
+        description: 'Create a git tag?'
+        required: false
+        default: 'true'
+        type: boolean
+      dry-run:
+        description: 'Perform a dry run (no files will be changed)?'
+        required: false
+        default: 'true'
+        type: boolean
 jobs:
   build:
     permissions:
@@ -29,8 +43,13 @@ jobs:
         id: bump
         uses: callowayproject/bump-my-version@master
         with:
-          args: -vv ${{ inputs.bump-type }}
+          args: >-
+            -vv
+            ${{ inputs.dry-run == 'true' && '--dry-run' || '' }}
+            ${{ inputs.new-version && format('--new-version {0}', inputs.new-version) || inputs.bump-type }}
+            ${{ inputs.create-tag == 'false' && '--no-tag' || '' }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
 
       - name: Check
         if: steps.bump.outputs.bumped == 'true'
