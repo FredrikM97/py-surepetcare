@@ -5,9 +5,10 @@ on:
       bump-type:
         description: 'Version bump type. pre_n increment pre-release number, move to release'
         required: true
-        default: 'patch'
+        default: 'ignore'
         type: choice
         options:
+          - ignore
           - patch
           - minor
           - major
