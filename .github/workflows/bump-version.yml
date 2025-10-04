@@ -40,17 +40,34 @@ jobs:
         uses: actions/checkout@v4      
         with:
           fetch-depth: 0     
-      - name: Bump version
-        id: bump
+      - name: Bump version (by type)
+        id: bump_type
         if: inputs.bump-type != 'ignore'
         uses: callowayproject/bump-my-version@master
         with:
           args: >-
             -vv
             ${{ inputs.dry-run == true && '--dry-run' || '' }}
-            ${{ inputs.create-tag == false && '--no-tag' || '' }}
-            ${{ inputs.new-version && format('--new-version {0}', inputs.new-version) || inputs.bump-type }}
+            ${{ inputs.create-tag == true && '--tag' || '' }}
+            ${{ inputs.bump-type }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bump version (by new-version only)
+        id: bump_new
+        if: inputs.bump-type == 'ignore' && inputs.new-version != ''
+        uses: callowayproject/bump-my-version@master
+        with:
+          args: >-
+            -vv
+            ${{ inputs.dry-run == true && '--dry-run' || '' }}
+            ${{ inputs.create-tag == true && '--tag' || '' }}
+            --new-version ${{ inputs.new-version }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Skipped version bump
+        if: inputs.bump-type == 'ignore' && inputs.new-version == ''
+        run: |
+          echo "Version bump was skipped because bump-type is 'ignore' and no new-version was set."
 
 
       - name: Check
