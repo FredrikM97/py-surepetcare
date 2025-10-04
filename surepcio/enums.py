@@ -137,18 +137,18 @@ class ModifyDeviceTag(Enum):
 class HubLedMode(SureEnum):
     NONE = 0
     STRONG = 1
-    NOT_DETERMINED_1 = 2
-    NOT_DETERMINED_2 = 3
+    # NOT_DETERMINED_1 = 2
+    # NOT_DETERMINED_2 = 3
     WEAK = 4
-    NOT_DETERMINED_3 = 128
+    # NOT_DETERMINED_3 = 128
 
 
 class HubPairMode(SureEnum):
     DISABLED = 0
-    NOT_DETERMINED_1 = 1
+    # NOT_DETERMINED_1 = 1
     ON = 2
-    NOT_DETERMINED_2 = 3
-    NOT_DETERMINED_3 = 128
+    # NOT_DETERMINED_2 = 3
+    # NOT_DETERMINED_3 = 128
 
 
 class SubstanceType(SureEnum):
@@ -162,4 +162,4 @@ class Tare(SureEnum):
     DISABLED = 0
     LARGE_BOWL = 1
     TWO_SMALL = 2
-    NOT_DETERMINED_1 = 3
+    # NOT_DETERMINED_1 = 3
