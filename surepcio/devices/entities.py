@@ -4,11 +4,15 @@ from datetime import time
 from typing import Any
 from typing import Optional
 
+from pydantic import Field
 from pydantic import field_serializer
 from pydantic import model_validator
 
 from surepcio.entities.error_mixin import ImprovedErrorMixin
+from surepcio.enums import BowlPosition
 from surepcio.enums import FlapLocking
+from surepcio.enums import FoodType
+from surepcio.enums import SubstanceType
 
 
 class PetTag(ImprovedErrorMixin):
@@ -126,3 +130,14 @@ class SurePetcareResponse:
     data: Optional[dict] = None
     status: int = 0
     reason: Optional[str] = None
+
+
+class BowlState(ImprovedErrorMixin):
+    position: BowlPosition = Field(default=BowlPosition.UNKNOWN, alias="index")
+    food_type: Optional[FoodType] = None
+    substance_type: Optional[SubstanceType] = None
+    current_weight: Optional[float] = None
+    last_filled_at: Optional[datetime] = None
+    last_zeroed_at: Optional[datetime] = None
+    last_fill_weight: Optional[float] = None
+    fill_percent: Optional[int] = None

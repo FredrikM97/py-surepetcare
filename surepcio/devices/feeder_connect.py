@@ -1,14 +1,12 @@
 import logging
-from datetime import datetime
 from typing import Optional
-
-from pydantic import Field
 
 from .device import BaseControl
 from .device import BaseStatus
 from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
+from surepcio.devices.entities import BowlState
 from surepcio.entities.error_mixin import ImprovedErrorMixin
 from surepcio.enums import BowlPosition
 from surepcio.enums import BowlType
@@ -19,17 +17,6 @@ from surepcio.enums import FoodType
 from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
-
-
-class BowlState(ImprovedErrorMixin):
-    position: BowlPosition = Field(default=BowlPosition.UNKNOWN, alias="index")
-    food_type: FoodType = FoodType.UNKNOWN
-    substance_type: Optional[int] = None
-    current_weight: Optional[float] = None
-    last_filled_at: Optional[datetime] = None
-    last_zeroed_at: Optional[datetime] = None
-    last_fill_weight: Optional[float] = None
-    fill_percent: Optional[int] = None
 
 
 class BowlSetting(ImprovedErrorMixin):
@@ -92,7 +79,7 @@ class FeederConnect(DeviceBase[Control, Status]):
                     # Use only the first bowl (assume it's the left bowl), set its position to MIDDLE
                     if self.status.bowl_status:
                         bowl = self.status.bowl_status[0]
-                        bowl.position = BowlPosition.MIDDLE
+                        bowl.position = BowlPosition.BOTH
                         self.status.bowl_status = [bowl]
             return self
 

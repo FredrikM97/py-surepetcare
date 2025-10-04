@@ -1,0 +1,47 @@
+# serializer version: 1
+# name: test_snapshot[device_names0]
+  dict({
+    'control': dict({
+      'fast_polling': False,
+      'learn_mode': False,
+      'tags': None,
+    }),
+    'entity_info': dict({
+      'household_id': 7777,
+      'id': 734730,
+      'name': 'Poseidon connect',
+      'parent_device_id': None,
+      'photo': None,
+      'product_id': 8,
+      'tag': None,
+      'tag_id': None,
+    }),
+    'status': dict({
+      'battery': 5.514,
+      'bowl_status': list([
+        dict({
+          'current_weight': 975.95,
+          'fill_percent': 91,
+          'food_type': None,
+          'last_fill_weight': 1071.92,
+          'last_filled_at': datetime.datetime(2025, 9, 3, 8, 39, 29, tzinfo=TzInfo(UTC)),
+          'last_zeroed_at': None,
+          'position': <BowlPosition.ONE: 0>,
+          'substance_type': <SubstanceType.WATER: 1>,
+        }),
+      ]),
+      'learn_mode': False,
+      'online': True,
+      'signal': dict({
+        'device_rssi': -74,
+      }),
+      'version': dict({
+        'device': dict({
+          'firmware': '213.562',
+          'hardware': '1',
+        }),
+      }),
+    }),
+    'timezone': 'Europe/Stockholm',
+  })
+# ---

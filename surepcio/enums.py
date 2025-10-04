@@ -35,9 +35,9 @@ class BowlPosition(SureEnum):
     """Feeder Bowl position."""
 
     UNKNOWN = -1
-    LEFT = 0
-    RIGHT = 1
-    MIDDLE = 2  # Does not really exist but made for large bowls
+    ONE = 0
+    TWO = 1
+    BOTH = 2  # Does not really exist but made for large bowls
 
 
 class CloseDelay(SureEnum):
@@ -142,3 +142,10 @@ class HubLedMode(SureEnum):
 class HubPairMode(SureEnum):
     OFF = 0
     ON = 1
+
+
+class SubstanceType(SureEnum):
+    """Substance Types."""
+
+    WATER = 1
+    FOOD = 2
