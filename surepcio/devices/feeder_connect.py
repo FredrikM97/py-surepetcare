@@ -15,6 +15,7 @@ from surepcio.enums import CloseDelay
 from surepcio.enums import FeederTrainingMode
 from surepcio.enums import FoodType
 from surepcio.enums import ProductId
+from surepcio.enums import Tare
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,7 @@ class Lid(ImprovedErrorMixin):
 class Control(BaseControl):
     lid: Optional[Lid] = None
     bowls: Optional[Bowls] = None
-    tare: Optional[int] = None
+    tare: Optional[Tare] = None
     training_mode: Optional[FeederTrainingMode] = None
     fast_polling: Optional[bool] = None
 
@@ -103,11 +104,11 @@ class FeederConnect(DeviceBase[Control, Status]):
         """Set lid settings"""
         return self.set_control(lid=lid)
 
-    def set_tare(self, tare: int) -> Command:
+    def set_tare(self, tare: Tare) -> Command:
         """Set tare settings"""
         return self.set_control(tare=tare)
 
-    def set_training_mode(self, training_mode: int) -> Command:
+    def set_training_mode(self, training_mode: FeederTrainingMode) -> Command:
         """Set training_mode settings"""
         return self.set_control(training_mode=training_mode)
 

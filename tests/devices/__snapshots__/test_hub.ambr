@@ -3,7 +3,7 @@
   dict({
     'control': dict({
       'led_mode': <HubLedMode.NONE: 0>,
-      'pairing_mode': <HubPairMode.OFF: 0>,
+      'pairing_mode': <HubPairMode.DISABLED: 0>,
       'tags': None,
     }),
     'entity_info': dict({
@@ -21,7 +21,7 @@
       'learn_mode': None,
       'led_mode': <HubLedMode.NONE: 0>,
       'online': True,
-      'pairing_mode': <HubPairMode.OFF: 0>,
+      'pairing_mode': <HubPairMode.DISABLED: 0>,
       'signal': None,
       'version': dict({
         'device': dict({

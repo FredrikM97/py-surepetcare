@@ -71,6 +71,7 @@ class BowlType(SureEnum):
 
     LARGE = 1
     TWO_SMALL = 4
+    NOT_DETERMINED = 5
 
 
 class BowlTypeOptions(Enum):
@@ -135,13 +136,19 @@ class ModifyDeviceTag(Enum):
 
 class HubLedMode(SureEnum):
     NONE = 0
-    WEAK = 4
     STRONG = 1
+    NOT_DETERMINED_1 = 2
+    NOT_DETERMINED_2 = 3
+    WEAK = 4
+    NOT_DETERMINED_3 = 128
 
 
 class HubPairMode(SureEnum):
-    OFF = 0
+    DISABLED = 0
+    NOT_DETERMINED_1 = 1
     ON = 2
+    NOT_DETERMINED_2 = 3
+    NOT_DETERMINED_3 = 128
 
 
 class SubstanceType(SureEnum):
@@ -149,3 +156,10 @@ class SubstanceType(SureEnum):
 
     WATER = 1
     FOOD = 2
+
+
+class Tare(SureEnum):
+    DISABLED = 0
+    LARGE_BOWL = 1
+    TWO_SMALL = 2
+    BONOT_DETERMINED_1 = 3
