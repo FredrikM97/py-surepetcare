@@ -162,4 +162,4 @@ class Tare(SureEnum):
     DISABLED = 0
     LARGE_BOWL = 1
     TWO_SMALL = 2
-    BONOT_DETERMINED_1 = 3
+    NOT_DETERMINED_1 = 3
