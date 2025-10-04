@@ -133,7 +133,7 @@ class SurePetcareResponse:
 
 
 class BowlState(ImprovedErrorMixin):
-    position: BowlPosition = Field(default=None, alias="index")
+    position: Optional[BowlPosition] = Field(default=None, alias="index")
     food_type: Optional[FoodType] = None
     substance_type: Optional[SubstanceType] = None
     current_weight: Optional[float] = None
