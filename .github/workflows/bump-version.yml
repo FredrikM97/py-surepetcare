@@ -1,0 +1,76 @@
+name: Bump package version
+on:
+  workflow_dispatch:
+    inputs:
+      bump-type:
+        description: 'Version bump type. pre_n increment pre-release number, move to release'
+        required: true
+        default: 'ignore'
+        type: choice
+        options:
+          - ignore
+          - patch
+          - minor
+          - major
+          - pre_n
+          - pre_l
+      new-version:
+        description: 'Set an exact version (optional, overrides bump-type)'
+        required: false
+        default: ''
+      create-tag:
+        description: 'Create a git tag?'
+        required: false
+        default: 'true'
+        type: boolean
+      dry-run:
+        description: 'Perform a dry run (no files will be changed)?'
+        required: false
+        default: 'true'
+        type: boolean
+jobs:
+  build:
+    permissions:
+        id-token: write
+        pull-requests: read
+        contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4      
+        with:
+          fetch-depth: 0     
+      - name: Bump version (by type)
+        id: bump_type
+        if: inputs.bump-type != 'ignore'
+        uses: callowayproject/bump-my-version@master
+        with:
+          args: >-
+            -vv
+            ${{ inputs.dry-run == true && '--dry-run' || '' }}
+            ${{ inputs.create-tag == true && '--tag' || '' }}
+            ${{ inputs.bump-type }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bump version (by new-version only)
+        id: bump_new
+        if: inputs.bump-type == 'ignore' && inputs.new-version != ''
+        uses: callowayproject/bump-my-version@master
+        with:
+          args: >-
+            -vv
+            ${{ inputs.dry-run == true && '--dry-run' || '' }}
+            ${{ inputs.create-tag == true && '--tag' || '' }}
+            --new-version ${{ inputs.new-version }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Skipped version bump
+        if: inputs.bump-type == 'ignore' && inputs.new-version == ''
+        run: |
+          echo "Version bump was skipped because bump-type is 'ignore' and no new-version was set."
+
+
+      - name: Check
+        if: steps.bump.outputs.bumped == 'true'
+        run: |
+          echo "Version was bumped from ${{ steps.bump.outputs.previous-version }} to ${{ steps.bump.outputs.current-version }}!"

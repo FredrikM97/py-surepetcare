@@ -1,0 +1,59 @@
+{
+    "GET": {
+        "https://app-api.production.surehub.io/api/device?HouseholdId=7777": {
+        "data": [
+             {
+                "id": 734730,
+                "product_id": 8,
+                "household_id": 7777,
+                "name": "Poseidon connect"
+            }
+        ]
+    },
+        "https://app-api.production.surehub.io/api/device/734730": {
+            "data": {
+                "id": 734730,
+                "parent_device_id": 248092,
+                "product_id": 8,
+                "household_id": 7777,
+                "index": 1,
+                "name": "***",
+                "serial_number": "***",
+                "mac_address": "***",
+                "version": 27357,
+                "created_at": "2020-12-22T13:40:45+00:00",
+                "updated_at": "2025-10-02T06:57:12+00:00",
+                "pairing_at": "2025-03-27T06:13:30+00:00",
+                "last_new_event_at": "2025-10-03T23:41:03+00:00",
+                "control": {
+                    "learn_mode": false,
+                    "fast_polling": false
+                },
+                "status": {
+                    "battery": 5.514,
+                    "learn_mode": false,
+                    "signal": {
+                        "device_rssi": -74
+                    },
+                    "bowl_status": [
+                        {
+                            "index": 0,
+                            "substance_type": 1,
+                            "current_weight": 975.95,
+                            "last_filled_at": "2025-09-03T08:39:29+00:00",
+                            "last_fill_weight": 1071.92,
+                            "fill_percent": 91
+                        }
+                    ],
+                    "version": {
+                        "device": {
+                            "hardware": "1",
+                            "firmware": "213.562"
+                        }
+                    },
+                    "online": true
+                }
+            }
+        }
+    }
+}
