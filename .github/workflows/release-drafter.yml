@@ -3,11 +3,15 @@ name: Release Drafter
 on:
   push:
     branches:
+<<<<<<< Updated upstream
       - main
     tags:
       - 'v*'
   pull_request:
     types: [opened, reopened, synchronize]
+=======
+      - dev
+>>>>>>> Stashed changes
 
 permissions:
   contents: read
