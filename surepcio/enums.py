@@ -141,7 +141,7 @@ class HubLedMode(SureEnum):
 
 class HubPairMode(SureEnum):
     OFF = 0
-    ON = 1
+    ON = 2
 
 
 class SubstanceType(SureEnum):
