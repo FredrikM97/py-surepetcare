@@ -1,0 +1,103 @@
+{
+    "GET":{
+    "https://app-api.production.surehub.io/api/device?HouseholdId=7777": {
+        "data": [
+            {
+                "id": 1334025,
+                "product_id": 6,
+                "household_id": 7777,
+                "name": "Patio Door"
+            }
+        ]
+    },
+    "https://app-api.production.surehub.io/api/device/1334025": {
+        "data": {
+            "id": 1334025,
+            "parent_device_id": 1111,
+            "product_id": 6,
+            "household_id": 7777,
+            "index": 4,
+            "name": "Patio Door",
+            "serial_number": "SN",
+            "mac_address": "**REDACTED**",
+            "version": 4,
+            "updated_at": "2025-09-07T04:27:54+00:00",
+            "pairing_at": "2025-08-22T12:03:34+00:00",
+            "last_new_event_at": "2025-09-08T10:39:07+00:00",
+            "control": {
+                "curfew": [
+                    {
+                        "enabled": true,
+                        "lock_time": "19:30",
+                        "unlock_time": "06:00"
+                    },
+                    {
+                        "enabled": false,
+                        "lock_time": "12:00",
+                        "unlock_time": "12:01"
+                    },
+                    {
+                        "enabled": false,
+                        "lock_time": "13:00",
+                        "unlock_time": "13:01"
+                    },
+                    {
+                        "enabled": false,
+                        "lock_time": "14:00",
+                        "unlock_time": "14:01"
+                    }
+                ],
+                "locking": 0,
+                "fail_safe": 0,
+                "fast_polling": false
+            },
+            "status": {
+                "battery": 5.72,
+                "learn_mode": false,
+                "locking": {
+                    "mode": 0
+                },
+                "signal": {
+                    "device_rssi": -76
+                },
+                "version": {
+                    "device": {
+                        "hardware": "11",
+                        "firmware": "335.422"
+                    }
+                },
+                "online": true
+            },
+            "tags": [
+                {
+                    "id": 1570310,
+                    "device_id": 1334025,
+                    "index": 1,
+                    "profile": 2,
+                    "version": 3,
+                    "created_at": "2025-08-22T12:04:00+00:00",
+                    "updated_at": "2025-08-22T12:05:39+00:00"
+                },
+                {
+                    "id": 1959332,
+                    "device_id": 1334025,
+                    "index": 2,
+                    "profile": 3,
+                    "version": 2,
+                    "created_at": "2025-08-22T16:17:11+00:00",
+                    "updated_at": "2025-08-22T16:17:23+00:00"
+                },
+                {
+                    "id": 2007261,
+                    "device_id": 1334025,
+                    "index": 3,
+                    "profile": 3,
+                    "version": 2,
+                    "created_at": "2025-09-01T06:13:25+00:00",
+                    "updated_at": "2025-09-01T06:13:35+00:00"
+                }
+            ]
+        }
+    }
+    }
+}

@@ -1,0 +1,114 @@
+{
+    "GET":{
+    "https://app-api.production.surehub.io/api/household": {
+        "data": [
+            
+            {
+                "id": 1,
+                "timezone": {
+                    "id": 361,
+                    "name": "(UTC+01:00) Central European Time (Stockholm)",
+                    "timezone": "Europe/Stockholm",
+                    "utc_offset": 7200
+                }
+            },
+            {
+                "id": 2,
+                "timezone": {
+                    "id": 361,
+                    "name": "(UTC+01:00) Central European Time (Stockholm)",
+                    "timezone": "Europe/Stockholm",
+                    "utc_offset": 7200
+                }
+            },
+            {
+                "id": 222527,
+                "name": "Hemmet",
+                "share_code": "asharecodePrivate",
+                "created_user_id": 5555555,
+                "timezone_id": 361,
+                "version": 2,
+                "created_at": "2023-10-01T14:30:53+00:00",
+                "updated_at": "2023-12-13T12:52:01+00:00",
+                "invites": [
+                    {
+                        "id": 133372,
+                        "code": "asdf1234123123",
+                        "email_address": "user1@gmail.com",
+                        "owner": true,
+                        "write": true,
+                        "status": 1,
+                        "user": {
+                            "creator": {
+                                "id": 1234566,
+                                "name": "User1"
+                            },
+                            "acceptor": {
+                                "id": 5555555,
+                                "name": "User2"
+                            }
+                        },
+                        "version": 2,
+                        "created_at": "2023-10-01T16:39:30+00:00",
+                        "updated_at": "2023-10-01T16:41:13+00:00"
+                    }
+                ],
+                "users": [
+                    {
+                        "id": 1234566,
+                        "owner": true,
+                        "write": true,
+                        "user": {
+                            "id": 1234566,
+                            "name": "User1"
+                        },
+                        "version": 0,
+                        "created_at": "2023-10-01T14:30:53+00:00",
+                        "updated_at": "2023-10-01T14:30:53+00:00"
+                    },
+                    {
+                        "id": 5555555,
+                        "owner": true,
+                        "write": true,
+                        "user": {
+                            "id": 5555555,
+                            "name": "User2"
+                        },
+                        "version": 0,
+                        "created_at": "2023-10-01T16:41:13+00:00",
+                        "updated_at": "2023-10-01T16:41:13+00:00"
+                    }
+                ],
+                "timezone": {
+                    "id": 361,
+                    "name": "(UTC+01:00) Central European Time (Stockholm)",
+                    "timezone": "Europe/Stockholm",
+                    "utc_offset": 7200
+                }
+            }
+        ]
+    },
+    "https://app-api.production.surehub.io/api/household/1": {
+        "data": {
+            "id": 1,
+            "timezone": {
+                "id": 361,
+                "name": "(UTC+01:00) Central European Time (Stockholm)",
+                "timezone": "Europe/Stockholm",
+                "utc_offset": 7200
+            }
+        }
+    },
+    "https://app-api.production.surehub.io/api/household/7777": {
+        "data": {
+            "id": 7777,
+            "timezone": {
+                "id": 361,
+                "name": "(UTC+01:00) Central European Time (Stockholm)",
+                "timezone": "Europe/Stockholm",
+                "utc_offset": 7200
+            }
+        }
+    }
+}
+}

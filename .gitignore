@@ -9,7 +9,6 @@ env/*
 *.pyc
 *.pyo
 *.pyd
-.vscode
 .venv
 .coverage
 .mypy_cache
@@ -17,3 +16,6 @@ env/*
 CACHEDIR.TAG
 env
 contribute/files
+dist
+htmlcov
+build
