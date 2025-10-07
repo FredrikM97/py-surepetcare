@@ -159,18 +159,8 @@ class SubstanceType(SureEnum):
 
 
 class Tare(SureEnum):
-    # Reset bowl weight to zero. Requires lid to be open.
+    # Reset bowl weight to zero. Requires lid to be open. LARGE and LEFT share the same value
     RESET_LARGE = 1
     RESET_LEFT = 1
     RESET_RIGHT = 2
     RESET_BOTH = 3
-
-    @classmethod
-    def large(cls) -> list["Tare"]:
-        """Return tare option for large bowl."""
-        return [cls.RESET_LARGE]
-
-    @classmethod
-    def small(cls) -> list["Tare"]:
-        """Return tare options for small bowls."""
-        return [cls.RESET_LEFT, cls.RESET_RIGHT, cls.RESET_BOTH]
