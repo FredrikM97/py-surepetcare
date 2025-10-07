@@ -108,6 +108,15 @@ class FeederConnect(DeviceBase[Control, Status]):
         """Set tare settings"""
         return self.set_control(tare=tare)
 
+    def get_tare_options(self) -> list[Tare] | list:
+        if self.control.bowls is None or self.control.bowls.type is None:
+            return []
+        if self.control.bowls.type == BowlType.LARGE:
+            return Tare.large()
+        if self.control.bowls.type == BowlType.TWO_SMALL:
+            return Tare.small()
+        raise ValueError("Unknown bowl type")
+
     def set_training_mode(self, training_mode: FeederTrainingMode) -> Command:
         """Set training_mode settings"""
         return self.set_control(training_mode=training_mode)

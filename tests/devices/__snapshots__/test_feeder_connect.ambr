@@ -30,7 +30,7 @@
           'version': 0,
         }),
       ]),
-      'tare': <Tare.TWO_SMALL: 2>,
+      'tare': <Tare.RESET_RIGHT: 2>,
       'training_mode': <FeederTrainingMode.DISABLED: 0>,
     }),
     'entity_info': dict({
