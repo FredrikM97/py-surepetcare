@@ -38,12 +38,18 @@ def get_bump_options():
     options = []
     for line in output.splitlines():
         line = line.strip()
-        if "─ major ─" in line or "─ minor ─" in line or "─ patch ─" in line or "─ pre_l ─" in line:
+        if (
+            "─ major ─" in line
+            or "─ minor ─" in line
+            or "─ patch ─" in line
+            or "─ pre_n ─" in line
+            or "─ pre_l ─" in line
+        ):
             parts = [p.strip() for p in line.split("─")]
             if len(parts) >= 3:
                 bump_type = parts[-2]
                 version = parts[-1]
-                valid = "invalid" not in version and bump_type != "pre_n"
+                valid = "invalid" not in version
                 if valid:
                     options.append((bump_type, version))
     return options
