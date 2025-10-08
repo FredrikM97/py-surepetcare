@@ -160,6 +160,7 @@ class SubstanceType(SureEnum):
 
 class Tare(SureEnum):
     # Reset bowl weight to zero. Requires lid to be open. LARGE and LEFT share the same value
+    DISABLED = 0  # I assume 0 is disabled
     RESET_LARGE = 1
     RESET_LEFT = 1
     RESET_RIGHT = 2
