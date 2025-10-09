@@ -19,11 +19,22 @@
     'status': dict({
       'battery': 5.514,
       'bowl_status': list([
-        ValidationInfo(config={'title': 'Status', 'extra_fields_behavior': 'ignore'}, context=None, data={'battery': 5.514, 'learn_mode': False, 'signal': ValidationInfo(config={'title': 'Status', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='signal'), 'version': {'device': {'hardware': '1', 'firmware': '213.562'}}, 'online': True, 'bowl_status': [ValidationInfo(config={'title': 'Status', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='bowl_status')]}, field_name='bowl_status'),
+        dict({
+          'current_weight': 975.95,
+          'fill_percent': 91,
+          'food_type': None,
+          'last_fill_weight': 1071.92,
+          'last_filled_at': datetime.datetime(2025, 9, 3, 8, 39, 29, tzinfo=TzInfo(0)),
+          'last_zeroed_at': None,
+          'position': <BowlPosition.ONE: 0>,
+          'substance_type': <SubstanceType.WATER: 1>,
+        }),
       ]),
       'learn_mode': False,
       'online': True,
-      'signal': ValidationInfo(config={'title': 'Status', 'extra_fields_behavior': 'ignore'}, context=None, data={'battery': 5.514, 'learn_mode': False, 'signal': ValidationInfo(config={'title': 'Status', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='signal'), 'version': {'device': {'hardware': '1', 'firmware': '213.562'}}, 'online': True, 'bowl_status': [ValidationInfo(config={'title': 'Status', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='bowl_status')]}, field_name='signal'),
+      'signal': dict({
+        'device_rssi': -74,
+      }),
       'version': dict({
         'device': dict({
           'firmware': '213.562',

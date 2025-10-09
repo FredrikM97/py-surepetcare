@@ -3,18 +3,58 @@
   dict({
     'control': dict({
       'curfew': list([
-        ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={'tags': [ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags')], 'curfew': [ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew')], 'locking': <FlapLocking.UNLOCKED: 0>, 'fail_safe': 0, 'fast_polling': False}, field_name='curfew'),
-        ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={'tags': [ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags')], 'curfew': [ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew')], 'locking': <FlapLocking.UNLOCKED: 0>, 'fail_safe': 0, 'fast_polling': False}, field_name='curfew'),
-        ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={'tags': [ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags')], 'curfew': [ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew')], 'locking': <FlapLocking.UNLOCKED: 0>, 'fail_safe': 0, 'fast_polling': False}, field_name='curfew'),
-        ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={'tags': [ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags')], 'curfew': [ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew')], 'locking': <FlapLocking.UNLOCKED: 0>, 'fail_safe': 0, 'fast_polling': False}, field_name='curfew'),
+        dict({
+          'enabled': True,
+          'lock_time': datetime.time(19, 30),
+          'unlock_time': datetime.time(6, 0),
+        }),
+        dict({
+          'enabled': False,
+          'lock_time': datetime.time(12, 0),
+          'unlock_time': datetime.time(12, 1),
+        }),
+        dict({
+          'enabled': False,
+          'lock_time': datetime.time(13, 0),
+          'unlock_time': datetime.time(13, 1),
+        }),
+        dict({
+          'enabled': False,
+          'lock_time': datetime.time(14, 0),
+          'unlock_time': datetime.time(14, 1),
+        }),
       ]),
       'fail_safe': 0,
       'fast_polling': False,
       'locking': <FlapLocking.UNLOCKED: 0>,
       'tags': list([
-        ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={'tags': [ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags')], 'curfew': [ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew')], 'locking': <FlapLocking.UNLOCKED: 0>, 'fail_safe': 0, 'fast_polling': False}, field_name='tags'),
-        ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={'tags': [ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags')], 'curfew': [ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew')], 'locking': <FlapLocking.UNLOCKED: 0>, 'fail_safe': 0, 'fast_polling': False}, field_name='tags'),
-        ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={'tags': [ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='tags')], 'curfew': [ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew'), ValidationInfo(config={'title': 'Control', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='curfew')], 'locking': <FlapLocking.UNLOCKED: 0>, 'fail_safe': 0, 'fast_polling': False}, field_name='tags'),
+        dict({
+          'created_at': datetime.datetime(2025, 8, 22, 12, 4, tzinfo=TzInfo(0)),
+          'device_id': 1334025,
+          'id': 1570310,
+          'index': 1,
+          'profile': 2,
+          'updated_at': datetime.datetime(2025, 8, 22, 12, 5, 39, tzinfo=TzInfo(0)),
+          'version': 3,
+        }),
+        dict({
+          'created_at': datetime.datetime(2025, 8, 22, 16, 17, 11, tzinfo=TzInfo(0)),
+          'device_id': 1334025,
+          'id': 1959332,
+          'index': 2,
+          'profile': 3,
+          'updated_at': datetime.datetime(2025, 8, 22, 16, 17, 23, tzinfo=TzInfo(0)),
+          'version': 2,
+        }),
+        dict({
+          'created_at': datetime.datetime(2025, 9, 1, 6, 13, 25, tzinfo=TzInfo(0)),
+          'device_id': 1334025,
+          'id': 2007261,
+          'index': 3,
+          'profile': 3,
+          'updated_at': datetime.datetime(2025, 9, 1, 6, 13, 35, tzinfo=TzInfo(0)),
+          'version': 2,
+        }),
       ]),
     }),
     'entity_info': dict({
@@ -30,9 +70,13 @@
     'status': dict({
       'battery': 5.72,
       'learn_mode': False,
-      'locking': ValidationInfo(config={'title': 'Status', 'extra_fields_behavior': 'ignore'}, context=None, data={'battery': 5.72, 'learn_mode': False, 'signal': ValidationInfo(config={'title': 'Status', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='signal'), 'version': {'device': {'hardware': '11', 'firmware': '335.422'}}, 'online': True, 'locking': ValidationInfo(config={'title': 'Status', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='locking')}, field_name='locking'),
+      'locking': dict({
+        'mode': <FlapLocking.UNLOCKED: 0>,
+      }),
       'online': True,
-      'signal': ValidationInfo(config={'title': 'Status', 'extra_fields_behavior': 'ignore'}, context=None, data={'battery': 5.72, 'learn_mode': False, 'signal': ValidationInfo(config={'title': 'Status', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='signal'), 'version': {'device': {'hardware': '11', 'firmware': '335.422'}}, 'online': True, 'locking': ValidationInfo(config={'title': 'Status', 'extra_fields_behavior': 'ignore'}, context=None, data={...}, field_name='locking')}, field_name='signal'),
+      'signal': dict({
+        'device_rssi': -76,
+      }),
       'version': dict({
         'device': dict({
           'firmware': '335.422',
