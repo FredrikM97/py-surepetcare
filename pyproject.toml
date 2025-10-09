@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "py-surepetcare"
-version = "0.5.8-dev8"
+version = "0.5.8-dev9"
 description = "Python library for SurePetcare API"
 authors = [
     { name = "FredrikM97" }
@@ -27,6 +27,7 @@ dev = [
     "pre_commit>=4.2.0",
     "pytest-cov>=4.1.0",
     "syrupy",
+    "bump-my-version",
 ]
 
 [tool.setuptools.packages.find]
@@ -37,7 +38,7 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 
 [tool.bumpversion]
-current_version = "0.5.8-dev8"
+current_version = "0.5.8-dev9"
 parse = """(?x)
     (?P<major>0|[1-9]\\d*)\\.
     (?P<minor>0|[1-9]\\d*)\\.
