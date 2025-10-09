@@ -24,7 +24,7 @@
           'fill_percent': 91,
           'food_type': None,
           'last_fill_weight': 1071.92,
-          'last_filled_at': datetime.datetime(2025, 9, 3, 8, 39, 29, tzinfo=TzInfo(UTC)),
+          'last_filled_at': datetime.datetime(2025, 9, 3, 8, 39, 29, tzinfo=TzInfo(0)),
           'last_zeroed_at': None,
           'position': <BowlPosition.ONE: 0>,
           'substance_type': <SubstanceType.WATER: 1>,
