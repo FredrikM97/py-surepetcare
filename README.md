@@ -15,5 +15,5 @@ The project is inspired by [benleb/surepy](https://github.com/benleb/surepy), bu
 
 ## Contributing
 Before pushing validate the changes with: `pre-commit run --all-files`..
-Run `pip install -r requirements-dev.txt` to add dependencies for development. Start application and enable debug. The debug logs contain the request data which can be provided with a issue and for snapshot testing.
+Run `pip install .[dev]` to add dependencies for development. Start application and enable debug. The debug logs contain the request data which can be provided with a issue and for snapshot testing.
 
