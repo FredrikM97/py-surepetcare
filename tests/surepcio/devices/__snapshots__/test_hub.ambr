@@ -7,7 +7,7 @@
       'tags': None,
     }),
     'entity_info': dict({
-      'household_id': 222527,
+      'household_id': 7777,
       'id': 295972,
       'name': 'Hem-hub',
       'parent_device_id': None,

@@ -19,3 +19,4 @@ contribute/files
 dist
 htmlcov
 build
+*.env

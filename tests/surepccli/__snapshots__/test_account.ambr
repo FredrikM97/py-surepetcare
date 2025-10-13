@@ -1,0 +1,69 @@
+# serializer version: 1
+# name: test_account[account]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root account [OPTIONS] COMMAND [ARGS]...
+      
+       Account commands
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
+      │ login    Login with email and password.                                      │
+      │ info     Show account info.                                                  │
+      │ logout   Logout and clear session.                                           │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_account[household]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root household [OPTIONS] COMMAND [ARGS]...
+      
+       Household commands
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
+      │ list      List households                                                    │
+      │ connect   Connect to a household                                             │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_account[household_list]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Households:
+      ID     | Name
+      --------------------------
+      7777   | default Household
+      1      | Household1
+      2      | Household2
+      222527 | Hemmet
+    ''',
+  })
+# ---
+# name: test_login
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Password:
+      Logged in as aemail.
+    ''',
+  })
+# ---

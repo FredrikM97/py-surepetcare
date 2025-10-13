@@ -2,7 +2,28 @@
 
 This repository provides a Python client for accessing the [SurePetcare API](https://app-api.beta.surehub.io/index.html?urls.primaryName=V1).  
 
-The project is inspired by [benleb/surepy](https://github.com/benleb/surepy), but aims for improved separation of concerns between classes, making it easier to extend and support the production, v1 and v2 SurePetcare API.
+It consist of io support (surepcio) and a cli (surepccli).
+
+For home assistant support use the [hass-surepetcare](https://github.com/FredrikM97/hass-surepetcare)
+
+## Cli support
+This repo also support (to some extent) cli commands. The cli is installed with pip install .[cli] and is not included by default. 
+
+To see available commands use:
+```python
+surepccli --help
+```
+However, most functionality requires login therefore use the
+
+```python
+surepccli account login <email> 
+```
+It is possible to fetch available households with:
+```python
+surepccli household
+```
+
+There is also support to store some properties in .env file. Check available properties to the household and device for more info.
 
 ## Supported devices
 * Hub
