@@ -52,6 +52,7 @@ async def test_snapshot_set_bowls_command(
             assert device.controlCls(**cmd.params).bowls == device.control.bowls
             object_snapshot(device, snapshot)
 
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize("device_names", [["feeder_connect", "household"]])
 async def test_snapshot_get_functions(
