@@ -51,3 +51,21 @@ async def test_snapshot_set_bowls_command(
             await client.api(cmd)
             assert device.controlCls(**cmd.params).bowls == device.control.bowls
             object_snapshot(device, snapshot)
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("device_names", [["feeder_connect", "household"]])
+async def test_snapshot_get_functions(
+    snapshot: SnapshotAssertion, aresponses: aresponses.ResponsesMockServer, mock_devices
+):
+    register_device_api_mocks(aresponses, mock_devices)
+    async with SurePetcareClient() as client:
+        household: Household = await client.api(Household.get_household(7777))
+        devices: list[FeederConnect] = await client.api(household.get_devices())
+
+        for device in devices:
+            await client.api(device.refresh())
+            results = {
+                "fill_percentages": device.fill_percentages(),
+                "get_bowl_type_option": device.get_bowl_type_option(),
+            }
+            object_snapshot(results, snapshot)

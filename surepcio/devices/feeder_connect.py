@@ -139,9 +139,11 @@ class FeederConnect(DeviceBase[Control, Status]):
 
     def fill_percentages(self):
         """Return (total_percent, {bowl_index: percent or None, ...}) for all bowls."""
-        bowl_status = (getattr(self.status, "bowl_status", []),)
-        bowl_settings = (getattr(self.control.bowls, "settings", []),)
+        bowl_status = getattr(self.status, "bowl_status", [])
+        bowl_settings = getattr(self.control.bowls, "settings", [])
 
+        if not bowl_status or not bowl_settings:
+            return None, {}
         total_weight = 0
         total_target = 0
         individual = {}
