@@ -136,3 +136,24 @@ class FeederConnect(DeviceBase[Control, Status]):
             if option.bowl_type == bowl_type and tuple(option.food_types) == tuple(food_types):
                 return option.name
         return None
+
+    def fill_percentages(self):
+        """Return (total_percent, {bowl_index: percent or None, ...}) for all bowls."""
+        bowl_status = (getattr(self.status, "bowl_status", []),)
+        bowl_settings = (getattr(self.control.bowls, "settings", []),)
+
+        total_weight = 0
+        total_target = 0
+        individual = {}
+        for i, (bowl, setting) in enumerate(zip(bowl_status, bowl_settings)):
+            weight = getattr(bowl, "current_weight", None)
+            target = getattr(setting, "target", 0)
+            if weight is not None and target > 0:
+                percent = (weight / target) * 100
+                individual[i] = percent
+                total_weight += weight
+                total_target += target
+            else:
+                individual[i] = None
+        total = (total_weight / total_target * 100) if total_target > 0 else None
+        return total, individual
