@@ -8,4 +8,5 @@ FIXTURES = [
     "household",
     "feeder_connect",
     "dual_scan_connect",
+    "auth",
 ]

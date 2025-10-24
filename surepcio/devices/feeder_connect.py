@@ -1,5 +1,6 @@
 import logging
 from typing import Optional
+from warnings import deprecated
 
 from .device import BaseControl
 from .device import BaseStatus
@@ -96,13 +97,16 @@ class FeederConnect(DeviceBase[Control, Status]):
         """Return the RSSI value."""
         return self.status.signal.device_rssi if self.status.signal else None
 
+    @deprecated("In favor of set_bowl_type")
     def set_bowls(self, bowls: Bowls) -> Command:
         """Set bowls settings"""
         return self.set_control(bowls=bowls)
 
-    def set_lid(self, lid: Lid) -> Command:
+    def set_lid(self, closeDelay: CloseDelay) -> Command:
         """Set lid settings"""
-        return self.set_control(lid=lid)
+        if isinstance(closeDelay, str):
+            closeDelay = CloseDelay[closeDelay]
+        return self.set_control(lid=Lid(close_delay=closeDelay))
 
     def set_tare(self, tare: Tare) -> Command:
         """Set tare settings"""
@@ -116,13 +120,8 @@ class FeederConnect(DeviceBase[Control, Status]):
         """Set the bowl type/settings on the device using BowlTypeOptions enum."""
         if not isinstance(option, BowlTypeOptions):
             return None
-        settings = [{"food_type": ft.value, "target": 0} for ft in option.food_types]
-        return self.set_control(
-            bowls={
-                "type": option.bowl_type.value,
-                "settings": settings,
-            }
-        )
+        settings = [BowlSetting(food_type=ft.value, target=0) for ft in option.food_types]
+        return self.set_control(bowls=Bowls(type=option.bowl_type.value, settings=settings))
 
     def get_bowl_type_option(self) -> str | None:
         """Return the BowlTypeOptions name matching the current device bowl settings."""

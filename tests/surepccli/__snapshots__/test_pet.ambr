@@ -1,0 +1,56 @@
+# serializer version: 1
+# name: test_pet[pet]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root pet [OPTIONS] COMMAND [ARGS]...
+      
+       Pet commands
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
+      │ list             List pets                                                   │
+      │ last-activity    Show last activity for a pet                                │
+      │ assign-devices   Fetch assigned devices for a pet                            │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_pet[pet_assign_devices]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Assigned devices for pet Maui (ID: 123455):
+      device_id: [269654, 271836, 1181149]
+    ''',
+  })
+# ---
+# name: test_pet[pet_last_activity]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Last activity for pet Maui (ID: 123455):
+      device_id: 269654
+      time: 2025-09-16 19:42:53+00:00
+    ''',
+  })
+# ---
+# name: test_pet[pet_list]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Tag    | Name
+      ---------------
+      123455 | Maui
+      629768 | Fionna
+    ''',
+  })
+# ---

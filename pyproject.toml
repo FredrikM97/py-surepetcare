@@ -28,10 +28,17 @@ dev = [
     "pytest-cov>=4.1.0",
     "syrupy",
     "bump-my-version",
+    "nest_asyncio",
 ]
+cli = [
+   "typer>=0.19.2",
+   "rich==13.7.1",
+]
+[project.scripts]
+surepccli = "surepccli.__main__:app"
 
 [tool.setuptools.packages.find]
-include = ["surepcio*"]
+include = ["surepcio*","surepccli*"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

@@ -1,0 +1,247 @@
+# serializer version: 1
+# name: test_devices[devices]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices [OPTIONS] COMMAND [ARGS]...
+      
+       Devices commands
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
+      │ list              List devices                                               │
+      │ connect           Select a device to work with                               │
+      │ clear             Clear selected device                                      │
+      │ feederconnect     Feeder device commands                                     │
+      │ dualscanconnect   Flap device commands                                       │
+      │ petdoor           PetDoor device commands                                    │
+      │ hub               PetDoor device commands                                    │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices[devices_list0]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices list [OPTIONS]
+      
+       List devices
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --product-id    -p      TEXT  Product ID.                                    │
+      │ --household-id          TEXT  Household ID.                                  │
+      │                               [env var: SUREPCCLI_HOUSEHOLD_ID]              │
+      │ --help                        Show this message and exit.                    │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices[devices_list1]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Listing devices for household 7777
+      
+      Index | ID      | Name                | ProductId
+      -------------------------------------------------
+      0     | 269654  | Maui matlåda (old)  | 4
+      1     | 1187564 | Maurice Futter      | 4
+    ''',
+  })
+# ---
+# name: test_dualscanconnect[devices_dualscanconnect]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices dualscanconnect [OPTIONS] COMMAND [ARGS]...
+      
+       Flap device commands
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
+      │ curfew    Set flap locking mode                                              │
+      │ locking   Set flap locking mode                                              │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_dualscanconnect[devices_dualscanconnect_curfew]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Device 1334025
+      curfew: [{'enabled': True, 'lock_time': '19:30', 'unlock_time': '06:00'}, {'enabled': False, 'lock_time': '12:00', 'unlock_time': '12:01'}, {'enabled': False, 'lock_time': '13:00', 'unlock_time': '13:01'}, {'enabled': False, 'lock_time': '14:00', 'unlock_time': '14:01'}]
+    ''',
+  })
+# ---
+# name: test_dualscanconnect[devices_dualscanconnect_locking]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Device 1334025
+      locking: Unlocked
+    ''',
+  })
+# ---
+# name: test_feederconnect[devices_feederconnect_bowl_type]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Device 1187564
+      bowls: {'settings': [{'food_type': <FoodType.DRY: 2>, 'target': 65}], 'type': <BowlType.LARGE: 1>}
+    ''',
+  })
+# ---
+# name: test_feederconnect[devices_feederconnect_bowl_type_options]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Device 1187564
+      Available Options:
+      LARGE_DRY
+    ''',
+  })
+# ---
+# name: test_feederconnect[devices_feederconnect_fill_percentages]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Type   | Percentage
+      -------------------
+      Bowl 0 | -62.06
+      Total  | -62
+    ''',
+  })
+# ---
+# name: test_feederconnect[devices_feederconnect_lid_delay]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Device 1187564
+      lid_delay: Faster
+    ''',
+  })
+# ---
+# name: test_feederconnect[devices_feederconnect_tare]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Device 1187564
+      tare: None
+    ''',
+  })
+# ---
+# name: test_feederconnect[devices_feederconnect_training_mode]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Device 1187564
+      training_mode: Disabled
+    ''',
+  })
+# ---
+# name: test_hub[devices_hub]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices hub [OPTIONS] COMMAND [ARGS]...
+      
+       PetDoor device commands
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
+      │ led-mode       LED mode                                                      │
+      │ pairing-mode   Pairing mode                                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_hub[devices_hub_led_mode]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Device 295972
+      led_mode: None
+    ''',
+  })
+# ---
+# name: test_hub[devices_hub_pairing_mode]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Device 295972
+      pairing_mode: Disabled
+    ''',
+  })
+# ---
+# name: test_petdoor[devices_petdoor]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices petdoor [OPTIONS] COMMAND [ARGS]...
+      
+       PetDoor device commands
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
+      │ curfew    Set locking mode                                                   │
+      │ locking   Set flap locking mode                                              │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_petdoor[devices_petdoor_curfew]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Device 727608
+      curfew: {'enabled': False, 'lock_time': '08:00', 'unlock_time': '17:00'}
+    ''',
+  })
+# ---
+# name: test_petdoor[devices_petdoor_locking]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Device 727608
+      Locking: Unlocked
+    ''',
+  })
+# ---

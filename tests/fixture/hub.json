@@ -5,7 +5,7 @@
             {
                 "id": 295972,
                 "product_id": 1,
-                "household_id": 222527,
+                "household_id": 7777,
                 "name": "Hem-hub"
             }
             ]
@@ -14,7 +14,7 @@
         "data":{
         "id": 295972,
         "product_id": 1,
-        "household_id": 222527,
+        "household_id": 7777,
         "name": "Hem-hub",
         "serial_number": "H008-0295972",
         "mac_address": "00000491620A2B43",
