@@ -32,7 +32,7 @@ dev = [
 ]
 cli = [
    "typer>=0.19.2",
-   "rich==13.7.1",
+   "rich==14.2.0",
 ]
 [project.scripts]
 surepccli = "surepccli.__main__:app"
