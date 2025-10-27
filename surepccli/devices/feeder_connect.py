@@ -1,8 +1,8 @@
 from typing import cast
-from typing import Optional
 
 import typer
 
+from surepccli.devices.helper import EnumChoice
 from surepccli.helpers import device_id_option
 from surepccli.helpers import fetch_device
 from surepccli.helpers import household_option
@@ -39,26 +39,29 @@ async def fill_percentages(
     print_table(rows, headers=["Type", "Percentage"])
 
 
-@feederconnect.command("lid_delay", login_required=True)
+@feederconnect.command(login_required=True)
 async def lid_delay(
-    state: Optional[CloseDelay] = state_option("Set new lid close delay (omit to show current)."),
+    state: CloseDelay = state_option(
+        "Set new lid close delay (omit to show current).", click_type=EnumChoice(CloseDelay)
+    ),
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
     device: FeederConnect = cast(FeederConnect, await fetch_device(household_id, device_id))
-
     if state is None:
         delay = getattr(device.control.lid, "close_delay")
-        typer.echo(f"Device {device.id}\nlid_delay: {delay}")
+        typer.echo(f"Device {device.id}\nlid_delay: {delay.name}")
         return
     async with get_session_manager() as sm:
         await sm.client.api(device.set_lid(state))
-    typer.echo(f"Device {device.id} lid delay set to {state}.")
+    typer.echo(f"Device {device.id} lid delay set to {state.name}.")
 
 
 @feederconnect.command(login_required=True)
 async def training_mode(
-    state: Optional[FeederTrainingMode] = state_option("Set new training mode (omit to show current)."),
+    state: FeederTrainingMode = state_option(
+        "Set new training mode (omit to show current).", click_type=EnumChoice(FeederTrainingMode)
+    ),
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
@@ -66,17 +69,17 @@ async def training_mode(
 
     if state is None:
         training_mode = getattr(device.control, "training_mode")
-        typer.echo(f"Device {device.id}\ntraining_mode: {training_mode}")
+        typer.echo(f"Device {device.id}\ntraining_mode: {training_mode.name}")
         return
     async with get_session_manager() as sm:
         await sm.client.api(device.set_training_mode(state))
 
-    typer.echo(f"Device {device_id} lock set to {state}.")
+    typer.echo(f"Device {device_id} lock set to {state.name}.")
 
 
 @feederconnect.command(login_required=True)
 async def tare(
-    state: Optional[Tare] = state_option("Set tare settings (omit to show current)."),
+    state: Tare = state_option("Set tare settings (omit to show current).", click_type=EnumChoice(Tare)),
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
@@ -84,17 +87,20 @@ async def tare(
 
     if state is None:
         tare = getattr(device.control, "tare")
+        tare = getattr(tare, "name", None)
         typer.echo(f"Device {device.id}\ntare: {tare}")
         return
     async with get_session_manager() as sm:
         await sm.client.api(device.set_tare(state))
 
-    typer.echo(f"Device {device_id} tare set to {state}.")
+    typer.echo(f"Device {device_id} tare set to {state.name}.")
 
 
 @feederconnect.command(login_required=True)
 async def bowl_type(
-    state: Optional[BowlTypeOptions] = state_option("Set bowl type/settings (omit to show current)."),
+    state: BowlTypeOptions = state_option(
+        "Set bowl type/settings (omit to show current).", click_type=EnumChoice(BowlTypeOptions)
+    ),
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
@@ -107,7 +113,7 @@ async def bowl_type(
     async with get_session_manager() as sm:
         await sm.client.api(device.set_bowl_type(state))
 
-    typer.echo(f"Device {device_id} bowls set to {state}.")
+    typer.echo(f"Device {device_id} bowls set to {state.name}.")
 
 
 @feederconnect.command(login_required=True)

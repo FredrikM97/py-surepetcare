@@ -1,5 +1,5 @@
 # serializer version: 1
-# name: test_pet[pet]
+# name: test_household_cmd_help[command_path0]
   dict({
     'exception': None,
     'exit_code': 0,
@@ -16,6 +16,62 @@
       │ list             List pets                                                   │
       │ last-activity    Show last activity for a pet                                │
       │ assign-devices   Fetch assigned devices for a pet                            │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_household_cmd_help[command_path1]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root pet list [OPTIONS]
+      
+       List pets
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --household-id        TEXT  Household ID. [env var: SUREPCCLI_HOUSEHOLD_ID]  │
+      │ --help                      Show this message and exit.                      │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_household_cmd_help[command_path2]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root pet last-activity [OPTIONS]
+      
+       Show last activity for a pet
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --household-id        TEXT  Household ID. [env var: SUREPCCLI_HOUSEHOLD_ID]  │
+      │ --pet-id              TEXT  Pet ID.                                          │
+      │ --help                      Show this message and exit.                      │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_household_cmd_help[command_path3]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root pet assign-devices [OPTIONS]
+      
+       Fetch assigned devices for a pet
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --household-id        TEXT  Household ID. [env var: SUREPCCLI_HOUSEHOLD_ID]  │
+      │ --pet-id              TEXT  Pet ID.                                          │
+      │ --help                      Show this message and exit.                      │
       ╰──────────────────────────────────────────────────────────────────────────────╯
   
     ''',

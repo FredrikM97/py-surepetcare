@@ -69,7 +69,7 @@ def product_id_option(optional: bool = False):
     )
 
 
-def state_option(help: str = "", **kwargs) -> Optional[typer.Option]:
+def state_option(help: str = "", **kwargs) -> typer.Option:
     return Option(
         None,
         "--state",

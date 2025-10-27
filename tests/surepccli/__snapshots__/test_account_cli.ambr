@@ -1,27 +1,4 @@
 # serializer version: 1
-# name: test_account[account]
-  dict({
-    'exception': None,
-    'exit_code': 0,
-    'output': '''
-      
-       Usage: root account [OPTIONS] COMMAND [ARGS]...
-      
-       Account commands
-      
-      ╭─ Options ────────────────────────────────────────────────────────────────────╮
-      │ --help          Show this message and exit.                                  │
-      ╰──────────────────────────────────────────────────────────────────────────────╯
-      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
-      │ login    Login with email and password.                                      │
-      │ info     Show account info.                                                  │
-      │ token    Show account token.                                                 │
-      │ logout   Logout and clear session.                                           │
-      ╰──────────────────────────────────────────────────────────────────────────────╯
-  
-    ''',
-  })
-# ---
 # name: test_account[account_info]
   dict({
     'exception': None,
@@ -50,6 +27,102 @@
     'exception': None,
     'exit_code': 0,
     'output': 'validToken',
+  })
+# ---
+# name: test_household_cmd_help[command_path0]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root account [OPTIONS] COMMAND [ARGS]...
+      
+       Account commands
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
+      │ login    Login with email and password.                                      │
+      │ info     Show account info.                                                  │
+      │ token    Show account token.                                                 │
+      │ logout   Logout and clear session.                                           │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_household_cmd_help[command_path1]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root account login [OPTIONS] EMAIL
+      
+       Login with email and password.
+      
+      ╭─ Arguments ──────────────────────────────────────────────────────────────────╮
+      │ *    email      TEXT  [required]                                             │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --password        TEXT  Account password (prompted, hidden).                 │
+      │ --no-store              Do not store session in environment. [default: True] │
+      │ --help                  Show this message and exit.                          │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_household_cmd_help[command_path2]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root account info [OPTIONS]
+      
+       Show account info.
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_household_cmd_help[command_path3]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root account token [OPTIONS]
+      
+       Show account token.
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_household_cmd_help[command_path4]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root account logout [OPTIONS]
+      
+       Logout and clear session.
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
   })
 # ---
 # name: test_login[account_login_aemail0]

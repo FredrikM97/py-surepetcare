@@ -175,3 +175,56 @@ def pytest_generate_tests(metafunc):
             commands,
             ids=[_cmd_id(c) for c in commands],
         )
+
+
+def list_all_typer_commands(obj, prefix=None, filters=None):
+    prefix = prefix or []
+    commands = []
+    # Add the group itself if it has a name (including first-level groups)
+    if hasattr(obj, "info") and hasattr(obj.info, "name") and obj.info.name:
+        group_name = obj.info.name.replace("_", "-")
+        if not prefix or prefix[-1] != group_name:
+            commands.append(prefix + [group_name])
+        prefix = prefix + [group_name]
+    # Add all commands at this level
+    if hasattr(obj, "registered_commands"):
+        for cmd in getattr(obj, "registered_commands", []):
+            name = getattr(cmd, "name", None)
+            callback = getattr(cmd, "callback", None)
+            callback_name = getattr(callback, "__name__", str(callback))
+            cmd_name = (name if name else callback_name).replace("_", "-")
+            cmd_path = prefix + [cmd_name]
+            commands.append(cmd_path)
+            command_obj = getattr(cmd, "command", None)
+            if command_obj and (
+                hasattr(command_obj, "registered_commands") or hasattr(command_obj, "registered_groups")
+            ):
+                commands.extend(list_all_typer_commands(command_obj, cmd_path, filters))
+    # Add all subgroups at this level
+    if hasattr(obj, "registered_groups"):
+        for group in getattr(obj, "registered_groups", []):
+            group_app = getattr(group, "typer_instance", None)
+            group_name = getattr(group, "name", None)
+            if group_app and group_name:
+                group_name = group_name.replace("_", "-")
+                commands.append(prefix + [group_name])
+                commands.extend(list_all_typer_commands(group_app, prefix + [group_name], filters))
+            elif group_app:
+                commands.extend(list_all_typer_commands(group_app, prefix, filters))
+    # Handle wrapped Typer instances
+    if hasattr(obj, "typer_instance"):
+        commands.extend(list_all_typer_commands(obj.typer_instance, prefix, filters))
+    # Apply filters if given
+    if filters:
+
+        def matches(cmd):
+            idx = 0
+            for f in filters:
+                try:
+                    idx = cmd.index(f, idx) + 1
+                except ValueError:
+                    return False
+            return True
+
+        commands = [cmd for cmd in commands if matches(cmd)]
+    return commands

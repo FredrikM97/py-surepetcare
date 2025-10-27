@@ -4,6 +4,7 @@ from typing import Optional
 import typer
 
 from surepccli.devices.helper import CurfewParamType
+from surepccli.devices.helper import EnumChoice
 from surepccli.helpers import device_id_option
 from surepccli.helpers import fetch_device
 from surepccli.helpers import household_option
@@ -43,7 +44,9 @@ async def curfew(
 
 @dualscanpetdoor.command("locking", help="Set flap locking mode")
 async def locking(
-    state: Optional[FlapLocking] = state_option("Set new locking mode (omit to show current)."),
+    state: FlapLocking = state_option(
+        "Set new locking mode (omit to show current).", click_type=EnumChoice(FlapLocking)
+    ),
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
@@ -52,9 +55,9 @@ async def locking(
 
     if state is None:
         locking = getattr(device.control, "locking")
-        typer.echo(f"Device {device.id}\nlocking: {locking}")
+        typer.echo(f"Device {device.id}\nlocking: {locking.name}")
         return
     async with get_session_manager() as sm:
         await sm.client.api(device.set_locking(state))
 
-    typer.echo(f"Device {device_id} lock set to {state}.")
+    typer.echo(f"Device {device_id} lock set to {state.name}.")
