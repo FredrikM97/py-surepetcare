@@ -1,5 +1,4 @@
 from typing import cast
-from typing import Optional
 
 import typer
 
@@ -20,7 +19,9 @@ hub = AsyncTyper(name="hub", help="PetDoor device commands", login_required=True
 
 @hub.command()
 async def led_mode(
-    state: Optional[HubLedMode] = state_option("Set LED mode (omit to show current)."),
+    state: HubLedMode = state_option(
+        "Set LED mode (omit to show current).", click_type=EnumChoice(HubLedMode)
+    ),
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
@@ -34,7 +35,7 @@ async def led_mode(
     async with get_session_manager() as sm:
         await sm.client.api(device.set_led_mode(state))
 
-    typer.echo(f"Device {device_id} led_mode to {state}.")
+    typer.echo(f"Device {device_id} led_mode to {state.name}.")
 
 
 @hub.command()

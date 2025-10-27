@@ -48,7 +48,6 @@ async def lid_delay(
     household_id: str = household_option(),
 ):
     device: FeederConnect = cast(FeederConnect, await fetch_device(household_id, device_id))
-    print("What is state??")
     if state is None:
         delay = getattr(device.control.lid, "close_delay")
         typer.echo(f"Device {device.id}\nlid_delay: {delay.name}")
