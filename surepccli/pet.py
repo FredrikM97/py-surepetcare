@@ -2,10 +2,10 @@ from typing import Optional
 
 import typer
 
-from surepccli import get_session_manager
 from surepccli.helpers import household_option
 from surepccli.helpers import pet_id_option
 from surepccli.helpers import print_table
+from surepccli.session import get_session_manager
 from surepccli.typer import AsyncTyper
 from surepcio.devices.pet import Pet
 from surepcio.household import Household

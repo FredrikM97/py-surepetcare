@@ -3,8 +3,8 @@ from typing import Optional
 import typer
 from typer import Option
 
-from surepccli import get_session_manager
 from surepccli.const import Envs
+from surepccli.session import get_session_manager
 from surepcio.devices.device import DeviceBase
 from surepcio.enums import ProductId
 from surepcio.household import Household

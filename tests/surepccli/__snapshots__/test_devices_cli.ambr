@@ -25,6 +25,13 @@
     ''',
   })
 # ---
+# name: test_devices[devices_clear]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '',
+  })
+# ---
 # name: test_devices[devices_list0]
   dict({
     'exception': None,
@@ -56,6 +63,21 @@
       -------------------------------------------------
       0     | 269654  | Maui matlåda (old)  | 4
       1     | 1187564 | Maurice Futter      | 4
+    ''',
+  })
+# ---
+# name: test_devices_connect[devices_connect]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Listing devices for household 7777
+      
+      Index | ID      | Name                | ProductId
+      -------------------------------------------------
+      0     | 269654  | Maui matlåda (old)  | 4
+      1     | 1187564 | Maurice Futter      | 4
+      Connect to device: 0
     ''',
   })
 # ---

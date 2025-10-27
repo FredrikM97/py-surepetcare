@@ -21,6 +21,18 @@
       'tag': None,
       'tag_id': None,
     }),
+    'properties': dict({
+      'available': True,
+      'battery_level': 74,
+      'household_id': 7777,
+      'id': 727608,
+      'name': 'Laundry Door',
+      'parent_device_id': None,
+      'photo': None,
+      'product': <ProductId.PET_DOOR: 3>,
+      'product_id': 3,
+      'product_name': 'PET_DOOR',
+    }),
     'status': dict({
       'battery': 6.0,
       'learn_mode': False,

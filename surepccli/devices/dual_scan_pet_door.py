@@ -3,12 +3,12 @@ from typing import Optional
 
 import typer
 
-from surepccli import get_session_manager
 from surepccli.devices.helper import CurfewParamType
 from surepccli.helpers import device_id_option
 from surepccli.helpers import fetch_device
 from surepccli.helpers import household_option
 from surepccli.helpers import state_option
+from surepccli.session import get_session_manager
 from surepccli.typer import AsyncTyper
 from surepcio.devices.dual_scan_pet_door import DualScanPetDoor
 from surepcio.devices.entities import Curfew

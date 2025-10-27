@@ -16,6 +16,18 @@
       'tag': None,
       'tag_id': None,
     }),
+    'properties': dict({
+      'available': True,
+      'battery_level': 0,
+      'household_id': 7777,
+      'id': 295972,
+      'name': 'Hem-hub',
+      'parent_device_id': None,
+      'photo': 'https://www.surepetcare.io/assets/assets/products/hub/hub.6475b3a385180ab8fb96731c4bfd1eda.png',
+      'product': <ProductId.HUB: 1>,
+      'product_id': 1,
+      'product_name': 'HUB',
+    }),
     'status': dict({
       'battery': None,
       'learn_mode': None,

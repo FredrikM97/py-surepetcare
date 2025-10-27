@@ -16,6 +16,18 @@
       'tag': None,
       'tag_id': None,
     }),
+    'properties': dict({
+      'available': True,
+      'battery_level': 44,
+      'household_id': 7777,
+      'id': 734730,
+      'name': 'Poseidon connect',
+      'parent_device_id': None,
+      'photo': None,
+      'product': <ProductId.POSEIDON_CONNECT: 8>,
+      'product_id': 8,
+      'product_name': 'POSEIDON_CONNECT',
+    }),
     'status': dict({
       'battery': 5.514,
       'bowl_status': list([

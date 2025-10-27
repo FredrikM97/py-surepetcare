@@ -35,7 +35,7 @@ cli = [
    "rich==14.2.0",
 ]
 [project.scripts]
-surepccli = "surepccli.__main__:app"
+surepccli = "surepccli:app"
 
 [tool.setuptools.packages.find]
 include = ["surepcio*","surepccli*"]
@@ -43,7 +43,11 @@ include = ["surepcio*","surepccli*"]
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
-
+markers = [
+    "devices(names): Specify required device mocks for a test.",
+    "cli_commands: List CLI command invocations for a test.",
+    "cli_inputs: Specify CLI user inputs for a test."
+]
 [tool.bumpversion]
 current_version = "0.5.8-dev11"
 parse = """(?x)

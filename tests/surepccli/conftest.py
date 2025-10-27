@@ -1,14 +1,14 @@
 """Conftest for CLI tests."""
 import inspect
 import re
+from pathlib import Path
 
 import nest_asyncio
 import pytest
 from syrupy.assertion import SnapshotAssertion
 from typer.testing import CliRunner
 
-import surepccli.context as ctx
-from surepccli.__main__ import app
+from surepccli import app
 from surepccli.const import Envs
 from tests.conftest import register_device_api_mocks
 
@@ -83,12 +83,11 @@ def test_configuration(monkeypatch, tmp_path):
     monkeypatch.setenv(Envs.TOKEN, "validToken")
     monkeypatch.setenv(Envs.CLIENT_ID, "validClientId")
 
-    new_path = tmp_path / ".surepccli.test.env"
-    # Ensure any code using ctx.ENV_FILE after this sees new path
-    monkeypatch.setattr(ctx, "ENV_FILE", new_path)
-    yield new_path
-    if new_path.exists():
-        new_path.unlink()
+    test_env = Path(tmp_path / ".surepccli.test.env")
+    monkeypatch.setattr("surepccli.session.getEnvFile", lambda: test_env)
+    yield test_env
+    if test_env.exists():
+        test_env.unlink()
 
 
 def _cmd_id(cmd: list[str]) -> str:
@@ -130,6 +129,29 @@ def cli_commands(request):
     if not commands:
         raise ValueError("cli_commands marker provided no command lists")
     return commands
+
+
+@pytest.fixture
+def cli_inputs(request, cli_command):
+    """
+    Returns the input string for the current cli_command, based on the cli_inputs marker.
+    """
+    mark = request.node.get_closest_marker("cli_inputs")
+    if not mark:
+        return None
+    idx = getattr(request, "param_index", None)
+    if idx is None:
+        # e.g. test_household_connect[household_list]
+        for i, arg in enumerate(request.node.callspec.params.get("cli_command", [])):
+            if str(arg) == str(cli_command):
+                idx = i
+                break
+        else:
+            idx = 0
+    try:
+        return mark.args[idx]
+    except IndexError:
+        return None
 
 
 def pytest_generate_tests(metafunc):

@@ -1,4 +1,5 @@
 import enum
+import inspect
 import json
 from pathlib import Path
 from unittest.mock import ANY
@@ -83,7 +84,18 @@ def serialize(obj):
     elif isinstance(obj, enum.Enum):
         return obj  # or obj.name if you prefer
     elif hasattr(obj, "__dict__"):
-        return {k: serialize(v) for k, v in vars(obj).items() if not k.startswith("_")}
+        data = {k: serialize(v) for k, v in vars(obj).items() if not k.startswith("_")}
+        # Add public properties
+        properties = {}
+        for name, member in inspect.getmembers(type(obj)):
+            if isinstance(member, property) and not name.startswith("_"):
+                try:
+                    properties[name] = serialize(getattr(obj, name))
+                except Exception:
+                    properties[name] = "<error>"
+        if properties:
+            data["properties"] = properties
+        return data
     else:
         return obj
 
