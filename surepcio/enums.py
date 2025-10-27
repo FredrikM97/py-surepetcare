@@ -5,8 +5,9 @@ from enum import IntEnum
 class SureEnum(IntEnum):
     """Sure base enum."""
 
-    def __str__(self) -> str:
-        return self.name.title()
+    # This breaks stuff so temp remove it..
+    # def __str__(self) -> str:
+    #    return self.name.title()
 
 
 class ProductId(SureEnum):

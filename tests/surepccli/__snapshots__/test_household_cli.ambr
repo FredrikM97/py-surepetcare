@@ -1,5 +1,20 @@
 # serializer version: 1
-# name: test_household[household]
+# name: test_household[household_list]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Households:
+      ID     | Name
+      --------------------------
+      7777   | default Household
+      1      | Household1
+      2      | Household2
+      222527 | Hemmet
+    ''',
+  })
+# ---
+# name: test_household_cmd_help[command_path0]
   dict({
     'exception': None,
     'exit_code': 0,
@@ -20,18 +35,37 @@
     ''',
   })
 # ---
-# name: test_household[household_list]
+# name: test_household_cmd_help[command_path1]
   dict({
     'exception': None,
     'exit_code': 0,
     'output': '''
-      Households:
-      ID     | Name
-      --------------------------
-      7777   | default Household
-      1      | Household1
-      2      | Household2
-      222527 | Hemmet
+      
+       Usage: root household list [OPTIONS]
+      
+       List households
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_household_cmd_help[command_path2]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root household connect [OPTIONS]
+      
+       Connect to a household
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
     ''',
   })
 # ---

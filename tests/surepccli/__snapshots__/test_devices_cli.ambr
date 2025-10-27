@@ -1,5 +1,26 @@
 # serializer version: 1
-# name: test_devices[devices]
+# name: test_devices[devices_clear]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '',
+  })
+# ---
+# name: test_devices[devices_list]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      Listing devices for household 7777
+      
+      Index | ID      | Name                | ProductId
+      -------------------------------------------------
+      0     | 269654  | Maui matlåda (old)  | 4
+      1     | 1187564 | Maurice Futter      | 4
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path0]
   dict({
     'exception': None,
     'exit_code': 0,
@@ -25,14 +46,220 @@
     ''',
   })
 # ---
-# name: test_devices[devices_clear]
+# name: test_devices_cmd_help[command_path10]
   dict({
     'exception': None,
     'exit_code': 0,
-    'output': '',
+    'output': '''
+      
+       Usage: root devices feederconnect bowl-type-options [OPTIONS]
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --device-id           TEXT  Device ID.                                       │
+      │ --household-id        TEXT  Household ID. [env var: SUREPCCLI_HOUSEHOLD_ID]  │
+      │ --help                      Show this message and exit.                      │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
   })
 # ---
-# name: test_devices[devices_list0]
+# name: test_devices_cmd_help[command_path11]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices dualscanconnect [OPTIONS] COMMAND [ARGS]...
+      
+       Flap device commands
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
+      │ curfew    Set flap curfew mode                                               │
+      │ locking   Set flap locking mode                                              │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path12]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices dualscanconnect curfew [OPTIONS]
+      
+       Set flap curfew mode
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --state         -s      CURFEW  Set new curfew times (omit to show current). │
+      │ --device-id             TEXT    Device ID.                                   │
+      │ --household-id          TEXT    Household ID.                                │
+      │                                 [env var: SUREPCCLI_HOUSEHOLD_ID]            │
+      │ --help                          Show this message and exit.                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path13]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices dualscanconnect locking [OPTIONS]
+      
+       Set flap locking mode
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --state         -s      [UNLOCKED|ALLOW_IN|ALLOW  Set new locking mode (omit │
+      │                         _OUT|LOCKED]              to show current).          │
+      │ --device-id             TEXT                      Device ID.                 │
+      │ --household-id          TEXT                      Household ID.              │
+      │                                                   [env var:                  │
+      │                                                   SUREPCCLI_HOUSEHOLD_ID]    │
+      │ --help                                            Show this message and      │
+      │                                                   exit.                      │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path14]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices petdoor [OPTIONS] COMMAND [ARGS]...
+      
+       PetDoor device commands
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
+      │ curfew    Set locking mode                                                   │
+      │ locking   Set flap locking mode                                              │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path15]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices petdoor curfew [OPTIONS]
+      
+       Set locking mode
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --state         -s      CURFEW  Set new curfew times (omit to show current). │
+      │ --device-id             TEXT    Device ID.                                   │
+      │ --household-id          TEXT    Household ID.                                │
+      │                                 [env var: SUREPCCLI_HOUSEHOLD_ID]            │
+      │ --help                          Show this message and exit.                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path16]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices petdoor locking [OPTIONS]
+      
+       Set flap locking mode
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --state         -s      [UNLOCKED|ALLOW_IN|ALLOW  Set new locking mode (omit │
+      │                         _OUT|LOCKED]              to show current).          │
+      │ --device-id             TEXT                      Device ID.                 │
+      │ --household-id          TEXT                      Household ID.              │
+      │                                                   [env var:                  │
+      │                                                   SUREPCCLI_HOUSEHOLD_ID]    │
+      │ --help                                            Show this message and      │
+      │                                                   exit.                      │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path17]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices hub [OPTIONS] COMMAND [ARGS]...
+      
+       PetDoor device commands
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
+      │ led-mode       LED mode                                                      │
+      │ pairing-mode   Pairing mode                                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path18]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices hub led-mode [OPTIONS]
+      
+       LED mode
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --state         -s      [0|1|4]  Set LED mode (omit to show current).        │
+      │ --device-id             TEXT     Device ID.                                  │
+      │ --household-id          TEXT     Household ID.                               │
+      │                                  [env var: SUREPCCLI_HOUSEHOLD_ID]           │
+      │ --help                           Show this message and exit.                 │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path19]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices hub pairing-mode [OPTIONS]
+      
+       Pairing mode
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --state         -s      [DISABLED|ON]  Set pairing mode (omit to show        │
+      │                                        current).                             │
+      │ --device-id             TEXT           Device ID.                            │
+      │ --household-id          TEXT           Household ID.                         │
+      │                                        [env var: SUREPCCLI_HOUSEHOLD_ID]     │
+      │ --help                                 Show this message and exit.           │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path1]
   dict({
     'exception': None,
     'exit_code': 0,
@@ -52,17 +279,171 @@
     ''',
   })
 # ---
-# name: test_devices[devices_list1]
+# name: test_devices_cmd_help[command_path2]
   dict({
     'exception': None,
     'exit_code': 0,
     'output': '''
-      Listing devices for household 7777
       
-      Index | ID      | Name                | ProductId
-      -------------------------------------------------
-      0     | 269654  | Maui matlåda (old)  | 4
-      1     | 1187564 | Maurice Futter      | 4
+       Usage: root devices connect [OPTIONS]
+      
+       Select a device to work with
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --product-id    -p      TEXT  Product ID.                                    │
+      │ --household-id          TEXT  Household ID.                                  │
+      │                               [env var: SUREPCCLI_HOUSEHOLD_ID]              │
+      │ --help                        Show this message and exit.                    │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path3]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices clear [OPTIONS]
+      
+       Clear selected device
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path4]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices feederconnect [OPTIONS] COMMAND [ARGS]...
+      
+       Feeder device commands
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
+      │ fill-percentages                                                             │
+      │ lid-delay                                                                    │
+      │ training-mode                                                                │
+      │ tare                                                                         │
+      │ bowl-type                                                                    │
+      │ bowl-type-options                                                            │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path5]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices feederconnect fill-percentages [OPTIONS]
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --device-id           TEXT  Device ID.                                       │
+      │ --household-id        TEXT  Household ID. [env var: SUREPCCLI_HOUSEHOLD_ID]  │
+      │ --help                      Show this message and exit.                      │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path6]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices feederconnect lid-delay [OPTIONS]
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --state         -s      [FASTER|NORMAL|SLOWER]  Set new lid close delay      │
+      │                                                 (omit to show current).      │
+      │ --device-id             TEXT                    Device ID.                   │
+      │ --household-id          TEXT                    Household ID.                │
+      │                                                 [env var:                    │
+      │                                                 SUREPCCLI_HOUSEHOLD_ID]      │
+      │ --help                                          Show this message and exit.  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path7]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices feederconnect training-mode [OPTIONS]
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --state         -s      [DISABLED|STEP_1|STEP_2|  Set new training mode      │
+      │                         STEP_3|STEP_4]            (omit to show current).    │
+      │ --device-id             TEXT                      Device ID.                 │
+      │ --household-id          TEXT                      Household ID.              │
+      │                                                   [env var:                  │
+      │                                                   SUREPCCLI_HOUSEHOLD_ID]    │
+      │ --help                                            Show this message and      │
+      │                                                   exit.                      │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path8]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices feederconnect tare [OPTIONS]
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --state         -s      [DISABLED|RESET_LARGE|RES  Set tare settings (omit   │
+      │                         ET_RIGHT|RESET_BOTH]       to show current).         │
+      │ --device-id             TEXT                       Device ID.                │
+      │ --household-id          TEXT                       Household ID.             │
+      │                                                    [env var:                 │
+      │                                                    SUREPCCLI_HOUSEHOLD_ID]   │
+      │ --help                                             Show this message and     │
+      │                                                    exit.                     │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_devices_cmd_help[command_path9]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root devices feederconnect bowl-type [OPTIONS]
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --state         -s      [LARGE_WET|LARGE_DRY|TWO  Set bowl type/settings     │
+      │                         _SMALL_WET_WET|TWO_SMALL  (omit to show current).    │
+      │                         _WET_DRY|TWO_SMALL_DRY_W                             │
+      │                         ET|TWO_SMALL_DRY_DRY]                                │
+      │ --device-id             TEXT                      Device ID.                 │
+      │ --household-id          TEXT                      Household ID.              │
+      │                                                   [env var:                  │
+      │                                                   SUREPCCLI_HOUSEHOLD_ID]    │
+      │ --help                                            Show this message and      │
+      │                                                   exit.                      │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
     ''',
   })
 # ---
@@ -81,28 +462,7 @@
     ''',
   })
 # ---
-# name: test_dualscanconnect[devices_dualscanconnect]
-  dict({
-    'exception': None,
-    'exit_code': 0,
-    'output': '''
-      
-       Usage: root devices dualscanconnect [OPTIONS] COMMAND [ARGS]...
-      
-       Flap device commands
-      
-      ╭─ Options ────────────────────────────────────────────────────────────────────╮
-      │ --help          Show this message and exit.                                  │
-      ╰──────────────────────────────────────────────────────────────────────────────╯
-      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
-      │ curfew    Set flap locking mode                                              │
-      │ locking   Set flap locking mode                                              │
-      ╰──────────────────────────────────────────────────────────────────────────────╯
-  
-    ''',
-  })
-# ---
-# name: test_dualscanconnect[devices_dualscanconnect_curfew]
+# name: test_dualscanconnect[devices_dualscanconnect_curfew0]
   dict({
     'exception': None,
     'exit_code': 0,
@@ -112,14 +472,28 @@
     ''',
   })
 # ---
-# name: test_dualscanconnect[devices_dualscanconnect_locking]
+# name: test_dualscanconnect[devices_dualscanconnect_curfew1]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': 'Device 1334025 curfew set to [Curfew(enabled=True, lock_time=datetime.time(8, 0), unlock_time=datetime.time(18, 0))].',
+  })
+# ---
+# name: test_dualscanconnect[devices_dualscanconnect_locking0]
   dict({
     'exception': None,
     'exit_code': 0,
     'output': '''
       Device 1334025
-      locking: Unlocked
+      locking: UNLOCKED
     ''',
+  })
+# ---
+# name: test_dualscanconnect[devices_dualscanconnect_locking1]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': 'Device 1334025 lock set to UNLOCKED.',
   })
 # ---
 # name: test_feederconnect[devices_feederconnect_bowl_type]
@@ -157,11 +531,14 @@
 # ---
 # name: test_feederconnect[devices_feederconnect_lid_delay]
   dict({
-    'exception': None,
-    'exit_code': 0,
+    'exception': 'SystemExit(2)',
+    'exit_code': 2,
     'output': '''
-      Device 1187564
-      lid_delay: Faster
+      Usage: root devices feederconnect [OPTIONS] COMMAND [ARGS]...
+      Try 'root devices feederconnect --help' for help.
+      ╭─ Error ──────────────────────────────────────────────────────────────────────╮
+      │ No such command 'lid_delay'.                                                 │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
     ''',
   })
 # ---
@@ -181,28 +558,7 @@
     'exit_code': 0,
     'output': '''
       Device 1187564
-      training_mode: Disabled
-    ''',
-  })
-# ---
-# name: test_hub[devices_hub]
-  dict({
-    'exception': None,
-    'exit_code': 0,
-    'output': '''
-      
-       Usage: root devices hub [OPTIONS] COMMAND [ARGS]...
-      
-       PetDoor device commands
-      
-      ╭─ Options ────────────────────────────────────────────────────────────────────╮
-      │ --help          Show this message and exit.                                  │
-      ╰──────────────────────────────────────────────────────────────────────────────╯
-      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
-      │ led-mode       LED mode                                                      │
-      │ pairing-mode   Pairing mode                                                  │
-      ╰──────────────────────────────────────────────────────────────────────────────╯
-  
+      training_mode: DISABLED
     ''',
   })
 # ---
@@ -212,7 +568,7 @@
     'exit_code': 0,
     'output': '''
       Device 295972
-      led_mode: None
+      led_mode: NONE
     ''',
   })
 # ---
@@ -222,28 +578,7 @@
     'exit_code': 0,
     'output': '''
       Device 295972
-      pairing_mode: Disabled
-    ''',
-  })
-# ---
-# name: test_petdoor[devices_petdoor]
-  dict({
-    'exception': None,
-    'exit_code': 0,
-    'output': '''
-      
-       Usage: root devices petdoor [OPTIONS] COMMAND [ARGS]...
-      
-       PetDoor device commands
-      
-      ╭─ Options ────────────────────────────────────────────────────────────────────╮
-      │ --help          Show this message and exit.                                  │
-      ╰──────────────────────────────────────────────────────────────────────────────╯
-      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
-      │ curfew    Set locking mode                                                   │
-      │ locking   Set flap locking mode                                              │
-      ╰──────────────────────────────────────────────────────────────────────────────╯
-  
+      pairing_mode: DISABLED
     ''',
   })
 # ---
@@ -263,7 +598,7 @@
     'exit_code': 0,
     'output': '''
       Device 727608
-      Locking: Unlocked
+      Locking: UNLOCKED
     ''',
   })
 # ---

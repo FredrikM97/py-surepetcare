@@ -3,6 +3,7 @@ from typing import Optional
 
 import typer
 
+from surepccli.devices.helper import EnumChoice
 from surepccli.helpers import device_id_option
 from surepccli.helpers import fetch_device
 from surepccli.helpers import household_option
@@ -28,7 +29,7 @@ async def led_mode(
 
     if state is None:
         led_mode = getattr(device.control, "led_mode")
-        typer.echo(f"Device {device.id}\nled_mode: {led_mode}")
+        typer.echo(f"Device {device.id}\nled_mode: {led_mode.name}")
         return
     async with get_session_manager() as sm:
         await sm.client.api(device.set_led_mode(state))
@@ -38,7 +39,9 @@ async def led_mode(
 
 @hub.command()
 async def pairing_mode(
-    state: Optional[HubPairMode] = state_option("Set pairing mode (omit to show current)."),
+    state: HubPairMode = state_option(
+        "Set pairing mode (omit to show current).", click_type=EnumChoice(HubPairMode)
+    ),
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
@@ -47,9 +50,9 @@ async def pairing_mode(
 
     if state is None:
         pairing_mode = getattr(device.control, "pairing_mode")
-        typer.echo(f"Device {device.id}\npairing_mode: {pairing_mode}")
+        typer.echo(f"Device {device.id}\npairing_mode: {pairing_mode.name}")
         return
     async with get_session_manager() as sm:
         await sm.client.api(device.set_pairing_mode(state))
 
-    typer.echo(f"Device {device_id} pairing_mode to {state}.")
+    typer.echo(f"Device {device_id} pairing_mode to {state.name}.")
