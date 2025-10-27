@@ -3,12 +3,12 @@ from typing import Optional
 
 import typer
 
-from surepccli import get_session_manager
 from surepccli.helpers import device_id_option
 from surepccli.helpers import fetch_device
 from surepccli.helpers import household_option
 from surepccli.helpers import print_table
 from surepccli.helpers import state_option
+from surepccli.session import get_session_manager
 from surepccli.typer import AsyncTyper
 from surepcio.devices.feeder_connect import FeederConnect
 from surepcio.enums import BowlTypeOptions

@@ -36,6 +36,17 @@
       }),
       'tag_id': 60978,
     }),
+    'properties': dict({
+      'available': True,
+      'household_id': 7777,
+      'id': 123455,
+      'name': 'Maui',
+      'photo': 'https://userimages.production.surehub.io/thm/3139194472/UCcarrDHzX0MkjEORQqCXNLKxsdweCQPJjl3OQ7s.jpg',
+      'product': <ProductId.PET: 0>,
+      'product_id': 0,
+      'product_name': 'PET',
+      'tag': 60978,
+    }),
     'status': dict({
       'activity': dict({
         'device_id': None,
@@ -132,6 +143,17 @@
         'version': 0,
       }),
       'tag_id': 1725049,
+    }),
+    'properties': dict({
+      'available': True,
+      'household_id': 7777,
+      'id': 629768,
+      'name': 'Fionna',
+      'photo': 'https://userimages.production.surehub.io/thm/XXXXXXXXX/R01qBHfrNHNkeMiNQrtfgoWlOtUGj8TqTCzgyUZPsI.jpg',
+      'product': <ProductId.PET: 0>,
+      'product_id': 0,
+      'product_name': 'PET',
+      'tag': 1725049,
     }),
     'status': dict({
       'activity': dict({

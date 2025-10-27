@@ -3,12 +3,12 @@ from typing import Optional
 import typer
 
 from .const import Envs
-from surepccli import clear_env
-from surepccli import save_session
 from surepccli.devices import device_subgroups
 from surepccli.helpers import household_option
 from surepccli.helpers import list_devices
 from surepccli.helpers import product_id_option
+from surepccli.session import clear_env
+from surepccli.session import save_session
 from surepccli.typer import AsyncTyper
 
 devices = AsyncTyper(help="Devices commands", login_required=True)

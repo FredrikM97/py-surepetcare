@@ -67,6 +67,18 @@
       'tag': None,
       'tag_id': None,
     }),
+    'properties': dict({
+      'available': True,
+      'battery_level': 57,
+      'household_id': 7777,
+      'id': 1334025,
+      'name': 'Patio Door',
+      'parent_device_id': None,
+      'photo': None,
+      'product': <ProductId.DUAL_SCAN_CONNECT: 6>,
+      'product_id': 6,
+      'product_name': 'DUAL_SCAN_CONNECT',
+    }),
     'status': dict({
       'battery': 5.72,
       'learn_mode': False,

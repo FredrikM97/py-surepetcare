@@ -5,9 +5,9 @@ import typer
 from .const import Envs
 from .helpers import print_table
 from .typer import AsyncTyper
-from surepccli import clear_session
-from surepccli import get_session_manager
-from surepccli import save_session
+from surepccli.session import clear_session
+from surepccli.session import get_session_manager
+from surepccli.session import save_session
 from surepcio.household import Household
 
 
@@ -45,6 +45,14 @@ async def info():
         info_data.append((key, status))
     typer.echo("Account info:")
     print_table(info_data, headers=["Key", "Value"])
+
+
+@account.command()
+async def token():
+    """Show account token."""
+
+    value = os.getenv(Envs.TOKEN)
+    typer.echo(value if value else "not set")
 
 
 @account.command()

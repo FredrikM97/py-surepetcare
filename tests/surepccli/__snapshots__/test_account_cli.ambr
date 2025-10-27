@@ -15,49 +15,54 @@
       ╭─ Commands ───────────────────────────────────────────────────────────────────╮
       │ login    Login with email and password.                                      │
       │ info     Show account info.                                                  │
+      │ token    Show account token.                                                 │
       │ logout   Logout and clear session.                                           │
       ╰──────────────────────────────────────────────────────────────────────────────╯
   
     ''',
   })
 # ---
-# name: test_account[household]
+# name: test_account[account_info]
   dict({
     'exception': None,
     'exit_code': 0,
     'output': '''
-      
-       Usage: root household [OPTIONS] COMMAND [ARGS]...
-      
-       Household commands
-      
-      ╭─ Options ────────────────────────────────────────────────────────────────────╮
-      │ --help          Show this message and exit.                                  │
-      ╰──────────────────────────────────────────────────────────────────────────────╯
-      ╭─ Commands ───────────────────────────────────────────────────────────────────╮
-      │ list      List households                                                    │
-      │ connect   Connect to a household                                             │
-      ╰──────────────────────────────────────────────────────────────────────────────╯
-  
+      Account info:
+      Key                           | Value
+      ---------------------------------------------
+      SUREPCCLI_SELECTED_DEVICE     | not set
+      SUREPCCLI_SELECTED_PET        | not set
+      SUREPCCLI_CLIENT_ID           | validClientId
+      SUREPCCLI_HOUSEHOLD_ID        | not set
+      SUREPCCLI_SELECTED_PRODUCT_ID | not set
     ''',
   })
 # ---
-# name: test_account[household_list]
+# name: test_account[account_logout]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': 'You have been logged out.',
+  })
+# ---
+# name: test_account[account_token]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': 'validToken',
+  })
+# ---
+# name: test_login[account_login_aemail0]
   dict({
     'exception': None,
     'exit_code': 0,
     'output': '''
-      Households:
-      ID     | Name
-      --------------------------
-      7777   | default Household
-      1      | Household1
-      2      | Household2
-      222527 | Hemmet
+      Password:
+      Logged in as aemail.
     ''',
   })
 # ---
-# name: test_login
+# name: test_login[account_login_aemail1]
   dict({
     'exception': None,
     'exit_code': 0,
