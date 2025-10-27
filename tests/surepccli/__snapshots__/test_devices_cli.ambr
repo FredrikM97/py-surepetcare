@@ -533,14 +533,11 @@
 # ---
 # name: test_feederconnect[devices_feederconnect_lid_delay]
   dict({
-    'exception': 'SystemExit(2)',
-    'exit_code': 2,
+    'exception': None,
+    'exit_code': 0,
     'output': '''
-      Usage: root devices feederconnect [OPTIONS] COMMAND [ARGS]...
-      Try 'root devices feederconnect --help' for help.
-      ╭─ Error ──────────────────────────────────────────────────────────────────────╮
-      │ No such command 'lid_delay'.                                                 │
-      ╰──────────────────────────────────────────────────────────────────────────────╯
+      Device 1187564
+      lid_delay: FASTER
     ''',
   })
 # ---

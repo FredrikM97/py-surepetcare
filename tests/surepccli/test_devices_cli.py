@@ -25,7 +25,7 @@ async def test_devices_connect(register_mocks, cli_capture, cli_command, cli_inp
 @pytest.mark.devices("feeder_connect", "household")
 @pytest.mark.cli_commands(
     ["devices", "feederconnect", "fill-percentages", "--household-id", "7777", "--device-id", "1187564"],
-    ["devices", "feederconnect", "lid_delay", "--household-id", "7777", "--device-id", "1187564"],
+    ["devices", "feederconnect", "lid-delay", "--household-id", "7777", "--device-id", "1187564"],
     ["devices", "feederconnect", "training-mode", "--household-id", "7777", "--device-id", "1187564"],
     ["devices", "feederconnect", "bowl-type", "--household-id", "7777", "--device-id", "1187564"],
     ["devices", "feederconnect", "tare", "--household-id", "7777", "--device-id", "1187564"],
