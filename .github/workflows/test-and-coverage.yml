@@ -25,4 +25,4 @@ jobs:
           pip install .[dev,cli]
       - name: Run tests with coverage
         run: |
-          pytest --cov=surepcio --cov-report=xml --cov-report=term
+          pytest --cov=surepcio --cov=surepccli --cov-report=xml --cov-report=term
