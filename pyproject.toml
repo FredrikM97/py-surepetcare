@@ -27,7 +27,6 @@ dev = [
     "pre_commit>=4.2.0",
     "pytest-cov>=4.1.0",
     "syrupy",
-    "bump-my-version",
     "nest_asyncio",
 ]
 cli = [
@@ -48,45 +47,3 @@ markers = [
     "cli_commands: List CLI command invocations for a test.",
     "cli_inputs: Specify CLI user inputs for a test."
 ]
-[tool.bumpversion]
-current_version = "0.5.8-dev12"
-parse = """(?x)
-    (?P<major>0|[1-9]\\d*)\\.
-    (?P<minor>0|[1-9]\\d*)\\.
-    (?P<patch>0|[1-9]\\d*)
-    (?:
-        -                             # dash separator for pre-release section
-        (?P<pre_l>[a-zA-Z-]+)         # pre-release label
-        (?P<pre_n>0|[1-9]\\d*)        # pre-release version number
-    )?                                # pre-release section is optional
-"""
-serialize = [
-    "{major}.{minor}.{patch}-{pre_l}{pre_n}",
-    "{major}.{minor}.{patch}",
-]
-search = "{current_version}"
-replace = "{new_version}"
-regex = false
-ignore_missing_version = false
-ignore_missing_files = false
-tag = false
-sign_tags = false
-tag_name = "v{new_version}"
-tag_message = "Bump version: {current_version} → {new_version}"
-allow_dirty = true
-commit = true
-message = "Bump version: {current_version} → {new_version}"
-moveable_tags = []
-commit_args = "--no-verify"
-setup_hooks = []
-pre_commit_hooks = []
-post_commit_hooks = []
-
-[[tool.bumpversion.files]]
-filename = "pyproject.toml"
-search = 'version = "{current_version}"'
-replace = 'version = "{new_version}"'
-
-[tool.bumpversion.parts.pre_l]
-values = ["dev", "final"]
-optional_value = "final"
