@@ -12,7 +12,15 @@ authors = [
 license = { text = "MIT" }
 readme = "README.md"
 requires-python = ">=3.13"
-
+classifiers = [
+    "Intended Audience :: Developers",
+    "Topic :: Home Automation",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 dependencies = [
     "aiohttp>=3.9.0",
     "pydantic>=2.11.7",
