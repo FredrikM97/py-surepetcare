@@ -25,4 +25,9 @@ jobs:
           pip install .[dev,cli]
       - name: Run tests with coverage
         run: |
-          pytest --cov=surepcio --cov=surepccli --cov-report=xml --cov-report=term
+          pytest --cov=surepcio --cov=surepccli --cov-branch --cov-report=xml
+      
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
