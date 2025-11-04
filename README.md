@@ -52,7 +52,7 @@ Run `pip install .[dev]` to add dependencies for development. Start application 
 
 [build-shield]: https://github.com/FredrikM97/py-surepetcare/actions/workflows/test-and-coverage.yml/badge.svg
 [build]: https://github.com/FredrikM97/py-surepetcare/actions
-[codecov-shield]: https://codecov.io/gh/FredrikM97/py-surepetcare/branch/main/graph/badge.svg
+[codecov-shield]: https://codecov.io/gh/FredrikM97/py-surepetcare/branch/dev/graph/badge.svg
 [codecov]: https://codecov.io/gh/FredrikM97/py-surepetcare
 [license-shield]: https://img.shields.io/github/license/FredrikM97/py-surepetcare.svg
 [devcontainer-shield]: https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode
