@@ -54,6 +54,12 @@ class SurePetcareClient(AuthClient):
                 logger.warning("Not all results are equal: %s", results)
                 return results
 
+        # If method is None, skip API call and just execute callback
+        if command.method is None:
+            if command.callback:
+                return command.callback(None)
+            return None
+
         headers = self._generate_headers(headers=self.headers(command.endpoint) if command.reuse else {})
         method = command.method.lower()
         response: SurePetcareResponse = await getattr(self, method)(
