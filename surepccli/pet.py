@@ -59,7 +59,7 @@ async def last_activity(household_id: str = household_option(), pet_id: str = pe
         typer.echo("No activity recorded yet.")
         return
     typer.echo(f"Last activity for pet {pet.name} (ID: {pet.id}):")
-    typer.echo(f"device_id: {result['device_id']}\ntime: {str(result['at'])}")
+    typer.echo(f"device_id: {result.device_id}\ntime: {str(result.at)}")
 
 
 @pet.command()

@@ -49,6 +49,13 @@ class AssignedDevices(ImprovedErrorMixin):
     count: int = 0
 
 
+class LastActivity(ImprovedErrorMixin):
+    """Last activity timestamp and device."""
+
+    at: datetime
+    device_id: int
+
+
 class Control(ImprovedErrorMixin):
     pass
 
@@ -58,7 +65,7 @@ class Status(ImprovedErrorMixin):
     feeding: Optional[PetConsumtionResource] = Field(default_factory=PetConsumtionResource)
     drinking: Optional[PetConsumtionResource] = Field(default_factory=PetConsumtionResource)
     devices: AssignedDevices = Field(default_factory=AssignedDevices)
-    last_activity: Optional[dict[str, datetime]] = None
+    last_activity: Optional[LastActivity] = None
 
 
 class Pet(PetBase[Control, Status]):
@@ -117,23 +124,23 @@ class Pet(PetBase[Control, Status]):
             return None
         return self.entity_info.tag.id
 
-    def last_activity(self) -> Optional[dict[str, datetime]]:
-        activities = [
-            getattr(self.status, "feeding", None),
-            getattr(self.status, "drinking", None),
-            getattr(self.status, "activity", None),
-        ]
-        valid = [
-            (at, device_id)
-            for s in activities
-            if s
-            and (at := getattr(s, "at", None)) is not None
-            and (device_id := getattr(s, "device_id", None)) is not None
-        ]
-        result = max(valid, default=None, key=lambda x: x[0])
-        if result is None:
+    def last_activity(self) -> Optional[LastActivity]:
+        activities = []
+
+        # Check feeding and drinking (use 'at' field)
+        for s in [self.status.feeding, self.status.drinking]:
+            if s and (at := s.at) and (device_id := s.device_id):
+                activities.append((at, device_id))
+
+        # Check activity/position (uses 'since' field)
+        if self.status.activity and self.status.activity.since and self.status.activity.device_id:
+            activities.append((self.status.activity.since, self.status.activity.device_id))
+
+        if not activities:
             return None
-        return {"at": result[0], "device_id": result[1]}
+
+        result = max(activities, key=lambda x: x[0])
+        return LastActivity(at=result[0], device_id=result[1])
 
     def fetch_assigned_devices(self) -> Command:
         """Fetch devices assigned to this pet."""
