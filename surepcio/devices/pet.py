@@ -42,6 +42,13 @@ class PetPositionResource(ImprovedErrorMixin):
     since: Optional[datetime] = None
 
 
+class AssignedDevices(ImprovedErrorMixin):
+    """Container for assigned devices with count."""
+
+    items: list[DevicePetTag] = Field(default_factory=list)
+    count: int = 0
+
+
 class Control(ImprovedErrorMixin):
     pass
 
@@ -50,7 +57,8 @@ class Status(ImprovedErrorMixin):
     activity: Optional[PetPositionResource] = Field(default_factory=PetPositionResource)
     feeding: Optional[PetConsumtionResource] = Field(default_factory=PetConsumtionResource)
     drinking: Optional[PetConsumtionResource] = Field(default_factory=PetConsumtionResource)
-    devices: Optional[list[DevicePetTag]] = None
+    devices: AssignedDevices = Field(default_factory=AssignedDevices)
+    last_activity: Optional[dict[str, datetime]] = None
 
 
 class Pet(PetBase[Control, Status]):
@@ -76,7 +84,7 @@ class Pet(PetBase[Control, Status]):
     def refresh(self) -> list[Command]:
         """Refresh the pet's report data."""
         # Important that fetch report is first to be updated!
-        return [self.fetch_report(), self.fetch_assigned_devices()]
+        return [self.fetch_report(), self.fetch_assigned_devices(), self.properties()]
 
     def fetch_report(self) -> Command:
         def parse(response) -> "Pet":
@@ -89,6 +97,15 @@ class Pet(PetBase[Control, Status]):
             callback=parse,
         )
 
+    def properties(self) -> Command:
+        """Update status properties with last activity data."""
+
+        def update_properties(_) -> "Pet":
+            self.status.last_activity = self.last_activity()
+            return self
+
+        return Command(callback=update_properties)
+
     @property
     def product(self) -> ProductId:
         return ProductId.PET
@@ -100,7 +117,7 @@ class Pet(PetBase[Control, Status]):
             return None
         return self.entity_info.tag.id
 
-    def last_activity(self) -> Optional[tuple[datetime, int]]:
+    def last_activity(self) -> Optional[dict[str, datetime]]:
         activities = [
             getattr(self.status, "feeding", None),
             getattr(self.status, "drinking", None),
@@ -114,7 +131,9 @@ class Pet(PetBase[Control, Status]):
             and (device_id := getattr(s, "device_id", None)) is not None
         ]
         result = max(valid, default=None, key=lambda x: x[0])
-        return result
+        if result is None:
+            return None
+        return {"at": result[0], "device_id": result[1]}
 
     def fetch_assigned_devices(self) -> Command:
         """Fetch devices assigned to this pet."""
@@ -128,7 +147,8 @@ class Pet(PetBase[Control, Status]):
                     self.name,
                 )
                 return self
-            self.status.devices = [DevicePetTag(**item) for item in response.data.get("data", [])]
+            devices_list = [DevicePetTag(**item) for item in response.data.get("data", [])]
+            self.status.devices = AssignedDevices(items=devices_list, count=len(devices_list))
             return self
 
         return Command(
@@ -156,7 +176,7 @@ class Pet(PetBase[Control, Status]):
         data = {
             "profile": profile.value,
         }
-        available_device_ids = [tag.id for tag in self.status.devices] if self.status.devices else []
+        available_device_ids = [tag.id for tag in self.status.devices.items]
         if device_id not in available_device_ids:
             raise ValueError(
                 f"Device ID {device_id} is not assigned to pet with tag {self.tag}. \

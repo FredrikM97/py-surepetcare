@@ -84,6 +84,7 @@
     'output': '''
       Assigned devices for pet Maui (ID: 123455):
       device_id: [269654, 271836, 1181149]
+      count: 3
     ''',
   })
 # ---

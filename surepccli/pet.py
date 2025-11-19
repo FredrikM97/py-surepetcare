@@ -52,15 +52,14 @@ async def last_activity(household_id: str = household_option(), pet_id: str = pe
     pet: Pet = await _fetch_pet(household_id, pet_id)
 
     async with get_session_manager() as sm:
-        pet = await sm.client.api(pet.refresh())
+        await sm.client.api(pet.refresh())
 
-    result = pet.last_activity()
+    result = pet.status.last_activity
     if result is None:
         typer.echo("No activity recorded yet.")
         return
-    time, device_id = result
     typer.echo(f"Last activity for pet {pet.name} (ID: {pet.id}):")
-    typer.echo(f"device_id: {device_id}\ntime: {str(time)}")
+    typer.echo(f"device_id: {result['device_id']}\ntime: {str(result['at'])}")
 
 
 @pet.command()
@@ -69,7 +68,8 @@ async def assign_devices(household_id: str = household_option(), pet_id: str = p
     pet: Pet = await _fetch_pet(household_id, pet_id)
 
     async with get_session_manager() as sm:
-        pet = await sm.client.api(pet.refresh())
+        await sm.client.api(pet.refresh())
 
     typer.echo(f"Assigned devices for pet {pet.name} (ID: {pet.id}):")
-    typer.echo(f"device_id: {[d.id for d in pet.status.devices or []]}")
+    typer.echo(f"device_id: {[d.id for d in pet.status.devices.items]}")
+    typer.echo(f"count: {pet.status.devices.count}")

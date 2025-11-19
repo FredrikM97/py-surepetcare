@@ -46,6 +46,9 @@ class Control(BaseControl):
 class Status(BaseStatus):
     # pet_status: Optional[dict] = None
     bowl_status: Optional[list[BowlState]] = None
+    bowl_type_options: Optional[str] = None
+    fill_percentages: Optional[dict[str, Optional[float] | dict[int, Optional[float]]]] = None
+    tare_options: Optional[list[str]] = None
 
 
 class FeederConnect(DeviceBase[Control, Status]):
@@ -62,7 +65,7 @@ class FeederConnect(DeviceBase[Control, Status]):
 
     def refresh(self):
         """Refresh the device status and control settings from the API."""
-        return self._refresh_device_status()
+        return [self._refresh_device_status(), self.properties()]
 
     def _refresh_device_status(self):
         def parse(response) -> "FeederConnect":
@@ -91,6 +94,17 @@ class FeederConnect(DeviceBase[Control, Status]):
             callback=parse,
         )
         return command
+
+    def properties(self) -> Command:
+        """Update status properties with bowl type options and fill percentages."""
+
+        def update_properties(_) -> "FeederConnect":
+            self.status.bowl_type_options = self.get_bowl_type_option()
+            self.status.fill_percentages = self.fill_percentages()
+            self.status.tare_options = self.get_tare_options()
+            return self
+
+        return Command(callback=update_properties)
 
     @property
     def rssi(self) -> Optional[int]:
@@ -136,6 +150,21 @@ class FeederConnect(DeviceBase[Control, Status]):
                 return option.name
         return None
 
+    def get_tare_options(self) -> list[str]:
+        """Return the available tare options based on bowl type.
+
+        Note: Returns hardcoded string names instead of enum values because
+        RESET_LARGE and RESET_LEFT share the same enum value (1) in the API.
+        """
+        bowls = self.control.bowls
+        if not bowls or not bowls.type:
+            return []
+
+        if bowls.type == BowlType.LARGE:
+            return ["reset_large"]
+        else:
+            return ["reset_left", "reset_right", "reset_both"]
+
     def fill_percentages(self):
         """Return (total_percent, {bowl_index: percent or None, ...}) for all bowls."""
         bowl_status = getattr(self.status, "bowl_status", [])
@@ -157,4 +186,4 @@ class FeederConnect(DeviceBase[Control, Status]):
             else:
                 individual[i] = None
         total = (total_weight / total_target * 100) if total_target > 0 else None
-        return total, individual
+        return {"total": total, "per_bowl": individual}

@@ -80,11 +80,24 @@
           'substance_type': <SubstanceType.FOOD: 2>,
         }),
       ]),
+      'bowl_type_options': 'TWO_SMALL_WET_DRY',
+      'fill_percentages': dict({
+        'per_bowl': dict({
+          0: None,
+          1: None,
+        }),
+        'total': None,
+      }),
       'learn_mode': False,
       'online': True,
       'signal': dict({
         'device_rssi': -79,
       }),
+      'tare_options': list([
+        'reset_left',
+        'reset_right',
+        'reset_both',
+      ]),
       'version': dict({
         'device': dict({
           'firmware': '406.437',
@@ -162,11 +175,21 @@
           'substance_type': <SubstanceType.FOOD: 2>,
         }),
       ]),
+      'bowl_type_options': 'LARGE_DRY',
+      'fill_percentages': dict({
+        'per_bowl': dict({
+          0: -62.06153846153847,
+        }),
+        'total': -62.06153846153847,
+      }),
       'learn_mode': False,
       'online': True,
       'signal': dict({
         'device_rssi': -64,
       }),
+      'tare_options': list([
+        'reset_large',
+      ]),
       'version': dict({
         'device': dict({
           'firmware': '406.437',
@@ -179,24 +202,24 @@
 # ---
 # name: test_snapshot_get_functions[device_names0]
   dict({
-    'fill_percentages': list([
-      None,
-      dict({
+    'fill_percentages': dict({
+      'per_bowl': dict({
         0: None,
         1: None,
       }),
-    ]),
+      'total': None,
+    }),
     'get_bowl_type_option': 'TWO_SMALL_WET_DRY',
   })
 # ---
 # name: test_snapshot_get_functions[device_names0].1
   dict({
-    'fill_percentages': list([
-      -62.06153846153847,
-      dict({
+    'fill_percentages': dict({
+      'per_bowl': dict({
         0: -62.06153846153847,
       }),
-    ]),
+      'total': -62.06153846153847,
+    }),
     'get_bowl_type_option': 'LARGE_DRY',
   })
 # ---
@@ -250,9 +273,12 @@
     'status': dict({
       'battery': None,
       'bowl_status': None,
+      'bowl_type_options': None,
+      'fill_percentages': None,
       'learn_mode': None,
       'online': None,
       'signal': None,
+      'tare_options': None,
       'version': None,
     }),
     'timezone': 'Europe/Stockholm',
@@ -308,9 +334,12 @@
     'status': dict({
       'battery': None,
       'bowl_status': None,
+      'bowl_type_options': None,
+      'fill_percentages': None,
       'learn_mode': None,
       'online': None,
       'signal': None,
+      'tare_options': None,
       'version': None,
     }),
     'timezone': 'Europe/Stockholm',

@@ -8,8 +8,8 @@ class Command:
 
     def __init__(
         self,
-        method: str,
-        endpoint: str,
+        method: Optional[str] = None,
+        endpoint: str = "",
         params: Optional[dict[Any, Any]] = None,
         response_type: Optional[str] = None,
         callback: Optional[Callable] = None,

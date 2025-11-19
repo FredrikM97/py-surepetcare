@@ -29,10 +29,12 @@ async def fill_percentages(
     if not device:
         return
     result = device.fill_percentages()
-    if isinstance(result, tuple):
-        total, bowls = result
-    else:
+    if result is None:
         total, bowls = None, {}
+    else:
+        total = result.get("total")
+        bowls = result.get("per_bowl", {})
+
     rows = [[f"Bowl {b}", f"{round(p, 2) if p is not None else 'N/A'}"] for b, p in (bowls or {}).items()]
     if total is not None:
         rows.append(["Total", f"{int(total)}"])
