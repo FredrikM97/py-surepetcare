@@ -113,3 +113,22 @@ class Household:
             callback=parse,
             reuse=False,
         )
+
+    def get_timeline(self, since_id: int = None, before_id: int = None) -> Command:
+        def parse(response):
+            if not response:
+                return []
+            return response.get("data", [])
+
+        params = {}
+        if since_id is not None:
+            params["since_id"] = since_id
+        if before_id is not None:
+            params["before_id"] = before_id
+
+        return Command(
+            method="GET",
+            endpoint=f"{API_ENDPOINT_PRODUCTION}/timeline/household/{self.id}",
+            params=params,
+            callback=parse,
+        )

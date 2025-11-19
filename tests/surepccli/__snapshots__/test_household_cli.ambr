@@ -28,8 +28,9 @@
       │ --help          Show this message and exit.                                  │
       ╰──────────────────────────────────────────────────────────────────────────────╯
       ╭─ Commands ───────────────────────────────────────────────────────────────────╮
-      │ list      List households                                                    │
-      │ connect   Connect to a household                                             │
+      │ list       List households                                                   │
+      │ connect    Connect to a household                                            │
+      │ timeline   List timeline events with optional pagination.                    │
       ╰──────────────────────────────────────────────────────────────────────────────╯
   
     ''',
@@ -64,6 +65,25 @@
       
       ╭─ Options ────────────────────────────────────────────────────────────────────╮
       │ --help          Show this message and exit.                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+  
+    ''',
+  })
+# ---
+# name: test_household_cmd_help[command_path3]
+  dict({
+    'exception': None,
+    'exit_code': 0,
+    'output': '''
+      
+       Usage: root household timeline [OPTIONS]
+      
+       List timeline events with optional pagination.
+      
+      ╭─ Options ────────────────────────────────────────────────────────────────────╮
+      │ --since-id         INTEGER  Return events with ID greater than this.         │
+      │ --before-id        INTEGER  Return events with ID less than this.            │
+      │ --help                      Show this message and exit.                      │
       ╰──────────────────────────────────────────────────────────────────────────────╯
   
     ''',

@@ -51,7 +51,8 @@ def clear_env(key: Envs):
 
 def get_session_manager() -> "SessionManager":
     global _session_manager
-    if _session_manager is None:
+    # Create new if doesn't exist or if session was closed
+    if _session_manager is None or _session_manager._is_closed():
         _session_manager = SessionManager()
     return _session_manager
 
@@ -72,10 +73,15 @@ class SessionManager:
             self.client._token = token
             self.client._device_id = client_id
 
+    def _is_closed(self) -> bool:
+        """Check if the underlying client session is closed."""
+        return self.client is None or (self.client.session is not None and self.client.session.closed)
+
     async def __aenter__(self):
         return self
 
     async def __aexit__(self, exc_type, exc, tb):
+        # Close the session to prevent resource warnings
         await self.aclose()
 
     async def aclose(self):

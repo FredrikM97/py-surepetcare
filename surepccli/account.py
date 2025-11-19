@@ -93,3 +93,17 @@ async def connect() -> None:
     index = typer.prompt("Select household", type=int)
     save_session({Envs.HOUSEHOLD_ID: str(data[index][1])})
     typer.echo(f"Connected to {data[index][2]}")
+
+@household.command(login_required=True)
+async def timeline(
+    since_id: int = typer.Option(None, "--since-id", help="Return events with ID greater than this."),
+    before_id: int = typer.Option(None, "--before-id", help="Return events with ID less than this."),
+) -> None:
+    """List timeline events with optional pagination."""
+    async with get_session_manager() as sm:
+        households: list[Household] = await sm.client.api(Household.get_households())
+
+        for household in households:
+            timeline = await sm.client.api(household.get_timeline(since_id=since_id, before_id=before_id))
+            typer.echo(f"timeline for household {household.id}:")
+            typer.echo(timeline)
