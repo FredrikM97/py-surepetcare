@@ -94,6 +94,7 @@ async def connect() -> None:
     save_session({Envs.HOUSEHOLD_ID: str(data[index][1])})
     typer.echo(f"Connected to {data[index][2]}")
 
+
 @household.command(login_required=True)
 async def timeline(
     since_id: int = typer.Option(None, "--since-id", help="Return events with ID greater than this."),

@@ -114,7 +114,7 @@ class Household:
             reuse=False,
         )
 
-    def get_timeline(self, since_id: int = None, before_id: int = None) -> Command:
+    def get_timeline(self, since_id: int | None = None, before_id: int | None = None) -> Command:
         def parse(response):
             if not response:
                 return []
