@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 class BowlSetting(ImprovedErrorMixin):
     food_type: Optional[FoodType] = None
-    target: Optional[int] = None
+    target: Optional[float] = None
 
 
 class Bowls(ImprovedErrorMixin):

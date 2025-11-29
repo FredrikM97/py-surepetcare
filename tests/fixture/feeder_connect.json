@@ -36,7 +36,7 @@
                         "settings": [
                             {
                                 "food_type": 2,
-                                "target": 65
+                                "target": 65.5
                             }
                         ],
                         "type": 1

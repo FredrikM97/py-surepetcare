@@ -6,11 +6,11 @@
         'settings': list([
           dict({
             'food_type': <FoodType.WET: 1>,
-            'target': 0,
+            'target': 0.0,
           }),
           dict({
             'food_type': <FoodType.DRY: 2>,
-            'target': 0,
+            'target': 0.0,
           }),
         ]),
         'type': <BowlType.TWO_SMALL: 4>,
@@ -115,7 +115,7 @@
         'settings': list([
           dict({
             'food_type': <FoodType.DRY: 2>,
-            'target': 65,
+            'target': 65.5,
           }),
         ]),
         'type': <BowlType.LARGE: 1>,
@@ -178,9 +178,9 @@
       'bowl_type_options': 'LARGE_DRY',
       'fill_percentages': dict({
         'per_bowl': dict({
-          0: -62.06153846153847,
+          0: -61.587786259541986,
         }),
-        'total': -62.06153846153847,
+        'total': -61.587786259541986,
       }),
       'learn_mode': False,
       'online': True,
@@ -216,9 +216,9 @@
   dict({
     'fill_percentages': dict({
       'per_bowl': dict({
-        0: -62.06153846153847,
+        0: -61.587786259541986,
       }),
-      'total': -62.06153846153847,
+      'total': -61.587786259541986,
     }),
     'get_bowl_type_option': 'LARGE_DRY',
   })
@@ -230,11 +230,11 @@
         'settings': list([
           dict({
             'food_type': <FoodType.WET: 1>,
-            'target': 50,
+            'target': 50.0,
           }),
           dict({
             'food_type': <FoodType.WET: 1>,
-            'target': 100,
+            'target': 100.0,
           }),
         ]),
         'type': <BowlType.TWO_SMALL: 4>,
@@ -291,11 +291,11 @@
         'settings': list([
           dict({
             'food_type': <FoodType.WET: 1>,
-            'target': 50,
+            'target': 50.0,
           }),
           dict({
             'food_type': <FoodType.WET: 1>,
-            'target': 100,
+            'target': 100.0,
           }),
         ]),
         'type': <BowlType.TWO_SMALL: 4>,
