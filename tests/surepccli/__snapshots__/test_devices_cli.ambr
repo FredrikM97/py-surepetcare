@@ -504,7 +504,7 @@
     'exit_code': 0,
     'output': '''
       Device 1187564
-      bowls: {'settings': [{'food_type': <FoodType.DRY: 2>, 'target': 65}], 'type': <BowlType.LARGE: 1>}
+      bowls: {'settings': [{'food_type': <FoodType.DRY: 2>, 'target': 65.5}], 'type': <BowlType.LARGE: 1>}
     ''',
   })
 # ---
@@ -526,8 +526,8 @@
     'output': '''
       Type   | Percentage
       -------------------
-      Bowl 0 | -62.06
-      Total  | -62
+      Bowl 0 | -61.59
+      Total  | -61
     ''',
   })
 # ---
