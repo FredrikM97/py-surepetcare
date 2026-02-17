@@ -111,6 +111,7 @@ class FlapLocking(SureEnum):
     ALLOW_IN = 1
     ALLOW_OUT = 2
     LOCKED = 3
+    CURFEW_MODE = 4
 
 
 class PetLocation(SureEnum):
