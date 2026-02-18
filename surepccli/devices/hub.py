@@ -13,7 +13,6 @@ from surepcio.devices.hub import Hub
 from surepcio.enums import HubLedMode
 from surepcio.enums import HubPairMode
 
-
 hub = AsyncTyper(name="hub", help="PetDoor device commands", login_required=True)
 
 

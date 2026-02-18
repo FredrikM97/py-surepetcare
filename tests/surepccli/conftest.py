@@ -1,4 +1,5 @@
 """Conftest for CLI tests."""
+
 import inspect
 import re
 from pathlib import Path

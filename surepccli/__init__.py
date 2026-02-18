@@ -5,7 +5,6 @@ from .pet import pet
 from surepccli.session import load_env_once
 from surepccli.typer import AsyncTyper
 
-
 app = AsyncTyper(help="SurePetcare CLI")
 app.add_typer(account, name="account")
 app.add_typer(household, name="household")

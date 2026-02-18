@@ -10,7 +10,6 @@ from dotenv import unset_key
 from surepccli.const import Envs
 from surepcio.client import SurePetcareClient
 
-
 _session_manager: Optional["SessionManager"] = None
 _env_loaded = False
 

@@ -1,6 +1,5 @@
 """Tests for SurePetCare."""
 
-
 FIXTURES = [
     "hub",
     "pet",

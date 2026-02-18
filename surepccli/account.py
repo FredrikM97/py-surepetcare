@@ -10,7 +10,6 @@ from surepccli.session import get_session_manager
 from surepccli.session import save_session
 from surepcio.household import Household
 
-
 account = AsyncTyper(help="Account commands")
 household = AsyncTyper(help="Household commands")
 

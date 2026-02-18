@@ -21,10 +21,12 @@ def household_option():
         envvar=Envs.HOUSEHOLD_ID,
         help="Household ID.",
         show_envvar=True,
-        callback=lambda c, p, v: v
-        if v
-        else _bad_param(
-            "No household ID provided. Use --household-id or set HOUSEHOLD_ID environment variable."
+        callback=lambda c, p, v: (
+            v
+            if v
+            else _bad_param(
+                "No household ID provided. Use --household-id or set HOUSEHOLD_ID environment variable."
+            )
         ),
     )
 
@@ -36,9 +38,11 @@ def device_id_option():
         envvar=Envs.SELECTED_DEVICE,
         help="Device ID.",
         show_envvar=False,
-        callback=lambda c, p, v: v
-        if v
-        else _bad_param("No device selected. Use --device-id or 'surepccli devices list --store' first."),
+        callback=lambda c, p, v: (
+            v
+            if v
+            else _bad_param("No device selected. Use --device-id or 'surepccli devices list --store' first.")
+        ),
     )
 
 
@@ -49,9 +53,9 @@ def pet_id_option():
         envvar=Envs.SELECTED_PET,
         help="Pet ID.",
         show_envvar=False,
-        callback=lambda c, p, v: v
-        if v
-        else _bad_param("No Pet selected. Use --pet-id or 'surepccli pet connect' first."),
+        callback=lambda c, p, v: (
+            v if v else _bad_param("No Pet selected. Use --pet-id or 'surepccli pet connect' first.")
+        ),
     )
 
 
@@ -63,9 +67,13 @@ def product_id_option(optional: bool = False):
         envvar=Envs.SELECTED_PRODUCT_ID,
         help="Product ID.",
         show_envvar=False,
-        callback=lambda c, p, v: v
-        if v or optional
-        else _bad_param("No product selected. Use --product-id or 'surepccli devices list --store' first."),
+        callback=lambda c, p, v: (
+            v
+            if v or optional
+            else _bad_param(
+                "No product selected. Use --product-id or 'surepccli devices list --store' first."
+            )
+        ),
     )
 
 
