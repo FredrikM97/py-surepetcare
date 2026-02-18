@@ -50,6 +50,16 @@
         "reveal": "always",
         "panel": "new"
       }
+    },
+    {
+      "label": "Pre-commit Autoupdate",
+      "type": "shell",
+      "command": "pre-commit autoupdate",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
     }
   ]
 }
