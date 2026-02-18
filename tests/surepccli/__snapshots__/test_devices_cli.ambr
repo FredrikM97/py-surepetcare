@@ -117,7 +117,7 @@
       
       ╭─ Options ────────────────────────────────────────────────────────────────────╮
       │ --state         -s      [UNLOCKED|ALLOW_IN|ALLOW  Set new locking mode (omit │
-      │                         _OUT|LOCKED]              to show current).          │
+      │                         _OUT|LOCKED|CURFEW_MODE]  to show current).          │
       │ --device-id             TEXT                      Device ID.                 │
       │ --household-id          TEXT                      Household ID.              │
       │                                                   [env var:                  │
@@ -183,7 +183,7 @@
       
       ╭─ Options ────────────────────────────────────────────────────────────────────╮
       │ --state         -s      [UNLOCKED|ALLOW_IN|ALLOW  Set new locking mode (omit │
-      │                         _OUT|LOCKED]              to show current).          │
+      │                         _OUT|LOCKED|CURFEW_MODE]  to show current).          │
       │ --device-id             TEXT                      Device ID.                 │
       │ --household-id          TEXT                      Household ID.              │
       │                                                   [env var:                  │
