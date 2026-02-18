@@ -15,7 +15,6 @@ from surepcio.devices.entities import Curfew
 from surepcio.devices.pet_door import PetDoor
 from surepcio.enums import FlapLocking
 
-
 petdoor = AsyncTyper(name="petdoor", help="PetDoor device commands", login_required=True)
 
 

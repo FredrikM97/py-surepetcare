@@ -15,7 +15,6 @@ from surepcio.devices.dual_scan_pet_door import DualScanPetDoor
 from surepcio.devices.entities import Curfew
 from surepcio.enums import FlapLocking
 
-
 dualscanpetdoor = AsyncTyper(
     name="dualscanpetdoor", help="DualScanPetDoor device commands", login_required=True
 )

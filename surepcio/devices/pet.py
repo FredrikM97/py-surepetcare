@@ -185,10 +185,8 @@ class Pet(PetBase[Control, Status]):
         }
         available_device_ids = [tag.id for tag in self.status.devices.items]
         if device_id not in available_device_ids:
-            raise ValueError(
-                f"Device ID {device_id} is not assigned to pet with tag {self.tag}. \
-                    Available tags: {available_device_ids}"
-            )
+            raise ValueError(f"Device ID {device_id} is not assigned to pet with tag {self.tag}. \
+                    Available tags: {available_device_ids}")
         return Command(
             method="PUT", endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{device_id}/tag/{self.tag}", params=data
         )
