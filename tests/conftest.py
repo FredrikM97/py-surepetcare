@@ -2,7 +2,7 @@ import enum
 import inspect
 import json
 from pathlib import Path
-from unittest.mock import ANY
+from unittest.mock import ANY, MagicMock
 from urllib.parse import urlparse
 
 import aresponses
@@ -34,6 +34,24 @@ def mock_all_devices() -> list[dict]:
 @pytest.fixture
 def mock_devices(device_names) -> list[dict]:
     return [_load_device(device_name) for device_name in device_names]
+
+
+@pytest.fixture
+def mock_api_device() -> MagicMock:
+    """Create a mock device for testing API operations."""
+
+    class MockControl:
+        def __init__(self, **kwargs):
+            self.__dict__.update(kwargs)
+
+    class MockStatus:
+        def __init__(self, **kwargs):
+            self.__dict__.update(kwargs)
+
+    device = MagicMock()
+    device.controlCls = MockControl
+    device.statusCls = MockStatus
+    return device
 
 
 def register_device_api_mocks(aresponses: aresponses.ResponsesMockServer, mock_devices: list[dict]):
