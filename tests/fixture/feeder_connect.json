@@ -179,7 +179,7 @@
         }
     },
     "PUT": {
-        "https://app-api.production.surehub.io/api/device/269654/control": {
+        "https://app-api.production.surehub.io/api/device/269654/control/async": {
             "data": {
                 "bowls": {
                     "settings": [
@@ -211,7 +211,7 @@
                 }
             ]
         },
-        "https://app-api.production.surehub.io/api/device/1187564/control": {
+        "https://app-api.production.surehub.io/api/device/1187564/control/async": {
             "data": {
                 "bowls": {
                     "settings": [

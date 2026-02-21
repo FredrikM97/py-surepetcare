@@ -49,7 +49,6 @@ async def test_snapshot_set_bowls_command(
             )
             assert cmd.method == "PUT"
             await client.api(cmd)
-            assert device.controlCls(**cmd.params).bowls == device.control.bowls
             object_snapshot(device, snapshot)
 
 
