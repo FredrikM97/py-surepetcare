@@ -15,6 +15,7 @@ class Command:
         callback: Optional[Callable] = None,
         reuse: bool = True,
         full_response: bool = False,
+        device: Optional[Any] = None,
     ):
         self.method = method
         self.endpoint = endpoint
@@ -23,6 +24,7 @@ class Command:
         self.callback = callback
         self.reuse = reuse
         self.full_response = full_response
+        self.device = device
 
     def __str__(self) -> str:
         return "Command(method={!r}, endpoint={!r}, params={!r}, response_type={!r})".format(

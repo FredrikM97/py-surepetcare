@@ -40,9 +40,7 @@ class CacheHeaders:
         etag = response.get("Etag")
 
         if etag != self.resources[resource_id].get("If-None-Match", None):
-            logger.debug("Reading ETag header %s. New generated for resource_id %s", etag, resource_id)
             self.resources[resource_id]["If-None-Match"] = etag
-        logger.debug("Reading ETag header %s. Using existing ETag for resource_id %s", etag, resource_id)
 
     def endpoint_to_resource_id(self, endpoint):
         """Convert an endpoint to a resource ID by hashing the endpoint path."""

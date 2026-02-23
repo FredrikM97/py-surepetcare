@@ -9,7 +9,7 @@ from pydantic import field_serializer
 from pydantic import model_validator
 
 from surepcio.entities.error_mixin import ImprovedErrorMixin
-from surepcio.enums import BowlPosition
+from surepcio.enums import BowlPosition, PetDeviceLocationProfile
 from surepcio.enums import FlapLocking
 from surepcio.enums import FoodType
 from surepcio.enums import SubstanceType
@@ -32,7 +32,7 @@ class DevicePetTag(ImprovedErrorMixin):
     id: Optional[int] = None
     device_id: Optional[int] = None
     index: Optional[int] = None
-    profile: Optional[int] = None
+    profile: Optional[PetDeviceLocationProfile] = None
     version: Optional[int] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None

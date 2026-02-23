@@ -167,3 +167,10 @@ class Tare(SureEnum):
     RESET_LEFT = 1
     RESET_RIGHT = 2
     RESET_BOTH = 3
+
+
+class RequestStatus(SureEnum):
+    """Request/Control Status for async operations."""
+
+    COMPLETED = 0
+    PENDING = 5

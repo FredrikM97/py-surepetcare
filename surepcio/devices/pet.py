@@ -173,7 +173,7 @@ class Pet(PetBase[Control, Status]):
             "since": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
         }
         return Command(
-            method="POST", endpoint=f"{API_ENDPOINT_PRODUCTION}/pet/{self.id}/position", params=data
+            method="POST", endpoint=f"{API_ENDPOINT_PRODUCTION}/pet/{self.id}/position/async", params=data
         )
 
     def set_profile(self, device_id: int, profile: PetDeviceLocationProfile) -> Command:
@@ -188,9 +188,16 @@ class Pet(PetBase[Control, Status]):
             raise ValueError(f"Device ID {device_id} is not assigned to pet with tag {self.tag}. \
                     Available tags: {available_device_ids}")
         return Command(
-            method="PUT", endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{device_id}/tag/{self.tag}", params=data
+            method="PUT",
+            endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{device_id}/tag/{self.tag}/async",
+            params=data,
+            device=self,
         )
 
     def set_tag(self, device_id: int, action: ModifyDeviceTag) -> Command:
         """Add device to pet."""
-        return Command(action.value, f"{API_ENDPOINT_V1}/device/{device_id}/tag/{self.tag}")
+        return Command(
+            action.value,
+            f"{API_ENDPOINT_V1}/device/{device_id}/tag/{self.tag}/async",
+            device=self,
+        )
