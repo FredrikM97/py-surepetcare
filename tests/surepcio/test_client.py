@@ -18,56 +18,6 @@ async def test_get_none_status(aresponses: aresponses.ResponsesMockServer, statu
         assert result is None
 
 
-@pytest.mark.skip(reason="Temporarily disabled. Missing functionality in aresponses?")
-@pytest.mark.asyncio
-async def test_api_put(aresponses: aresponses.ResponsesMockServer):
-    aresponses.add(
-        "example.com",
-        "/endpoint",
-        "PUT",
-        aresponses.Response(
-            text='{"data": {"foo": "bar"}}', status=200, headers={"Content-Type": "application/json"}
-        ),
-    )
-    async with SurePetcareClient() as client:
-        result = await client.api(Command("PUT", "https://example.com/endpoint", params={"bar": 1}))
-        assert result == {"data": {"foo": "bar"}}
-
-
-@pytest.mark.skip(reason="Temporarily disabled. Missing functionality in aresponses?")
-@pytest.mark.asyncio
-async def test_api_delete(aresponses: aresponses.ResponsesMockServer):
-    aresponses.add(
-        "example.com",
-        "/endpoint",
-        "DELETE",
-        aresponses.Response(
-            text='{"data": {"foo": "bar"}}', status=200, headers={"Content-Type": "application/json"}
-        ),
-    )
-    async with SurePetcareClient() as client:
-        result = await client.api(Command("DELETE", "https://example.com/endpoint", full_response=True))
-        assert result == {"data": {"foo": "bar"}}
-
-
-@pytest.mark.skip(reason="Temporarily disabled. Missing functionality in aresponses?")
-@pytest.mark.asyncio
-async def test_api_post(aresponses: aresponses.ResponsesMockServer):
-    aresponses.add(
-        "example.com",
-        "/endpoint",
-        "POST",
-        aresponses.Response(
-            text='{"data": {"foo": "bar"}}', status=200, headers={"Content-Type": "application/json"}
-        ),
-    )
-    async with SurePetcareClient() as client:
-        result = await client.api(
-            Command(method="POST", endpoint="https://example.com/endpoint", params={"bar": 1})
-        )
-        assert result == {"data": {"foo": "bar"}}
-
-
 @pytest.mark.asyncio
 async def test_async_put_with_pending_and_polling(
     aresponses: aresponses.ResponsesMockServer, mock_api_device
@@ -79,7 +29,7 @@ async def test_async_put_with_pending_and_polling(
         "/api/device/123/control",
         "PUT",
         aresponses.Response(
-            text='{"data": {"id": 123, "control": {}}, "results": [{"request_id": "abc", "status_id": 5}]}',
+            text='{"data": {"id": 123, "control": {}}, "pending": [{"request_id": "abc", "status_id": 5}]}',
             status=200,
             headers={"Content-Type": "application/json"},
         ),
@@ -137,7 +87,7 @@ async def test_non_async_put_updates_device(aresponses: aresponses.ResponsesMock
         aresponses.Response(
             text=(
                 '{"data": {"id": 456, "control": {"bowls": {"type": 1}}, '
-                '"status": {"online": true}}, "results": '
+                '"status": {"online": true}}, "pending": '
                 '[{"request_id": "xyz", "status_id": 0}]}'
             ),
             status=200,
@@ -180,7 +130,7 @@ async def test_async_post_with_device_refresh(aresponses: aresponses.ResponsesMo
         "/api/device/789/control",
         "POST",
         aresponses.Response(
-            text='{"data": {}, "results": [{"request_id": "post1", "status_id": 5}]}',
+            text='{"data": {}, "pending": [{"request_id": "post1", "status_id": 5}]}',
             status=200,
             headers={"Content-Type": "application/json"},
         ),
