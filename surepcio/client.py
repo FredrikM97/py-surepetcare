@@ -83,12 +83,7 @@ class SurePetcareClient(AuthClient):
         # Extract result based on full_response flag
         result = response if command.full_response else response.data
 
-        has_pending = (
-            isinstance(response.data, dict)
-            and (results := response.data.get("results", []))
-            and results[0].get("request_id") is not None
-            and results[0].get("status_id") not in (None, RequestStatus.COMPLETED)
-        )
+        has_pending = isinstance(response.data, dict) and response.data.get("pending")
 
         # Only apply callback if not async (async will refresh device later)
         if command.callback and not has_pending:
@@ -97,41 +92,74 @@ class SurePetcareClient(AuthClient):
         # For async operations: poll until complete then refresh device
         if has_pending:
             await self._watcher_task(response.data, command.device)
+            return has_pending
         # For non-async PUT/POST: refresh device to get updated state
         elif command.device and command.method in ("PUT", "POST"):
             await self.api(command.device.refresh())
-
+            return has_pending
         return result
 
     async def _watcher_task(
-        self, response_data: dict[Any, Any] | None, device_obj, timeout_sec: int = 30
+        self,
+        response_data: dict[Any, Any] | None,
+        device_obj,
+        timeout_sec: int = 30,
     ) -> None:
-        """Poll until the request is completed, then refresh device."""
-        if not response_data or not response_data.get("results"):
+        """Poll until tracked requests are completed, then refresh device."""
+
+        pending = response_data.get("pending") if response_data else None
+        if not pending:
+            logger.debug("No pending requests to watch.")
             return
 
-        logger.debug(f"Starting poll for {len(response_data['results'])} requests...")
-        try:
-            for attempt in range(int(timeout_sec / 2.0)):
-                await asyncio.sleep(2.0)
-                resp = await self.api(
-                    Command(
-                        method="GET",
-                        endpoint=(
-                            f"{API_ENDPOINT_PRODUCTION}/household/{device_obj.household_id}/"
-                            "device/control/status"
-                        ),
-                        params={"status": [RequestStatus.PENDING]},
-                        full_response=True,
-                    )
+        # Track all request IDs from the initial response
+        remaining_ids = {r.get("request_id") for r in pending if r.get("request_id")}
+        if not remaining_ids:
+            logger.debug("No valid request_ids found, exiting watcher.")
+            return
+
+        logger.info(f"Starting poll for {len(remaining_ids)} request(s): {remaining_ids}")
+
+        async for _ in poll_with_backoff(timeout=timeout_sec):
+            resp = await self.api(
+                Command(
+                    method="GET",
+                    endpoint=f"{API_ENDPOINT_PRODUCTION}/household/{device_obj.household_id}"
+                    "/device/control/status",
+                    params={"status": RequestStatus.not_completed()},
+                    full_response=True,
                 )
+            )
 
-                data = resp.data or {}
-                results = data.get("results", []) or data.get("data", [])
-                if not any(r.get("status_id") == RequestStatus.PENDING for r in results):
-                    logger.info("All requests completed! Refreshing device...")
-                    await self.api(device_obj.refresh())
-                    return
+            data = resp.data.get("data", []) if resp.data else []
 
-        except Exception as e:
-            logger.error(f"Error polling requests: {e}")
+            # IDs returned by API in this poll
+            returned_ids = {r.get("request_id") for r in data if r.get("request_id")}
+
+            # Any tracked ID missing in API response is considered completed
+            completed_ids = remaining_ids - returned_ids
+            remaining_ids -= completed_ids
+
+            if completed_ids:
+                logger.debug(f"Completed {len(completed_ids)} request(s): {completed_ids}")
+
+            if not remaining_ids:
+                logger.info("All tracked requests completed! Refreshing device...")
+                await self.api(device_obj.refresh())
+                break
+        else:
+            logger.warning(
+                f"Watcher timed out with {len(remaining_ids)} request(s) still pending: {remaining_ids}"
+            )
+
+
+async def poll_with_backoff(
+    initial: float = 2.0, factor: float = 1.1, max_sleep: float = 10.0, timeout: float = 30.0
+):
+    elapsed = 0.0
+    interval = initial
+    while elapsed < timeout:
+        await asyncio.sleep(interval)
+        yield
+        elapsed += interval
+        interval = min(interval * factor, max_sleep)

@@ -169,8 +169,17 @@ class Tare(SureEnum):
     RESET_BOTH = 3
 
 
-class RequestStatus(SureEnum):
+class RequestStatus(Enum):
     """Request/Control Status for async operations."""
 
     COMPLETED = 0
+    STATUS_1 = 1
+    STATUS_2 = 2
+    STATUS_3 = 3
+    STATUS_4 = 4
     PENDING = 5
+
+    @classmethod
+    def not_completed(cls):
+        """Return all enum members that are not COMPLETED."""
+        return [status.value for status in cls if status != cls.COMPLETED]
