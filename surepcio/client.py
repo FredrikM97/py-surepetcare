@@ -104,6 +104,7 @@ class SurePetcareClient(AuthClient):
         response_data: dict[Any, Any] | None,
         device_obj,
         timeout_sec: int = 30,
+        poll_interval: int = 3,
     ) -> None:
         """Poll until tracked requests are completed, then refresh device."""
 
@@ -120,7 +121,7 @@ class SurePetcareClient(AuthClient):
 
         logger.info(f"Starting poll for {len(remaining_ids)} request(s): {remaining_ids}")
 
-        async for _ in poll_with_backoff(timeout=timeout_sec):
+        for iteration in range(1, int(timeout_sec / poll_interval) + 1):
             resp = await self.api(
                 Command(
                     method="GET",
@@ -144,22 +145,16 @@ class SurePetcareClient(AuthClient):
                 logger.debug(f"Completed {len(completed_ids)} request(s): {completed_ids}")
 
             if not remaining_ids:
-                logger.info("All tracked requests completed! Refreshing device...")
+                logger.info(
+                    f"All tracked requests completed after {iteration*poll_interval} "
+                    "seconds! Refreshing device..."
+                )
                 await self.api(device_obj.refresh())
-                break
-        else:
-            logger.warning(
-                f"Watcher timed out with {len(remaining_ids)} request(s) still pending: {remaining_ids}"
-            )
+                return
 
+            await asyncio.sleep(poll_interval)
 
-async def poll_with_backoff(
-    initial: float = 2.0, factor: float = 1.1, max_sleep: float = 10.0, timeout: float = 30.0
-):
-    elapsed = 0.0
-    interval = initial
-    while elapsed < timeout:
-        await asyncio.sleep(interval)
-        yield
-        elapsed += interval
-        interval = min(interval * factor, max_sleep)
+        logger.warning(
+            f"Watcher timed out after {timeout_sec} seconds with {len(remaining_ids)} request(s) "
+            "still pending: {remaining_ids}"
+        )
