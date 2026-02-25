@@ -92,11 +92,9 @@ class SurePetcareClient(AuthClient):
         # For async operations: poll until complete then refresh device
         if has_pending:
             await self._watcher_task(response.data, command.device)
-            return has_pending
         # For non-async PUT/POST: refresh device to get updated state
         elif command.device and command.method in ("PUT", "POST"):
             await self.api(command.device.refresh())
-            return has_pending
         return result
 
     async def _watcher_task(

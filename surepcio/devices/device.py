@@ -104,10 +104,21 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
 
     def set_control(self, **control_settings: Any) -> Command:
         """Universal setter for control settings. Inherit the self.control type and can take any input."""
+
+        def parse(response) -> "DeviceBase":
+            if not response:
+                return self
+            # Basic attempt to update data from response. This is to prevent that the device
+            # data is not updated until the refresh command is called, which can be a
+            # long time if there are pending requests.
+            self.control = self.controlCls(**{**self.control.model_dump(), **response["data"]})
+            return self
+
         return Command(
             "PUT",
             f"{API_ENDPOINT_PRODUCTION}/device/{self.id}/control/async",
             params=self.controlCls(**control_settings).model_dump(),
+            callback=parse,
             device=self,
         )
 
