@@ -55,7 +55,7 @@ class EntityInfo(ImprovedErrorMixin):
     """Represents basic information about an entity."""
 
     id: int
-    name: str
+    name: Optional[str] = None
     household_id: int
     product_id: int
     tag_id: Optional[int] = None

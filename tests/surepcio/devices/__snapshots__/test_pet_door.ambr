@@ -61,3 +61,65 @@
     'timezone': 'Europe/Stockholm',
   })
 # ---
+# name: test_snapshot[device_names0].1
+  dict({
+    'control': dict({
+      'curfew': dict({
+        'enabled': False,
+        'lock_time': datetime.time(11, 1),
+        'unlock_time': datetime.time(11, 2),
+      }),
+      'fast_polling': True,
+      'locking': <FlapLocking.UNLOCKED: 0>,
+      'tags': None,
+    }),
+    'entity_info': dict({
+      'household_id': 7777,
+      'id': 260093,
+      'name': None,
+      'parent_device_id': None,
+      'photo': None,
+      'product_id': 3,
+      'tag': None,
+      'tag_id': None,
+    }),
+    'properties': dict({
+      'available': True,
+      'battery_level': 70,
+      'household_id': 7777,
+      'id': 260093,
+      'name': None,
+      'parent_device_id': None,
+      'photo': None,
+      'product': <ProductId.PET_DOOR: 3>,
+      'product_id': 3,
+      'product_name': 'PET_DOOR',
+    }),
+    'status': dict({
+      'battery': 5.932,
+      'learn_mode': False,
+      'locking': dict({
+        'mode': <FlapLocking.UNLOCKED: 0>,
+      }),
+      'online': True,
+      'signal': dict({
+        'device_rssi': -59,
+      }),
+      'version': dict({
+        'device': dict({
+          'firmware': '1.0',
+          'hardware': '1.2',
+        }),
+        'lcd': dict({
+          'firmware': '1.0',
+          'hardware': '1.0',
+        }),
+        'rf': dict({
+          'firmware': '0.16',
+          'hardware': '4.0',
+        }),
+      }),
+    }),
+    'timezone': 'Europe/Stockholm',
+  })
+# ---
