@@ -95,7 +95,7 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
         return self.entity_info.household_id
 
     @property
-    def name(self) -> str:
+    def name(self) -> Optional[str]:
         return self.entity_info.name
 
     def set_tag(self, tag_id: int, action: ModifyDeviceTag) -> Command:
@@ -133,5 +133,5 @@ class PetBase(SurePetCareBase[C, S]):
         return self.entity_info.household_id
 
     @property
-    def name(self) -> str:
+    def name(self) -> Optional[str]:
         return self.entity_info.name
