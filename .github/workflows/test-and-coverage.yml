@@ -19,13 +19,21 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: '3.13'
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install .[dev,cli]
+          uv sync --all-extras --dev --frozen
+      - name: Verify lock file is up to date
+        run: |
+          uv lock --check
+      - name: Audit locked dependencies
+        run: |
+          uv export --frozen --all-extras --format requirements-txt --no-hashes -o requirements.lock.txt
+          uv tool run --from pip-audit pip-audit -r requirements.lock.txt
       - name: Run tests with coverage
         run: |
-          pytest --cov=surepcio --cov=surepccli --cov-branch --cov-report=xml
+          uv run pytest --cov=surepcio --cov=surepccli --cov-branch --cov-report=xml
       
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v6

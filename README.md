@@ -17,7 +17,7 @@ It consist of io support (surepcio) and a cli (surepccli).
 For home assistant support use the [hass-surepetcare](https://github.com/FredrikM97/hass-surepetcare)
 
 ## Cli support
-This repo also support (to some extent) cli commands. The cli is installed with pip install .[cli] and is not included by default. 
+This repo also support (to some extent) cli commands. The cli can be installed with `uv sync --extra cli` and is not included by default.
 
 To see available commands use:
 ```python
@@ -46,7 +46,12 @@ There is also support to store some properties in .env file. Check available pro
 
 ## Contributing
 Before pushing validate the changes with: `pre-commit run --all-files`..
-Run `pip install .[dev]` to add dependencies for development. Start application and enable debug. The debug logs contain the request data which can be provided with a issue and for snapshot testing.
+Run `uv sync --all-extras --dev` to install development dependencies from `uv.lock`.
+Use `uv lock` when dependency constraints change and commit the updated `uv.lock`.
+Run tests with `uv run pytest tests` and snapshot updates with `uv run pytest --snapshot-update tests`.
+For a quick vulnerability check against the lockfile:
+`uv export --frozen --all-extras --format requirements-txt --no-hashes -o requirements.lock.txt && uv tool run --from pip-audit pip-audit -r requirements.lock.txt`.
+Start application and enable debug. The debug logs contain request data that can be provided with an issue and for snapshot testing.
 
 
 
