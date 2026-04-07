@@ -4,7 +4,7 @@
     {
       "label": "Install Dev Requirements",
       "type": "shell",
-      "command": "pip install .[dev]",
+      "command": "uv sync --all-extras --dev",
       "group": "build",
       "presentation": {
         "reveal": "always",
@@ -14,7 +14,7 @@
     {
       "label": "Run Pytest",
       "type": "shell",
-      "command": "${command:python.interpreterPath} -m pytest tests",
+      "command": "uv run pytest tests",
       "group": "test",
       "presentation": {
         "reveal": "always",
@@ -24,7 +24,7 @@
     {
       "label": "Update Syrupy Snapshots",
       "type": "shell",
-      "command": "${command:python.interpreterPath} -m pytest --snapshot-update tests",
+      "command": "uv run pytest --snapshot-update tests",
       "group": "test",
       "presentation": {
         "reveal": "always",
@@ -34,7 +34,7 @@
     {
       "label": "Lint (Ruff)",
       "type": "shell",
-      "command": "ruff .",
+      "command": "uv run ruff .",
       "group": "test",
       "presentation": {
         "reveal": "always",
@@ -44,7 +44,7 @@
     {
       "label": "Lint (Pylint)",
       "type": "shell",
-      "command": "pylint custom_components/surepetcare tests",
+      "command": "uv run pylint surepcio surepccli tests",
       "group": "test",
       "presentation": {
         "reveal": "always",
@@ -54,7 +54,17 @@
     {
       "label": "Pre-commit Autoupdate",
       "type": "shell",
-      "command": "pre-commit autoupdate",
+      "command": "uv tool run --from pre-commit pre-commit autoupdate",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Update uv Lock",
+      "type": "shell",
+      "command": "uv lock",
       "group": "test",
       "presentation": {
         "reveal": "always",
