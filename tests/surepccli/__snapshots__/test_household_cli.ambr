@@ -28,9 +28,9 @@
       │ --help          Show this message and exit.                                  │
       ╰──────────────────────────────────────────────────────────────────────────────╯
       ╭─ Commands ───────────────────────────────────────────────────────────────────╮
-      │ list       List households                                                   │
-      │ connect    Connect to a household                                            │
-      │ timeline   List timeline events with optional pagination.                    │
+      │ list      List households                                                    │
+      │ connect   Connect to a household                                             │
+      │ timeline  List timeline events with optional pagination.                     │
       ╰──────────────────────────────────────────────────────────────────────────────╯
   
     ''',

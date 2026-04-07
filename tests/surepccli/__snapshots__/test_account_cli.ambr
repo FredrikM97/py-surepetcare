@@ -43,10 +43,10 @@
       │ --help          Show this message and exit.                                  │
       ╰──────────────────────────────────────────────────────────────────────────────╯
       ╭─ Commands ───────────────────────────────────────────────────────────────────╮
-      │ login    Login with email and password.                                      │
-      │ info     Show account info.                                                  │
-      │ token    Show account token.                                                 │
-      │ logout   Logout and clear session.                                           │
+      │ login   Login with email and password.                                       │
+      │ info    Show account info.                                                   │
+      │ token   Show account token.                                                  │
+      │ logout  Logout and clear session.                                            │
       ╰──────────────────────────────────────────────────────────────────────────────╯
   
     ''',

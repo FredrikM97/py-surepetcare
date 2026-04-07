@@ -13,9 +13,9 @@
       │ --help          Show this message and exit.                                  │
       ╰──────────────────────────────────────────────────────────────────────────────╯
       ╭─ Commands ───────────────────────────────────────────────────────────────────╮
-      │ list             List pets                                                   │
-      │ last-activity    Show last activity for a pet                                │
-      │ assign-devices   Fetch assigned devices for a pet                            │
+      │ list            List pets                                                    │
+      │ last-activity   Show last activity for a pet                                 │
+      │ assign-devices  Fetch assigned devices for a pet                             │
       ╰──────────────────────────────────────────────────────────────────────────────╯
   
     ''',
