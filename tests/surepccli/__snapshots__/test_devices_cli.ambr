@@ -34,13 +34,13 @@
       │ --help          Show this message and exit.                                  │
       ╰──────────────────────────────────────────────────────────────────────────────╯
       ╭─ Commands ───────────────────────────────────────────────────────────────────╮
-      │ list              List devices                                               │
-      │ connect           Select a device to work with                               │
-      │ clear             Clear selected device                                      │
-      │ feederconnect     Feeder device commands                                     │
-      │ dualscanconnect   Flap device commands                                       │
-      │ petdoor           PetDoor device commands                                    │
-      │ hub               PetDoor device commands                                    │
+      │ list             List devices                                                │
+      │ connect          Select a device to work with                                │
+      │ clear            Clear selected device                                       │
+      │ feederconnect    Feeder device commands                                      │
+      │ dualscanconnect  Flap device commands                                        │
+      │ petdoor          PetDoor device commands                                     │
+      │ hub              PetDoor device commands                                     │
       ╰──────────────────────────────────────────────────────────────────────────────╯
   
     ''',
@@ -77,8 +77,8 @@
       │ --help          Show this message and exit.                                  │
       ╰──────────────────────────────────────────────────────────────────────────────╯
       ╭─ Commands ───────────────────────────────────────────────────────────────────╮
-      │ curfew    Set flap curfew mode                                               │
-      │ locking   Set flap locking mode                                              │
+      │ curfew   Set flap curfew mode                                                │
+      │ locking  Set flap locking mode                                               │
       ╰──────────────────────────────────────────────────────────────────────────────╯
   
     ''',
@@ -143,8 +143,8 @@
       │ --help          Show this message and exit.                                  │
       ╰──────────────────────────────────────────────────────────────────────────────╯
       ╭─ Commands ───────────────────────────────────────────────────────────────────╮
-      │ curfew    Set locking mode                                                   │
-      │ locking   Set flap locking mode                                              │
+      │ curfew   Set locking mode                                                    │
+      │ locking  Set flap locking mode                                               │
       ╰──────────────────────────────────────────────────────────────────────────────╯
   
     ''',
@@ -209,8 +209,8 @@
       │ --help          Show this message and exit.                                  │
       ╰──────────────────────────────────────────────────────────────────────────────╯
       ╭─ Commands ───────────────────────────────────────────────────────────────────╮
-      │ led-mode       LED mode                                                      │
-      │ pairing-mode   Pairing mode                                                  │
+      │ led-mode      LED mode                                                       │
+      │ pairing-mode  Pairing mode                                                   │
       ╰──────────────────────────────────────────────────────────────────────────────╯
   
     ''',
