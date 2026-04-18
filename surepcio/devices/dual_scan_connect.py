@@ -25,7 +25,7 @@ class Status(BaseStatus):
     locking: Optional[Locking] = None
 
 
-class DualScanConnect(DeviceBase[Control, Status]):
+class DualScanConnect(DeviceBase[Control, Status], DoorMixin):
     """Representation of a Dual Scan Connect device."""
 
     controlCls = Control
