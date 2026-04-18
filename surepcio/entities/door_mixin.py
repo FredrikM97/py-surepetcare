@@ -1,4 +1,4 @@
-class door_mixin:
+class DoorMixin:
    def is_curfew_active(self):
         curfews = self.control.curfew if isinstance(self.control.curfew, list) else ([self.control.curfew] if self.control.curfew else [])
         now = datetime.now().time()
