@@ -7,6 +7,7 @@ on:
 jobs:
 
   build:
+    if: github.repository_owner == 'FredrikM97'
     name: Build distribution
     runs-on: ubuntu-latest
     permissions:
