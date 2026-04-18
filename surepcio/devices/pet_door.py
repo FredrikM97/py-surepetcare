@@ -24,7 +24,7 @@ class Status(BaseStatus):
     locking: Optional[Locking] = None
 
 
-class PetDoor(DeviceBase[Control, Status]):
+class PetDoor(DeviceBase[Control, Status], DoorMixin):
     """Representation of a Pet Door device."""
 
     controlCls = Control
