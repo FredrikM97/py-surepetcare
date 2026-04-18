@@ -25,7 +25,7 @@ class Status(BaseStatus):
     locking: Optional[Locking] = None
 
 
-class DualScanPetDoor(DeviceBase[Control, Status]):
+class DualScanPetDoor(DeviceBase[Control, Status], DoorMixin):
     """Representation of a Dual Scan Pet Door device."""
 
     @property
