@@ -3,7 +3,7 @@ from typing import Optional
 
 from .device import BaseControl
 from .device import BaseStatus
-from .device import DeviceBase
+from .device import DoorDeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.entities import Curfew
@@ -24,7 +24,7 @@ class Status(BaseStatus):
     locking: Optional[Locking] = None
 
 
-class PetDoor(DeviceBase[Control, Status]):
+class PetDoor(DoorDeviceBase[Control, Status]):
     """Representation of a Pet Door device."""
 
     controlCls = Control
@@ -53,7 +53,3 @@ class PetDoor(DeviceBase[Control, Status]):
     def set_curfew(self, curfew: Curfew) -> Command:
         """Set the flap curfew times, using the household's timezone"""
         return self.set_control(curfew=curfew)
-
-    def set_locking(self, locking: FlapLocking) -> Command:
-        """Set locking mode"""
-        return self.set_control(locking=locking)

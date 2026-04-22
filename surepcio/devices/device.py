@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 from abc import ABC
 from abc import abstractmethod
@@ -15,7 +16,7 @@ from surepcio.devices.entities import BaseControl
 from surepcio.devices.entities import BaseStatus
 from surepcio.devices.entities import EntityInfo
 from surepcio.entities.battery_mixin import BatteryMixin
-from surepcio.enums import ModifyDeviceTag
+from surepcio.enums import FlapLocking, ModifyDeviceTag
 from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
@@ -110,6 +111,35 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
             params=self.controlCls(**control_settings).model_dump(),
             device=self,
         )
+
+
+class DoorDeviceBase(DeviceBase[C, S]):
+    """Base class for door devices."""
+
+    @property
+    def is_curfew_active(self) -> bool:
+        curfews = (
+            self.control.curfew
+            if isinstance(self.control.curfew, list)
+            else ([self.control.curfew] if self.control.curfew else [])
+        )
+        now = datetime.now().time()
+        return any(
+            c.enabled
+            and (
+                (c.lock_time <= c.unlock_time and c.lock_time <= now <= c.unlock_time)
+                or (c.lock_time > c.unlock_time and (now >= c.lock_time or now <= c.unlock_time))
+            )
+            for c in curfews
+        )
+
+    def set_locking(self, locking: FlapLocking) -> Command:
+        """Set locking mode"""
+        return self.set_control(locking=locking)
+
+    def set_failsafe(self, failsafe: int) -> Command:
+        """Set failsafe mode"""
+        return self.set_control(fail_safe=failsafe)
 
 
 class PetBase(SurePetCareBase[C, S]):

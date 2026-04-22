@@ -72,6 +72,7 @@
       'battery_level': 57,
       'household_id': 7777,
       'id': 1334025,
+      'is_curfew_active': False,
       'name': 'Patio Door',
       'parent_device_id': None,
       'photo': None,
