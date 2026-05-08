@@ -118,6 +118,10 @@ class SurePetcareClient(AuthClient):
             logger.debug("No valid request_ids found, exiting watcher.")
             return
 
+        if device_obj is None:
+            logger.warning("Watcher task invoked without a device object to refresh.")
+            return
+
         logger.info(f"Starting poll for {len(remaining_ids)} request(s): {remaining_ids}")
 
         async for _ in poll_with_backoff(timeout=timeout_sec):
