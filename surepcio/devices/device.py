@@ -101,7 +101,7 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
 
     def set_tag(self, tag_id: int, action: ModifyDeviceTag) -> Command:
         """Add tag/microchip to device."""
-        return Command(action.value, f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}/async")
+        return Command(action.value, f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}/async", device=self)
 
     def set_control(self, **control_settings: Any) -> Command:
         """Universal setter for control settings. Inherit the self.control type and can take any input."""
