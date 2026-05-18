@@ -8,6 +8,7 @@ from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.entities import SurePetcareResponse
 from surepcio.enums import RequestStatus
 from surepcio.security.auth import AuthClient
+from surepcio.security.exceptions import ApiError
 
 logger = logging.getLogger(__name__)
 
@@ -20,12 +21,25 @@ class SurePetcareClient(AuthClient):
         http_method = getattr(self.session, method)
         async with http_method(endpoint, **kwargs) as response:
             self.populate_headers(response)
-            if response.content_length == 0:
-                return SurePetcareResponse(data=None, status=response.status, reason=response.reason)
-            try:
-                data = await response.json()
-            except Exception:
-                data = None
+
+            data = None
+            if response.content_length != 0:
+                try:
+                    data = await response.json()
+                except Exception as e:
+                    logger.warning(f"Failed to parse JSON response: {e}")
+
+            # Raise for any 4xx/5xx error as ApiError
+            # (or subclass for 400/401/403/404/5xx if you want, but default is generic)
+            if 400 <= response.status < 600:
+                raise ApiError(
+                    method=method,
+                    endpoint=endpoint,
+                    status=response.status,
+                    reason=response.reason,
+                    payload=data,
+                )
+
             return SurePetcareResponse(data=data, status=response.status, reason=response.reason)
 
     async def get(

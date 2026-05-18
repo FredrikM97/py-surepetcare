@@ -2,6 +2,7 @@ import aresponses
 import pytest
 from surepcio import SurePetcareClient
 from surepcio.command import Command
+from surepcio.security.exceptions import ApiError
 
 
 @pytest.mark.asyncio
@@ -14,8 +15,41 @@ async def test_get_none_status(aresponses: aresponses.ResponsesMockServer, statu
         aresponses.Response(text="", status=status, headers={"Content-Type": "application/json"}),
     )
     async with SurePetcareClient() as client:
-        result = await client.api(Command("GET", "https://example.com/endpoint"))
+        result = await client.get("https://example.com/endpoint", params=None)
+        result = result.data
         assert result is None
+
+
+# Parametrize over a variety of 4xx/5xx error codes, including 405
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "status,error_text",
+    [
+        (400, "bad request"),
+        (401, "unauthorized"),
+        (403, "forbidden"),
+        (404, "not found"),
+        (405, "method not allowed"),
+        (418, "teapot"),
+        (500, "server error"),
+    ],
+)
+async def test_api_error_for_various_statuses(aresponses, status, error_text):
+    aresponses.add(
+        "example.com",
+        "/endpoint",
+        "GET",
+        aresponses.Response(
+            text=f'{{"error": "{error_text}"}}',
+            status=status,
+            headers={"Content-Type": "application/json"},
+        ),
+    )
+    async with SurePetcareClient() as client:
+        with pytest.raises(ApiError) as exc_info:
+            await client.get("https://example.com/endpoint", params=None)
+    assert exc_info.value.status == status
+    assert exc_info.value.payload == {"error": error_text}
 
 
 @pytest.mark.asyncio
@@ -87,8 +121,7 @@ async def test_non_async_put_updates_device(aresponses: aresponses.ResponsesMock
         aresponses.Response(
             text=(
                 '{"data": {"id": 456, "control": {"bowls": {"type": 1}}, '
-                '"status": {"online": true}}, "pending": '
-                '[{"request_id": "xyz", "status_id": 0}]}'
+                '"status": {"online": true}}, "pending": []}'
             ),
             status=200,
             headers={"Content-Type": "application/json"},

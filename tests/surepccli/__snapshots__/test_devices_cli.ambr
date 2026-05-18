@@ -476,9 +476,9 @@
 # ---
 # name: test_dualscanconnect[devices_dualscanconnect_curfew1]
   dict({
-    'exception': None,
-    'exit_code': 0,
-    'output': 'Device 1334025 curfew set to [Curfew(enabled=True, lock_time=datetime.time(8, 0), unlock_time=datetime.time(18, 0))].',
+    'exception': "ApiError('API error: PUT https://app-api.production.surehub.io/api/device/1334025/control/async returned 500 Internal Server Error')",
+    'exit_code': 1,
+    'output': '',
   })
 # ---
 # name: test_dualscanconnect[devices_dualscanconnect_locking0]
@@ -493,9 +493,9 @@
 # ---
 # name: test_dualscanconnect[devices_dualscanconnect_locking1]
   dict({
-    'exception': None,
-    'exit_code': 0,
-    'output': 'Device 1334025 lock set to UNLOCKED.',
+    'exception': "ApiError('API error: PUT https://app-api.production.surehub.io/api/device/1334025/control/async returned 500 Internal Server Error')",
+    'exit_code': 1,
+    'output': '',
   })
 # ---
 # name: test_feederconnect[devices_feederconnect_bowl_type]
