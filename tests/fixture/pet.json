@@ -262,5 +262,21 @@
         }
       ]
     }
+  },
+  "PUT": {
+    "https://app-api.production.surehub.io/api/device/269654/tag/60978/async": {
+      "data": {}
+    },
+    "https://app.api.surehub.io/api/device/269654/tag/60978/async": {
+      "data": {}
+    }
+  },
+  "POST": {
+    "https://app-api.production.surehub.io/api/pet/123455/position": {
+      "data": {}
+    },
+    "https://app-api.production.surehub.io/api/pet/629768/position": {
+      "data": {}
+    }
   }
 }
