@@ -9,7 +9,10 @@ import aresponses
 import pytest
 from syrupy.assertion import SnapshotAssertion
 
+from surepcio.const import API_ENDPOINT_PRODUCTION
 from tests import FIXTURES
+
+PRODUCTION_API_HOST = urlparse(API_ENDPOINT_PRODUCTION).netloc
 
 
 def _load_device(device_name: str) -> dict:
@@ -58,23 +61,48 @@ def register_device_api_mocks(aresponses: aresponses.ResponsesMockServer, mock_d
     for method_dict in mock_devices:
         for method, device in method_dict.items():
             for url, payload in device.items():
-                parsed = urlparse(url)
-                host = parsed.netloc
-                path = parsed.path
-                if parsed.query:
-                    path += "?" + parsed.query
-
-                aresponses.add(
-                    host,
-                    path,
+                add_api_json_response(
+                    aresponses,
                     method,
-                    aresponses.Response(
-                        body=json.dumps(payload),
-                        status=200,
-                        headers={"Content-Type": "application/json"},
-                    ),
+                    url,
+                    payload,
                     match_querystring=True,
+                    repeat=20,
                 )
+
+
+def add_api_json_response(
+    aresponses: aresponses.ResponsesMockServer,
+    method: str,
+    endpoint: str,
+    payload: dict,
+    status: int = 200,
+    match_querystring: bool = False,
+    repeat: int = 1,
+):
+    """Register a JSON API response for an absolute URL or a path on production API host."""
+    if endpoint.startswith("http://") or endpoint.startswith("https://"):
+        parsed = urlparse(endpoint)
+        host = parsed.netloc
+        path = parsed.path
+        if parsed.query:
+            path += "?" + parsed.query
+    else:
+        host = PRODUCTION_API_HOST
+        path = endpoint
+
+    aresponses.add(
+        host,
+        path,
+        method,
+        aresponses.Response(
+            body=json.dumps(payload),
+            status=status,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=match_querystring,
+        repeat=repeat,
+    )
 
 
 def mask_fields(obj, skip_fields=None, any_fields=None):

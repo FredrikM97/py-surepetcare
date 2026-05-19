@@ -17,3 +17,15 @@ class ApiError(Exception):
             f"API error: {self.method} {self.endpoint} " f"returned {self.status} {self.reason or ''}".strip()
         )
         super().__init__(message)
+
+    def __repr__(self) -> str:
+        return (
+            "ApiError("
+            f"message={str(self)!r}, "
+            f"method={self.method!r}, "
+            f"endpoint={self.endpoint!r}, "
+            f"status={self.status!r}, "
+            f"reason={self.reason!r}, "
+            f"payload={self.payload!r}"
+            ")"
+        )

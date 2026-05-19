@@ -29,8 +29,6 @@ class SurePetcareClient(AuthClient):
                 except Exception as e:
                     logger.warning(f"Failed to parse JSON response: {e}")
 
-            # Raise for any 4xx/5xx error as ApiError
-            # (or subclass for 400/401/403/404/5xx if you want, but default is generic)
             if 400 <= response.status < 600:
                 raise ApiError(
                     method=method,
