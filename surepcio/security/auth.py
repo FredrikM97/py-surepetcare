@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class AuthClient(CacheHeaders):
     def __init__(self):
         self._token = None
-        self.session = None
+        self.session: aiohttp.ClientSession | None = None
         self._device_id = None
 
     async def login(
@@ -29,6 +29,8 @@ class AuthClient(CacheHeaders):
     ) -> "AuthClient":
         """Authenticate with the Sure Petcare API using either email/password or token/device_id."""
         await self.set_session()
+        if self.session is None:
+            raise AuthenticationError("Session could not be established")
         self.clear_resources()
 
         if token and device_id:

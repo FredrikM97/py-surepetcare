@@ -8,6 +8,7 @@ from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.entities import SurePetcareResponse
 from surepcio.enums import RequestStatus
 from surepcio.security.auth import AuthClient
+from surepcio.security.exceptions import ApiError
 
 logger = logging.getLogger(__name__)
 
@@ -20,12 +21,23 @@ class SurePetcareClient(AuthClient):
         http_method = getattr(self.session, method)
         async with http_method(endpoint, **kwargs) as response:
             self.populate_headers(response)
-            if response.content_length == 0:
-                return SurePetcareResponse(data=None, status=response.status, reason=response.reason)
-            try:
-                data = await response.json()
-            except Exception:
-                data = None
+
+            data = None
+            if response.content_length != 0:
+                try:
+                    data = await response.json()
+                except Exception as e:
+                    logger.warning(f"Failed to parse JSON response: {e}")
+
+            if 400 <= response.status < 600:
+                raise ApiError(
+                    method=method,
+                    endpoint=endpoint,
+                    status=response.status,
+                    reason=response.reason,
+                    payload=data,
+                )
+
             return SurePetcareResponse(data=data, status=response.status, reason=response.reason)
 
     async def get(
@@ -42,30 +54,28 @@ class SurePetcareClient(AuthClient):
     async def delete(self, endpoint: str, params: dict | None = None, headers=None) -> SurePetcareResponse:
         return await self._request("delete", endpoint, json=params, headers=headers)
 
-    async def api(self, command: Union[Command, list[Command]], full_response: bool = False) -> Any:
+    async def api(self, command: Union[Command, list[Command]]) -> Any:
+        """Execute one or more commands and normalize post-request behavior.
+
+        Handles command lists, callback-only commands, and regular HTTP commands.
+        For PUT/POST commands it also coordinates async polling and device refresh.
+        """
         if command is None:
-            logger.debug("No command to execute on command")
-            return None
+            raise TypeError("api() received None — every command in a pipeline must be non-None")
+
         if isinstance(command, list):
-            if not command:
-                logger.debug("Empty command list provided")
-                return None
-            results = [await self.api(cmd) for cmd in command]
-            if all(result == results[-1] for result in results):
-                return results[-1]
-            else:
-                logger.warning("Not all results are equal: %s", results)
-                return results
+            return [await self.api(cmd) for cmd in command]
 
-        # If method is None, skip API call and just execute callback
+        return await self.handle_command(command)
+
+    async def handle_command(self, command: Command) -> Any:
         if command.method is None:
-            if command.callback:
-                return command.callback(None)
-            return None
+            raise ValueError("Command missing HTTP method")
 
+        # reuse headers if command.reuse is True, otherwise generate new headers for this request
         headers = self._generate_headers(headers=self.headers(command.endpoint) if command.reuse else {})
-        method = command.method.lower()
-        response: SurePetcareResponse = await getattr(self, method)(
+
+        response: SurePetcareResponse = await getattr(self, command.method.lower())(
             command.endpoint,
             params=command.params,
             headers=headers,
@@ -73,30 +83,22 @@ class SurePetcareClient(AuthClient):
 
         logger.debug(
             "API <%s> < %s >: status=%s, reason=%s, data=%s",
-            command.method.upper(),
+            command.method,
             command.endpoint,
             response.status,
             response.reason,
             response.data,
         )
 
-        # Extract result based on full_response flag
-        result = response if command.full_response else response.data
+        # Async commands are completed via watcher polling; result is the refreshed device state.
+        if bool(isinstance(response.data, dict) and response.data.get("pending")):
+            result = await self._watcher_task(response.data, command.device)
+        else:
+            # parse extracts domain data from the response; chain produces follow-up Commands to execute.
+            result = command.parse(response) if command.parse is not None else response
+            if command.chain is not None and (follow_up := command.chain(result)):
+                result = await self.api(follow_up)
 
-        has_pending = isinstance(response.data, dict) and response.data.get("pending")
-
-        # Only apply callback if not async (async will refresh device later)
-        if command.callback and not has_pending:
-            result = command.callback(result)
-
-        # For async operations: poll until complete then refresh device
-        if has_pending:
-            await self._watcher_task(response.data, command.device)
-            return has_pending
-        # For non-async PUT/POST: refresh device to get updated state
-        elif command.device and command.method in ("PUT", "POST"):
-            await self.api(command.device.refresh())
-            return has_pending
         return result
 
     async def _watcher_task(
@@ -104,62 +106,60 @@ class SurePetcareClient(AuthClient):
         response_data: dict[Any, Any] | None,
         device_obj,
         timeout_sec: int = 30,
-    ) -> None:
-        """Poll until tracked requests are completed, then refresh device."""
-
-        pending = response_data.get("pending") if response_data else None
-        if not pending:
-            logger.debug("No pending requests to watch.")
-            return
-
-        # Track all request IDs from the initial response
-        remaining_ids = {r.get("request_id") for r in pending if r.get("request_id")}
+    ) -> Any:
+        """Poll until tracked requests complete, then return the refreshed device state."""
+        remaining_ids = self._tracked_pending_ids(response_data)
         if not remaining_ids:
-            logger.debug("No valid request_ids found, exiting watcher.")
-            return
-
+            raise ValueError("Watcher task invoked with no pending requests to watch.")
         if device_obj is None:
-            logger.warning("Watcher task invoked without a device object to refresh.")
-            return
+            raise ValueError("Watcher task requires a device object to refresh after completion.")
 
-        logger.info(f"Starting poll for {len(remaining_ids)} request(s): {remaining_ids}")
+        logger.info("Waiting for %d request(s): %s", len(remaining_ids), remaining_ids)
 
         async for _ in poll_with_backoff(timeout=timeout_sec):
-            resp = await self.api(
-                Command(
-                    method="GET",
-                    endpoint=f"{API_ENDPOINT_PRODUCTION}/household/{device_obj.household_id}"
-                    "/device/control/status",
-                    params={"status": RequestStatus.not_completed()},
-                    full_response=True,
-                )
-            )
-
-            data = resp.data.get("data", []) if resp.data else []
-
-            # IDs returned by API in this poll
-            returned_ids = {r.get("request_id") for r in data if r.get("request_id")}
-
-            # Any tracked ID missing in API response is considered completed
-            completed_ids = remaining_ids - returned_ids
-            remaining_ids -= completed_ids
-
-            if completed_ids:
-                logger.debug(f"Completed {len(completed_ids)} request(s): {completed_ids}")
-
+            remaining_ids &= await self._poll_pending_ids(device_obj)
+            logger.debug("%d request(s) still pending", len(remaining_ids))
             if not remaining_ids:
-                logger.info("All tracked requests completed! Refreshing device...")
-                await self.api(device_obj.refresh())
-                break
+                return await self.api(device_obj.refresh())
         else:
-            logger.warning(
+            raise TimeoutError(
                 f"Watcher timed out with {len(remaining_ids)} request(s) still pending: {remaining_ids}"
             )
+
+    @staticmethod
+    def _tracked_pending_ids(response_data: dict[Any, Any] | None) -> set[str]:
+        """Extract request IDs from the initial pending payload."""
+        pending = response_data.get("pending") if response_data else None
+        if not pending:
+            return set()
+        return {request_id for item in pending if (request_id := item.get("request_id"))}
+
+    async def _poll_pending_ids(self, device_obj) -> set[str]:
+        """Fetch the latest control status and return request IDs still in progress."""
+
+        def parse(response: SurePetcareResponse) -> set[str]:
+            if not isinstance(response.data, dict):
+                raise RuntimeError("Expected control status payload to be a dict.")
+            entries = response.data.get("data") or response.data.get("results")
+            if not isinstance(entries, list):
+                raise RuntimeError("Expected control status entries to be a list.")
+            return {item["request_id"] for item in entries if isinstance(item, dict) and "request_id" in item}
+
+        return await self.api(
+            Command(
+                method="GET",
+                endpoint=f"{API_ENDPOINT_PRODUCTION}/household/{device_obj.household_id}"
+                "/device/control/status",
+                params={"status": RequestStatus.not_completed()},
+                parse=parse,
+            )
+        )
 
 
 async def poll_with_backoff(
     initial: float = 2.0, factor: float = 1.1, max_sleep: float = 10.0, timeout: float = 30.0
 ):
+    """Yield on a growing interval until timeout is reached."""
     elapsed = 0.0
     interval = initial
     while elapsed < timeout:

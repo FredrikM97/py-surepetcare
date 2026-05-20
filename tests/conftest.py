@@ -4,11 +4,12 @@ import json
 from pathlib import Path
 from unittest.mock import ANY, MagicMock
 from urllib.parse import urlparse
-
+import warnings
 import aresponses
 import pytest
 from syrupy.assertion import SnapshotAssertion
 
+from surepcio.const import API_ENDPOINT_PRODUCTION
 from tests import FIXTURES
 
 
@@ -54,27 +55,92 @@ def mock_api_device() -> MagicMock:
     return device
 
 
-def register_device_api_mocks(aresponses: aresponses.ResponsesMockServer, mock_devices: list[dict]):
-    for method_dict in mock_devices:
-        for method, device in method_dict.items():
-            for url, payload in device.items():
-                parsed = urlparse(url)
-                host = parsed.netloc
-                path = parsed.path
-                if parsed.query:
-                    path += "?" + parsed.query
+class ApiMockServer:
+    """Wraps an aresponses server with a higher-level API for registering JSON responses.
 
-                aresponses.add(
-                    host,
-                    path,
-                    method,
-                    aresponses.Response(
-                        body=json.dumps(payload),
-                        status=200,
-                        headers={"Content-Type": "application/json"},
-                    ),
-                    match_querystring=True,
-                )
+    Raises ``ValueError`` when a route is registered twice without ``overwrite=True``,
+    making fixture conflicts immediately visible rather than silently serving stale data.
+    """
+
+    def __init__(self, server: aresponses.ResponsesMockServer) -> None:
+        self._server = server
+
+    @staticmethod
+    def _parse_endpoint(endpoint: str) -> tuple[str, str]:
+        """Return (host, path) from a full URL or a bare path relative to the production API."""
+        if endpoint.startswith("http://") or endpoint.startswith("https://"):
+            parsed = urlparse(endpoint)
+            path = parsed.path
+            if parsed.query:
+                path += "?" + parsed.query
+            return parsed.netloc, path
+        return urlparse(API_ENDPOINT_PRODUCTION).netloc, endpoint
+
+    def _existing_routes(self, host: str, path: str, method: str) -> list:
+        """Return all registered routes that match the given host, path, and method."""
+        return [
+            (r, res)
+            for r, res in self._server._responses
+            if r.host_pattern == host.lower()
+            and r.path_pattern == path
+            and r.method_pattern == method.lower()
+        ]
+
+    def __call__(
+        self,
+        method: str,
+        endpoint: str,
+        payload: dict,
+        status: int = 200,
+        match_querystring: bool = False,
+        repeat: int = 50,
+        overwrite: bool = False,
+    ) -> None:
+        host, path = self._parse_endpoint(endpoint)
+        existing: list = self._existing_routes(host, path, method)
+
+        if overwrite:
+            self._server._responses[:] = [
+                (r, res) for r, res in self._server._responses if (r, res) not in existing
+            ]
+        elif existing:
+            warnings.warn(
+                f"Route already registered: {method} {host}{path} — queuing another response.",
+                stacklevel=2,
+            )
+        self._server.add(
+            host,
+            path,
+            method,
+            self._server.Response(
+                body=json.dumps(payload),
+                status=status,
+                headers={"Content-Type": "application/json"},
+            ),
+            match_querystring=match_querystring,
+            repeat=repeat,
+        )
+
+
+@pytest.fixture
+def register_device_api_mocks(add_api_json_response):
+    def _register(mock_devices: list[dict]):
+        for method_dict in mock_devices:
+            for method, device in method_dict.items():
+                for url, payload in device.items():
+                    add_api_json_response(method, url, payload, match_querystring=True)
+
+    return _register
+
+
+@pytest.fixture
+def add_api_json_response(aresponses: aresponses.ResponsesMockServer) -> ApiMockServer:
+    """Fixture returning an ``ApiMockServer`` pre-bound to the active aresponses server.
+
+    Tests call it directly:  ``add_api_json_response("GET", "/some/path", {...})``
+    Pass ``overwrite=True`` to replace an already-registered route for the same endpoint.
+    """
+    return ApiMockServer(aresponses)
 
 
 def mask_fields(obj, skip_fields=None, any_fields=None):

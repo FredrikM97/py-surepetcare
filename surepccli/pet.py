@@ -15,7 +15,10 @@ pet = AsyncTyper(help="Pet commands", login_required=True)
 
 async def _fetch_all_pets(household_id: str) -> list[Pet]:
     async with get_session_manager() as sm:
-        return await sm.client.api(Household({"id": household_id}).get_pets())
+        # Dummy in order to populate the devices that is assigned
+        household = Household({"id": household_id})
+        await sm.client.api(household.get_devices())
+        return await sm.client.api(household.get_pets())
 
 
 async def _fetch_pets(

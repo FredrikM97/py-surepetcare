@@ -56,3 +56,6 @@ markers = [
     "cli_commands: List CLI command invocations for a test.",
     "cli_inputs: Specify CLI user inputs for a test."
 ]
+
+[tool.mypy]
+check_untyped_defs = true

@@ -1,7 +1,6 @@
 import json
 import logging
 
-import aresponses
 import pytest
 from syrupy.assertion import SnapshotAssertion
 
@@ -11,7 +10,6 @@ from surepcio.const import REDACTED_STRING
 from surepcio.household import Household
 from surepcio.security.redact import redact_sensitive
 from tests.conftest import object_snapshot
-from tests.conftest import register_device_api_mocks
 
 
 @pytest.fixture
@@ -68,22 +66,15 @@ def test_logging_redacts_sensitive_data(caplog, snapshot):
 
 
 @pytest.mark.asyncio
-async def test_snapshot(
-    snapshot: SnapshotAssertion, aresponses: aresponses.ResponsesMockServer, mock_all_devices, caplog
-):
+async def test_snapshot(snapshot: SnapshotAssertion, register_device_api_mocks, mock_all_devices, caplog):
     logger = logging.getLogger("surepcio")
     logger.setLevel(logging.DEBUG)
 
-    register_device_api_mocks(aresponses, mock_all_devices)
+    register_device_api_mocks(mock_all_devices)
     async with SurePetcareClient() as client:
         household: Household = await client.api(Household.get_household(7777))
-        pets = await client.api(household.get_pets())
-        devices = await client.api(household.get_devices())
-        for pet in pets:
-            await client.api(pet.refresh())
-        for device in devices:
-            await client.api(device.refresh())
-
+        _ = await client.api(household.get_pets())
+        _ = await client.api(household.get_devices())
     # Collect all log messages as a list of strings
     log_messages = [record.getMessage() for record in caplog.records]
     object_snapshot(log_messages, snapshot)

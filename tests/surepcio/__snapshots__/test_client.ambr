@@ -1,0 +1,78 @@
+# serializer version: 1
+# name: test_api_error_for_various_statuses[400-bad request]
+  dict({
+    'endpoint': 'https://example.com/endpoint',
+    'method': 'GET',
+    'payload': dict({
+      'error': 'bad request',
+    }),
+    'reason': 'Bad Request',
+    'status': 400,
+  })
+# ---
+# name: test_api_error_for_various_statuses[401-unauthorized]
+  dict({
+    'endpoint': 'https://example.com/endpoint',
+    'method': 'GET',
+    'payload': dict({
+      'error': 'unauthorized',
+    }),
+    'reason': 'Unauthorized',
+    'status': 401,
+  })
+# ---
+# name: test_api_error_for_various_statuses[403-forbidden]
+  dict({
+    'endpoint': 'https://example.com/endpoint',
+    'method': 'GET',
+    'payload': dict({
+      'error': 'forbidden',
+    }),
+    'reason': 'Forbidden',
+    'status': 403,
+  })
+# ---
+# name: test_api_error_for_various_statuses[404-not found]
+  dict({
+    'endpoint': 'https://example.com/endpoint',
+    'method': 'GET',
+    'payload': dict({
+      'error': 'not found',
+    }),
+    'reason': 'Not Found',
+    'status': 404,
+  })
+# ---
+# name: test_api_error_for_various_statuses[405-method not allowed]
+  dict({
+    'endpoint': 'https://example.com/endpoint',
+    'method': 'GET',
+    'payload': dict({
+      'error': 'method not allowed',
+    }),
+    'reason': 'Method Not Allowed',
+    'status': 405,
+  })
+# ---
+# name: test_api_error_for_various_statuses[418-teapot]
+  dict({
+    'endpoint': 'https://example.com/endpoint',
+    'method': 'GET',
+    'payload': dict({
+      'error': 'teapot',
+    }),
+    'reason': "I'm a Teapot",
+    'status': 418,
+  })
+# ---
+# name: test_api_error_for_various_statuses[500-server error]
+  dict({
+    'endpoint': 'https://example.com/endpoint',
+    'method': 'GET',
+    'payload': dict({
+      'error': 'server error',
+    }),
+    'reason': 'Internal Server Error',
+    'status': 500,
+  })
+# ---

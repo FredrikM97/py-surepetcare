@@ -99,5 +99,34 @@
             ]
         }
     }
+    },
+    "PUT": {
+        "https://app-api.production.surehub.io/api/device/1334025/control/async": {
+            "data": {
+                "id": 1334025,
+                "control": {
+                    "curfew": [
+                        {
+                            "enabled": true,
+                            "lock_time": "08:00",
+                            "unlock_time": "18:00"
+                        }
+                    ],
+                    "locking": 0,
+                    "fail_safe": 0,
+                    "fast_polling": false
+                }
+            },
+            "results": [
+                {
+                    "request_id": "dualscanconnect-put-request",
+                    "response_id": "dualscanconnect-put-response",
+                    "status": 0,
+                    "status_id": 0,
+                    "requested_at": "2025-09-12T11:35:58.8848743+00:00",
+                    "committed_at": "2025-09-12T11:36:08.7850398+00:00"
+                }
+            ]
+        }
     }
 }

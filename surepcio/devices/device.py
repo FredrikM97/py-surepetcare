@@ -59,10 +59,7 @@ class SurePetCareBase(ABC, ModelFactoryMixin[C, S]):
         return self.product.name
 
     def __str__(self):
-        return f"<{self.__class__.__name__} id={self.id} name={self.name}>"
-
-    # def __repr__(self):
-    #    return f"<{self.__class__.__name__} id={self.id} name={self.name}>"
+        return f"<{self.__class__.__name__} id={self.entity_info.id} name={self.entity_info.name}>"
 
     def refresh(self) -> Command | list[Command]:
         """Refresh the device data."""
@@ -101,15 +98,21 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
 
     def set_tag(self, tag_id: int, action: ModifyDeviceTag) -> Command:
         """Add tag/microchip to device."""
-        return Command(action.value, f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}/async", device=self)
+        return Command(
+            method=action.value,
+            endpoint=f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}/async",
+            device=self,
+            chain=lambda _: self.refresh(),
+        )
 
     def set_control(self, **control_settings: Any) -> Command:
         """Universal setter for control settings. Inherit the self.control type and can take any input."""
         return Command(
-            "PUT",
-            f"{API_ENDPOINT_PRODUCTION}/device/{self.id}/control/async",
+            method="PUT",
+            endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}/control/async",
             params=self.controlCls(**control_settings).model_dump(),
             device=self,
+            chain=lambda _: self.refresh(),
         )
 
 

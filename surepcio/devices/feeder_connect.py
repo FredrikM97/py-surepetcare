@@ -7,7 +7,7 @@ from .device import BaseStatus
 from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.devices.entities import BowlState
+from surepcio.devices.entities import BowlState, SurePetcareResponse
 from surepcio.entities.error_mixin import ImprovedErrorMixin
 from surepcio.enums import BowlPosition
 from surepcio.enums import BowlType
@@ -63,16 +63,16 @@ class FeederConnect(DeviceBase[Control, Status]):
     def photo(self) -> str:
         return "https://www.surepetcare.io/assets/assets/products/feeder.7ff330c9e368df01d256156b6fc797bb.png"
 
-    def refresh(self):
+    def refresh(self) -> Command:
         """Refresh the device status and control settings from the API."""
-        return [self._refresh_device_status(), self.properties()]
+        return self._refresh_device_status()
 
-    def _refresh_device_status(self):
-        def parse(response) -> "FeederConnect":
-            if not response:
+    def _refresh_device_status(self) -> Command:
+        def parse(response: SurePetcareResponse) -> "FeederConnect":
+            if not response.data:
                 return self
-            self.status = self.statusCls(**{**self.status.model_dump(), **response["data"]})
-            self.control = self.controlCls(**{**self.control.model_dump(), **response["data"]})
+            self.status = self.statusCls(**{**self.status.model_dump(), **response.data["data"]})
+            self.control = self.controlCls(**{**self.control.model_dump(), **response.data["data"]})
 
             # Post-process bowl_status based on bowls.type
             bowls_type = None
@@ -81,30 +81,22 @@ class FeederConnect(DeviceBase[Control, Status]):
 
             if bowls_type is not None and self.status.bowl_status:
                 if bowls_type == BowlType.LARGE:
-                    # Use only the first bowl (assume it's the left bowl), set its position to MIDDLE
                     if self.status.bowl_status:
                         bowl = self.status.bowl_status[0]
                         bowl.position = BowlPosition.BOTH
                         self.status.bowl_status = [bowl]
-            return self
 
-        command = Command(
-            method="GET",
-            endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}",
-            callback=parse,
-        )
-        return command
-
-    def properties(self) -> Command:
-        """Update status properties with bowl type options and fill percentages."""
-
-        def update_properties(_) -> "FeederConnect":
+            # Derive computed properties from the freshly-updated status/control
             self.status.bowl_type_options = self.get_bowl_type_option()
             self.status.fill_percentages = self.fill_percentages()
             self.status.tare_options = self.get_tare_options()
             return self
 
-        return Command(callback=update_properties)
+        return Command(
+            method="GET",
+            endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}",
+            parse=parse,
+        )
 
     @property
     def rssi(self) -> Optional[int]:

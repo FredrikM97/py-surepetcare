@@ -1,7 +1,12 @@
 import aresponses
 import pytest
+from syrupy.assertion import SnapshotAssertion
 from surepcio import SurePetcareClient
 from surepcio.command import Command
+from surepcio.const import API_ENDPOINT_PRODUCTION
+from surepcio.devices.feeder_connect import FeederConnect
+from surepcio.security.exceptions import ApiError
+from tests.conftest import object_snapshot
 
 
 @pytest.mark.asyncio
@@ -14,62 +19,75 @@ async def test_get_none_status(aresponses: aresponses.ResponsesMockServer, statu
         aresponses.Response(text="", status=status, headers={"Content-Type": "application/json"}),
     )
     async with SurePetcareClient() as client:
-        result = await client.api(Command("GET", "https://example.com/endpoint"))
+        result = await client.get("https://example.com/endpoint", params=None)
+        result = result.data
         assert result is None
 
 
 @pytest.mark.asyncio
-async def test_async_put_with_pending_and_polling(
-    aresponses: aresponses.ResponsesMockServer, mock_api_device
+@pytest.mark.parametrize(
+    "status,error_text",
+    [
+        (400, "bad request"),
+        (401, "unauthorized"),
+        (403, "forbidden"),
+        (404, "not found"),
+        (405, "method not allowed"),
+        (418, "teapot"),
+        (500, "server error"),
+    ],
+)
+async def test_api_error_for_various_statuses(
+    add_api_json_response,
+    snapshot: SnapshotAssertion,
+    status: int,
+    error_text: str,
 ):
+    endpoint = "https://example.com/endpoint"
+    add_api_json_response("GET", endpoint, {"error": error_text}, status=status)
+
+    async with SurePetcareClient() as client:
+        with pytest.raises(ApiError) as exc_info:
+            await client.get(endpoint, params=None)
+
+    err = exc_info.value
+    object_snapshot(err, snapshot)
+
+
+@pytest.mark.asyncio
+async def test_async_put_with_pending_and_polling(add_api_json_response):
     """Test async PUT operation with pending results that completes via polling."""
+    device_endpoint = f"{API_ENDPOINT_PRODUCTION}/device/123"
+
     # Mock PUT response with pending status (status_id=5)
-    aresponses.add(
-        "app-api.production.surehub.io",
-        "/api/device/123/control",
+    add_api_json_response(
         "PUT",
-        aresponses.Response(
-            text='{"data": {"id": 123, "control": {}}, "pending": [{"request_id": "abc", "status_id": 5}]}',
-            status=200,
-            headers={"Content-Type": "application/json"},
-        ),
+        f"{device_endpoint}/control",
+        {"data": {"id": 123, "control": {}}, "pending": [{"request_id": "abc", "status_id": 5}]},
     )
 
     # Mock polling response (status changed to 0=completed)
-    aresponses.add(
-        "app-api.production.surehub.io",
-        "/api/household/7777/device/control/status",
+    add_api_json_response(
         "GET",
-        aresponses.Response(
-            text='{"results": [{"request_id": "abc", "status_id": 0}]}',
-            status=200,
-            headers={"Content-Type": "application/json"},
-        ),
+        f"{API_ENDPOINT_PRODUCTION}/household/7777/device/control/status",
+        {"results": []},
+        repeat=1,
     )
 
     # Mock device refresh
-    aresponses.add(
-        "app-api.production.surehub.io",
-        "/api/device/123",
+    add_api_json_response(
         "GET",
-        aresponses.Response(
-            text='{"data": {"id": 123, "control": {"bowls": null}, "status": {}, "household_id": 7777}}',
-            status=200,
-            headers={"Content-Type": "application/json"},
-        ),
+        device_endpoint,
+        {"data": {"id": 123, "control": {"bowls": None}, "status": {}, "household_id": 7777}},
+        repeat=1,
     )
 
     async with SurePetcareClient() as client:
-        device = mock_api_device
-        device.id = 123
-        device.household_id = 7777
-        device.controlCls = dict
-        device.statusCls = dict
-        device.refresh.return_value = Command("GET", "https://app-api.production.surehub.io/api/device/123")
+        device = FeederConnect({"id": 123, "household_id": 7777})
 
         cmd = Command(
             method="PUT",
-            endpoint="https://app-api.production.surehub.io/api/device/123/control",
+            endpoint=f"{device_endpoint}/control",
             device=device,
         )
         result = await client.api(cmd)
@@ -77,44 +95,37 @@ async def test_async_put_with_pending_and_polling(
 
 
 @pytest.mark.asyncio
-async def test_non_async_put_updates_device(aresponses: aresponses.ResponsesMockServer, mock_api_device):
+async def test_non_async_put_updates_device(add_api_json_response):
     """Test non-async PUT updates device control directly."""
+    device_endpoint = f"{API_ENDPOINT_PRODUCTION}/device/456"
+
     # Mock PUT response with completed status (status_id=0)
-    aresponses.add(
-        "app-api.production.surehub.io",
-        "/api/device/456/control",
+    add_api_json_response(
         "PUT",
-        aresponses.Response(
-            text=(
-                '{"data": {"id": 456, "control": {"bowls": {"type": 1}}, '
-                '"status": {"online": true}}, "pending": '
-                '[{"request_id": "xyz", "status_id": 0}]}'
-            ),
-            status=200,
-            headers={"Content-Type": "application/json"},
-        ),
+        f"{device_endpoint}/control",
+        {
+            "data": {
+                "id": 456,
+                "control": {"bowls": {"type": 1}},
+                "status": {"online": True},
+            },
+            "pending": [],
+        },
     )
 
     # Mock refresh endpoint
-    aresponses.add(
-        "app-api.production.surehub.io",
-        "/api/device/456",
+    add_api_json_response(
         "GET",
-        aresponses.Response(
-            text='{"data": {"id": 456, "control": {"bowls": {"type": 1}}, "status": {"online": true}}}',
-            status=200,
-            headers={"Content-Type": "application/json"},
-        ),
+        device_endpoint,
+        {"data": {"id": 456, "control": {"bowls": {"type": 1}}, "status": {"online": True}}},
     )
 
     async with SurePetcareClient() as client:
-        device = mock_api_device
-        device.id = 456
-        device.refresh.return_value = Command("GET", "https://app-api.production.surehub.io/api/device/456")
+        device = FeederConnect({"id": 456, "household_id": 7777})
 
         cmd = Command(
             method="PUT",
-            endpoint="https://app-api.production.surehub.io/api/device/456/control",
+            endpoint=f"{device_endpoint}/control",
             device=device,
         )
         result = await client.api(cmd)
@@ -122,55 +133,38 @@ async def test_non_async_put_updates_device(aresponses: aresponses.ResponsesMock
 
 
 @pytest.mark.asyncio
-async def test_async_post_with_device_refresh(aresponses: aresponses.ResponsesMockServer, mock_api_device):
+async def test_async_post_with_device_refresh(add_api_json_response):
     """Test async POST operation with pending results."""
+    device_endpoint = f"{API_ENDPOINT_PRODUCTION}/device/789"
+
     # Mock POST response with pending status
-    aresponses.add(
-        "app-api.production.surehub.io",
-        "/api/device/789/control",
+    add_api_json_response(
         "POST",
-        aresponses.Response(
-            text='{"data": {}, "pending": [{"request_id": "post1", "status_id": 5}]}',
-            status=200,
-            headers={"Content-Type": "application/json"},
-        ),
+        f"{device_endpoint}/control",
+        {"data": {}, "pending": [{"request_id": "post1", "status_id": 5}]},
     )
 
     # Mock polling response (completed)
-    aresponses.add(
-        "app-api.production.surehub.io",
-        "/api/household/8888/device/control/status",
+    add_api_json_response(
         "GET",
-        aresponses.Response(
-            text='{"results": [{"request_id": "post1", "status_id": 0}]}',
-            status=200,
-            headers={"Content-Type": "application/json"},
-        ),
+        f"{API_ENDPOINT_PRODUCTION}/household/8888/device/control/status",
+        {"results": []},
+        repeat=1,
     )
 
     # Mock device refresh
-    aresponses.add(
-        "app-api.production.surehub.io",
-        "/api/device/789",
+    add_api_json_response(
         "GET",
-        aresponses.Response(
-            text='{"data": {"id": 789, "control": {}, "status": {}, "household_id": 8888}}',
-            status=200,
-            headers={"Content-Type": "application/json"},
-        ),
+        device_endpoint,
+        {"data": {"id": 789, "control": {}, "status": {}, "household_id": 8888}},
     )
 
     async with SurePetcareClient() as client:
-        device = mock_api_device
-        device.id = 789
-        device.household_id = 8888
-        device.controlCls = dict
-        device.statusCls = dict
-        device.refresh.return_value = Command("GET", "https://app-api.production.surehub.io/api/device/789")
+        device = FeederConnect({"id": 789, "household_id": 8888})
 
         cmd = Command(
             method="POST",
-            endpoint="https://app-api.production.surehub.io/api/device/789/control",
+            endpoint=f"{device_endpoint}/control",
             device=device,
         )
         result = await client.api(cmd)
