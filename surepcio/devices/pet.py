@@ -152,12 +152,7 @@ class Pet(PetBase[Control, Status]):
 
         def parse(response: SurePetcareResponse) -> "Pet":
             if not response.data:
-                logger.error(
-                    "Pet %s - %s: no assigned devices returned.",
-                    self.id,
-                    self.name,
-                )
-                return self
+                raise NotLoadedError(f"No data returned for assigned devices of pet {self.id} - {self.name}")
             devices_list = [DevicePetTag(**item) for item in response.data.get("data", [])]
             self.status.devices = AssignedDevices(items=devices_list, count=len(devices_list))
             return self

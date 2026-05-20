@@ -96,8 +96,11 @@ class SurePetcareClient(AuthClient):
         else:
             # parse extracts domain data from the response; chain produces follow-up Commands to execute.
             result = command.parse(response) if command.parse is not None else response
-            if command.chain is not None and (follow_up := command.chain(result)):
-                result = await self.api(follow_up)
+            if command.chain is not None:
+                follow_up = command.chain(result)
+                # In case the chain returns None,
+                # we want to avoid passing that to api() which expects Command or list[Command]
+                result = await self.api(follow_up) if follow_up else []
 
         return result
 
