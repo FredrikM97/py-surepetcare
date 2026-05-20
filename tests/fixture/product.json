@@ -1,6 +1,6 @@
 {
     "GET": {
-        "https://app-api.production.surehub.io/api/product/1/device/2/control": {
+        "https://app-api.production.surehub.io/api/product/4/device/2/control": {
             "data": {
                 "bowls": {
                     "settings": [
