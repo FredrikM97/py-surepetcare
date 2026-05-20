@@ -80,6 +80,22 @@ def test_get_devices_skips_invalid_product() -> None:
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("device_names", [["household"]])
+async def test_get_pets_empty_household(
+    add_api_json_response, register_device_api_mocks, mock_devices
+) -> None:
+    """get_pets returns [] and does not crash when the API returns no pets."""
+    register_device_api_mocks(mock_devices)
+    add_api_json_response("GET", "/api/pet", {"data": []}, match_querystring=False)
+    async with SurePetcareClient() as client:
+        household: Household = await client.api(Household.get_household(7777))
+        pets: list[Pet] = await client.api(household.get_pets())
+
+    assert pets == []
+    assert household.data["pets"] == []
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("device_names", [["household"]])
 async def test_snapshot(snapshot: SnapshotAssertion, register_device_api_mocks, mock_devices) -> None:
     register_device_api_mocks(mock_devices)
     async with SurePetcareClient() as client:
