@@ -7,7 +7,7 @@ from .device import BaseStatus
 from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.devices.entities import BowlState
+from surepcio.devices.entities import BowlState, SurePetcareResponse
 from surepcio.entities.error_mixin import ImprovedErrorMixin
 from surepcio.enums import BowlPosition
 from surepcio.enums import BowlType
@@ -68,11 +68,11 @@ class FeederConnect(DeviceBase[Control, Status]):
         return [self._refresh_device_status(), self.properties()]
 
     def _refresh_device_status(self):
-        def parse(response) -> "FeederConnect":
-            if not response:
+        def parse(response: SurePetcareResponse) -> "FeederConnect":
+            if not response.data:
                 return self
-            self.status = self.statusCls(**{**self.status.model_dump(), **response["data"]})
-            self.control = self.controlCls(**{**self.control.model_dump(), **response["data"]})
+            self.status = self.statusCls(**{**self.status.model_dump(), **response.data["data"]})
+            self.control = self.controlCls(**{**self.control.model_dump(), **response.data["data"]})
 
             # Post-process bowl_status based on bowls.type
             bowls_type = None

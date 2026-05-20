@@ -6,7 +6,6 @@ from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.feeder_connect import FeederConnect
 from surepcio.security.exceptions import ApiError
-from tests.conftest import add_api_json_response
 from tests.conftest import object_snapshot
 
 
@@ -39,13 +38,13 @@ async def test_get_none_status(aresponses: aresponses.ResponsesMockServer, statu
     ],
 )
 async def test_api_error_for_various_statuses(
-    aresponses: aresponses.ResponsesMockServer,
+    add_api_json_response,
     snapshot: SnapshotAssertion,
     status: int,
     error_text: str,
 ):
     endpoint = "https://example.com/endpoint"
-    add_api_json_response(aresponses, "GET", endpoint, {"error": error_text}, status=status)
+    add_api_json_response("GET", endpoint, {"error": error_text}, status=status)
 
     async with SurePetcareClient() as client:
         with pytest.raises(ApiError) as exc_info:
@@ -56,13 +55,12 @@ async def test_api_error_for_various_statuses(
 
 
 @pytest.mark.asyncio
-async def test_async_put_with_pending_and_polling(aresponses: aresponses.ResponsesMockServer):
+async def test_async_put_with_pending_and_polling(add_api_json_response):
     """Test async PUT operation with pending results that completes via polling."""
     device_endpoint = f"{API_ENDPOINT_PRODUCTION}/device/123"
 
     # Mock PUT response with pending status (status_id=5)
     add_api_json_response(
-        aresponses,
         "PUT",
         f"{device_endpoint}/control",
         {"data": {"id": 123, "control": {}}, "pending": [{"request_id": "abc", "status_id": 5}]},
@@ -70,7 +68,6 @@ async def test_async_put_with_pending_and_polling(aresponses: aresponses.Respons
 
     # Mock polling response (status changed to 0=completed)
     add_api_json_response(
-        aresponses,
         "GET",
         f"{API_ENDPOINT_PRODUCTION}/household/7777/device/control/status",
         {"results": [{"request_id": "abc", "status_id": 0}]},
@@ -78,7 +75,6 @@ async def test_async_put_with_pending_and_polling(aresponses: aresponses.Respons
 
     # Mock device refresh
     add_api_json_response(
-        aresponses,
         "GET",
         device_endpoint,
         {"data": {"id": 123, "control": {"bowls": None}, "status": {}, "household_id": 7777}},
@@ -97,13 +93,12 @@ async def test_async_put_with_pending_and_polling(aresponses: aresponses.Respons
 
 
 @pytest.mark.asyncio
-async def test_non_async_put_updates_device(aresponses: aresponses.ResponsesMockServer):
+async def test_non_async_put_updates_device(add_api_json_response):
     """Test non-async PUT updates device control directly."""
     device_endpoint = f"{API_ENDPOINT_PRODUCTION}/device/456"
 
     # Mock PUT response with completed status (status_id=0)
     add_api_json_response(
-        aresponses,
         "PUT",
         f"{device_endpoint}/control",
         {
@@ -118,7 +113,6 @@ async def test_non_async_put_updates_device(aresponses: aresponses.ResponsesMock
 
     # Mock refresh endpoint
     add_api_json_response(
-        aresponses,
         "GET",
         device_endpoint,
         {"data": {"id": 456, "control": {"bowls": {"type": 1}}, "status": {"online": True}}},
@@ -137,13 +131,12 @@ async def test_non_async_put_updates_device(aresponses: aresponses.ResponsesMock
 
 
 @pytest.mark.asyncio
-async def test_async_post_with_device_refresh(aresponses: aresponses.ResponsesMockServer):
+async def test_async_post_with_device_refresh(add_api_json_response):
     """Test async POST operation with pending results."""
     device_endpoint = f"{API_ENDPOINT_PRODUCTION}/device/789"
 
     # Mock POST response with pending status
     add_api_json_response(
-        aresponses,
         "POST",
         f"{device_endpoint}/control",
         {"data": {}, "pending": [{"request_id": "post1", "status_id": 5}]},
@@ -151,7 +144,6 @@ async def test_async_post_with_device_refresh(aresponses: aresponses.ResponsesMo
 
     # Mock polling response (completed)
     add_api_json_response(
-        aresponses,
         "GET",
         f"{API_ENDPOINT_PRODUCTION}/household/8888/device/control/status",
         {"results": [{"request_id": "post1", "status_id": 0}]},
@@ -159,7 +151,6 @@ async def test_async_post_with_device_refresh(aresponses: aresponses.ResponsesMo
 
     # Mock device refresh
     add_api_json_response(
-        aresponses,
         "GET",
         device_endpoint,
         {"data": {"id": 789, "control": {}, "status": {}, "household_id": 8888}},

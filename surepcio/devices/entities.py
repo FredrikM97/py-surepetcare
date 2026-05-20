@@ -131,7 +131,6 @@ class SurePetcareResponse:
     status: int = 0
     reason: Optional[str] = None
 
-
 class BowlState(ImprovedErrorMixin):
     position: Optional[BowlPosition] = Field(default=None, alias="index")
     food_type: Optional[FoodType] = None

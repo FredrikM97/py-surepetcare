@@ -1,4 +1,3 @@
-import aresponses
 import pytest
 from syrupy.assertion import SnapshotAssertion
 
@@ -10,15 +9,14 @@ from surepcio.devices.feeder_connect import FeederConnect
 from surepcio.enums import BowlType
 from surepcio.enums import FoodType
 from tests.conftest import object_snapshot
-from tests.conftest import register_device_api_mocks
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("device_names", [["feeder_connect", "household"]])
 async def test_snapshot(
-    snapshot: SnapshotAssertion, aresponses: aresponses.ResponsesMockServer, mock_devices
+    snapshot: SnapshotAssertion, register_device_api_mocks, mock_devices
 ):
-    register_device_api_mocks(aresponses, mock_devices)
+    register_device_api_mocks(mock_devices)
     async with SurePetcareClient() as client:
         household: Household = await client.api(Household.get_household(7777))
         devices = await client.api(household.get_devices())
@@ -30,9 +28,9 @@ async def test_snapshot(
 @pytest.mark.asyncio
 @pytest.mark.parametrize("device_names", [["feeder_connect", "household"]])
 async def test_snapshot_set_bowls_command(
-    snapshot: SnapshotAssertion, aresponses: aresponses.ResponsesMockServer, mock_devices
+    snapshot: SnapshotAssertion, register_device_api_mocks, mock_devices
 ):
-    register_device_api_mocks(aresponses, mock_devices)
+    register_device_api_mocks(mock_devices)
     async with SurePetcareClient() as client:
         household: Household = await client.api(Household.get_household(7777))
         devices: list[FeederConnect] = await client.api(household.get_devices())
@@ -55,9 +53,9 @@ async def test_snapshot_set_bowls_command(
 @pytest.mark.asyncio
 @pytest.mark.parametrize("device_names", [["feeder_connect", "household"]])
 async def test_snapshot_get_functions(
-    snapshot: SnapshotAssertion, aresponses: aresponses.ResponsesMockServer, mock_devices
+    snapshot: SnapshotAssertion, register_device_api_mocks, mock_devices
 ):
-    register_device_api_mocks(aresponses, mock_devices)
+    register_device_api_mocks(mock_devices)
     async with SurePetcareClient() as client:
         household: Household = await client.api(Household.get_household(7777))
         devices: list[FeederConnect] = await client.api(household.get_devices())

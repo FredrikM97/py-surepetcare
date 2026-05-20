@@ -14,7 +14,6 @@ class Command:
         response_type: Optional[str] = None,
         callback: Optional[Callable] = None,
         reuse: bool = True,
-        full_response: bool = False,
         device: Optional[Any] = None,
     ):
         self.method = method
@@ -23,7 +22,6 @@ class Command:
         self.response_type = response_type
         self.callback = callback
         self.reuse = reuse
-        self.full_response = full_response
         self.device = device
 
     def __str__(self) -> str:

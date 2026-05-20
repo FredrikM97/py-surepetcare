@@ -11,7 +11,6 @@ from typer.testing import CliRunner
 
 from surepccli import app
 from surepccli.const import Envs
-from tests.conftest import register_device_api_mocks
 
 # Solves "RuntimeError: This event loop is already running"
 nest_asyncio.apply()
@@ -40,11 +39,11 @@ async def run_cli(args: list[str], input_text: str | None = None):
 
 
 @pytest.fixture
-def register_mocks(aresponses, mock_devices, device_names):
+def register_mocks(register_device_api_mocks, mock_devices, device_names):
     """
     Fixture to register device API mocks.
     """
-    register_device_api_mocks(aresponses, mock_devices)
+    register_device_api_mocks(mock_devices)
 
 
 @pytest.fixture

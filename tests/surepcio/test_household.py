@@ -1,28 +1,16 @@
-import aresponses
 import pytest
 from syrupy.assertion import SnapshotAssertion
 
 import surepcio
 from surepcio import Household
 from surepcio.client import SurePetcareClient
+from surepcio.command import Command
+from surepcio.devices.feeder_connect import FeederConnect
+from surepcio.devices.hub import Hub
+from surepcio.devices.pet import Pet
 from surepcio.enums import ProductId
 from tests.conftest import object_snapshot
-from tests.conftest import register_device_api_mocks
 
-
-# --- Helpers ---
-def make_pet_data():
-    return [
-        {"id": 1, "household_id": 1, "name": "Pet1", "tag_id": 123, "tag": {"id": 1, "tag": "123"}},
-        {"id": 2, "household_id": 1, "name": "Pet2", "tag_id": 123, "tag": {"id": 2, "tag": "123"}},
-    ]
-
-
-def make_device_data():
-    return [
-        {"id": 10, "household_id": 1, "name": "Hub1", "product_id": 1, "status": {"online": True}},
-        {"id": 11, "household_id": 1, "name": "Feeder1", "product_id": 4, "status": {"online": True}},
-    ]
 
 
 # --- Parametrized error/corner case tests ---
@@ -128,9 +116,9 @@ def test_get_devices_uses_cached():
 @pytest.mark.asyncio
 @pytest.mark.parametrize("device_names", [["household"]])
 async def test_snapshot(
-    snapshot: SnapshotAssertion, aresponses: aresponses.ResponsesMockServer, mock_devices
+    snapshot: SnapshotAssertion, register_device_api_mocks, mock_devices
 ):
-    register_device_api_mocks(aresponses, mock_devices)
+    register_device_api_mocks(mock_devices)
     async with SurePetcareClient() as client:
         household = await client.api(Household.get_households())
         object_snapshot(household, snapshot)
@@ -138,12 +126,66 @@ async def test_snapshot(
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("device_names", [["household", "product"]])
-async def test_get_product(snapshot, aresponses, mock_devices):
+async def test_get_product(snapshot, register_device_api_mocks, mock_devices):
     """Test fetching a product for a device using aresponses and household fixture."""
-    register_device_api_mocks(aresponses, mock_devices)
+    register_device_api_mocks(mock_devices)
     async with SurePetcareClient() as client:
         command = Household.get_product(1, 2)
         result = await client.api(command)
         assert "bowls" in result
         assert result["bowls"]["type"] == 4
         object_snapshot(result, snapshot)
+
+def test_fetch_pet_device_assignments_requires_both_loaded():
+    """Raises RuntimeError if pets or devices have not been loaded yet."""
+    h_no_pets = Household({"id": 1})
+    h_no_pets.data["devices"] = []
+    with pytest.raises(RuntimeError, match="Pets have not been loaded"):
+        h_no_pets.fetch_pet_device_assignments()
+
+    h_no_devices = Household({"id": 1})
+    h_no_devices.data["pets"] = []
+    with pytest.raises(RuntimeError, match="Devices have not been loaded"):
+        h_no_devices.fetch_pet_device_assignments()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("device_names", [["pet", "feeder_connect_without_tags", "household"]])
+async def test_fetch_pet_device_assignments(
+    register_device_api_mocks, mock_devices
+):
+    """Returns commands only for pets whose tag matches a device tag.
+
+    Hub has no pet tags and must be silently excluded without crashing.
+    Pet "Maui" (tag.id=60978) matches feeder device 269654 (tags[0].id=60978).
+    Pet "Fionna" (tag.id=1725049) has no match and is also excluded.
+    Commands are executed via the client to verify they are valid API calls.
+    """
+    register_device_api_mocks(mock_devices)
+    async with SurePetcareClient() as client:
+        household: Household = await client.api(Household.get_household(7777))
+        pets: list[Pet] = await client.api(household.get_pets())
+        devices: list[FeederConnect | Hub] = await client.api(household.get_devices())
+        
+        # Required otherwise devices will be skipped in fetch_pet_device_assignments
+        for device in devices:
+            await client.api(device.refresh())
+        commands: list[Command] = household.fetch_pet_device_assignments()
+        await client.api(commands)
+
+    matched_tag_ids: set[int] = {
+        tag.id
+        for device in devices
+        if device.control.tags
+        for tag in device.control.tags
+    }
+    matched_pets: list[Pet] = [p for p in pets if p.tag in matched_tag_ids]
+    excluded_pets: list[Pet] = [p for p in pets if p.tag not in matched_tag_ids]
+
+    assert len(excluded_pets) > 0, "Expected at least one pet to be excluded — test fixture may be missing a tagless device"
+    assert len(commands) == len(matched_pets)
+    assert len(commands) < len(pets)
+    for cmd in commands:
+        assert cmd.method == "GET"
+        assert "/tag/" in cmd.endpoint
+        assert "/device" in cmd.endpoint

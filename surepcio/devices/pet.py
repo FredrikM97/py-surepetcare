@@ -89,13 +89,12 @@ class Pet(PetBase[Control, Status]):
         return self.entity_info.photo.location
 
     def refresh(self) -> list[Command]:
-        """Refresh the pet's report data."""
-        # Important that fetch report is first to be updated!
-        return [self.fetch_report(), self.fetch_assigned_devices(), self.properties()]
+        """Refresh the pet's activity and status data."""
+        return [self.fetch_report(), self.properties()]
 
     def fetch_report(self) -> Command:
-        def parse(response) -> "Pet":
-            self.status = Status(**{**self.status.model_dump(), **response["data"]["status"]})
+        def parse(response: SurePetcareResponse) -> "Pet":
+            self.status = Status(**{**self.status.model_dump(), **response.data["data"]["status"]})
             return self
 
         return Command(
@@ -146,10 +145,9 @@ class Pet(PetBase[Control, Status]):
         """Fetch devices assigned to this pet."""
 
         def parse(response: SurePetcareResponse) -> "Pet":
-            if response.status == 403 or response.data is None:
-                logger.debug(
-                    "Pet %s - %s returned 403 when fetching assigned devices."
-                    "Could be due to missing assigned devices!",
+            if not response.data:
+                logger.error(
+                    "Pet %s - %s: no assigned devices returned.",
                     self.id,
                     self.name,
                 )
@@ -158,11 +156,11 @@ class Pet(PetBase[Control, Status]):
             self.status.devices = AssignedDevices(items=devices_list, count=len(devices_list))
             return self
 
+        # A 403 Forbidden response is returned by the API when the pet has no assigned devices.
         return Command(
             method="GET",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/tag/{self.tag}/device",
             callback=parse,
-            full_response=True,
         )
 
     def set_position(self, location: PetLocation) -> Command:
@@ -194,10 +192,12 @@ class Pet(PetBase[Control, Status]):
             device=self,
         )
 
-    def set_tag(self, device_id: int, action: ModifyDeviceTag) -> Command:
-        """Add device to pet."""
-        return Command(
-            action.value,
-            f"{API_ENDPOINT_V1}/device/{device_id}/tag/{self.tag}/async",
-            device=self,
-        )
+    def set_tag(self, device_id: int, action: ModifyDeviceTag) -> list[Command]:
+        """Add or remove a device tag on this pet, then refresh assigned devices."""
+        return [
+            Command(
+                action.value,
+                f"{API_ENDPOINT_V1}/device/{device_id}/tag/{self.tag}/async",
+            ),
+            self.fetch_assigned_devices(),
+        ]
