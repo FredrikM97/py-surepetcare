@@ -4,6 +4,31 @@ class AuthenticationError(Exception):
     pass
 
 
+class InvalidCommandError(ValueError):
+    """Raised when a Command is constructed or used incorrectly."""
+
+
+class InvalidResponseError(ValueError):
+    """Raised when an API response has an unexpected or unprocessable format."""
+
+
+class UnexpectedDataTypeError(InvalidResponseError):
+    """Raised when an API response field has an unexpected type.
+
+    Example: expected a dict under 'data' but received a list.
+    """
+
+    def __init__(self, field: str, expected: type, got: type) -> None:
+        super().__init__(f"Expected {expected.__name__} for '{field}' but got {got.__name__}")
+        self.field = field
+        self.expected = expected
+        self.got = got
+
+
+class NotLoadedError(RuntimeError):
+    """Raised when household data (pets, devices) is accessed before it has been fetched."""
+
+
 class ApiError(Exception):
     """Base exception for all API HTTP errors."""
 

@@ -4,7 +4,7 @@ from surepccli import app
 from tests.surepccli.conftest import list_all_typer_commands
 
 
-@pytest.mark.devices("pet", "household")
+@pytest.mark.devices("pet", "household", "pet_door", "poseidon_connect", "dual_scan_connect", "hub")
 @pytest.mark.cli_commands(
     ["pet", "list", "--household-id", "7777"],
     ["pet", "last-activity", "--household-id", "7777", "--pet-id", "123455"],

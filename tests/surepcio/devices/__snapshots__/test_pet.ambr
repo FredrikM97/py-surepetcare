@@ -58,35 +58,8 @@
         'where': None,
       }),
       'devices': dict({
-        'count': 3,
+        'count': 0,
         'items': list([
-          dict({
-            'created_at': datetime.datetime(2025, 9, 17, 17, 12, 47, tzinfo=TzInfo(0)),
-            'device_id': None,
-            'id': 269654,
-            'index': 2,
-            'profile': <PetDeviceLocationProfile.NO_RESTRICTION: 2>,
-            'updated_at': datetime.datetime(2025, 9, 17, 17, 12, 47, tzinfo=TzInfo(0)),
-            'version': 1,
-          }),
-          dict({
-            'created_at': datetime.datetime(2025, 7, 13, 11, 14, 42, tzinfo=TzInfo(0)),
-            'device_id': None,
-            'id': 271836,
-            'index': 2,
-            'profile': <PetDeviceLocationProfile.NO_RESTRICTION: 2>,
-            'updated_at': datetime.datetime(2025, 7, 13, 11, 14, 42, tzinfo=TzInfo(0)),
-            'version': 1,
-          }),
-          dict({
-            'created_at': datetime.datetime(2025, 4, 25, 19, 0, 40, tzinfo=TzInfo(0)),
-            'device_id': None,
-            'id': 1181149,
-            'index': 1,
-            'profile': <PetDeviceLocationProfile.NO_RESTRICTION: 2>,
-            'updated_at': datetime.datetime(2025, 4, 25, 19, 0, 40, tzinfo=TzInfo(0)),
-            'version': 1,
-          }),
         ]),
       }),
       'drinking': dict({
@@ -173,17 +146,8 @@
         'where': <PetLocation.INSIDE: 1>,
       }),
       'devices': dict({
-        'count': 1,
+        'count': 0,
         'items': list([
-          dict({
-            'created_at': datetime.datetime(2025, 9, 17, 17, 12, 47, tzinfo=TzInfo(0)),
-            'device_id': None,
-            'id': 269654,
-            'index': 2,
-            'profile': <PetDeviceLocationProfile.NO_RESTRICTION: 2>,
-            'updated_at': datetime.datetime(2025, 9, 17, 17, 12, 47, tzinfo=TzInfo(0)),
-            'version': 1,
-          }),
         ]),
       }),
       'drinking': dict({

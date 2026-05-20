@@ -8,14 +8,11 @@ from tests.conftest import object_snapshot
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("device_names", [["hub", "household"]])
-async def test_snapshot(
-    snapshot: SnapshotAssertion, register_device_api_mocks, mock_devices
-):
+async def test_snapshot(snapshot: SnapshotAssertion, register_device_api_mocks, mock_devices):
     register_device_api_mocks(mock_devices)
     async with SurePetcareClient() as client:
         household = await client.api(Household.get_household(7777))
 
         devices = await client.api(household.get_devices())
         for device in devices:
-            await client.api(device.refresh())
             object_snapshot(device, snapshot)

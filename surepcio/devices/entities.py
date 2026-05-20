@@ -127,9 +127,10 @@ class Locking(ImprovedErrorMixin):
 
 @dataclass
 class SurePetcareResponse:
-    data: Optional[dict] = None
+    data: Optional[dict] | None = None
     status: int = 0
     reason: Optional[str] = None
+
 
 class BowlState(ImprovedErrorMixin):
     position: Optional[BowlPosition] = Field(default=None, alias="index")

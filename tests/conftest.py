@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from unittest.mock import ANY, MagicMock
 from urllib.parse import urlparse
-
+import warnings
 import aresponses
 import pytest
 from syrupy.assertion import SnapshotAssertion
@@ -81,7 +81,8 @@ class ApiMockServer:
     def _existing_routes(self, host: str, path: str, method: str) -> list:
         """Return all registered routes that match the given host, path, and method."""
         return [
-            (r, res) for r, res in self._server._responses
+            (r, res)
+            for r, res in self._server._responses
             if r.host_pattern == host.lower()
             and r.path_pattern == path
             and r.method_pattern == method.lower()
@@ -94,21 +95,21 @@ class ApiMockServer:
         payload: dict,
         status: int = 200,
         match_querystring: bool = False,
-        repeat: int = 1,
+        repeat: int = 50,
         overwrite: bool = False,
     ) -> None:
         host, path = self._parse_endpoint(endpoint)
         existing: list = self._existing_routes(host, path, method)
 
-        if existing and not overwrite:
-            raise ValueError(
-                f"Route already registered: {method} {host}{path}. "
-                "Pass overwrite=True to replace it."
-            )
         if overwrite:
             self._server._responses[:] = [
                 (r, res) for r, res in self._server._responses if (r, res) not in existing
             ]
+        elif existing:
+            warnings.warn(
+                f"Route already registered: {method} {host}{path} — queuing another response.",
+                stacklevel=2,
+            )
         self._server.add(
             host,
             path,
@@ -129,7 +130,8 @@ def register_device_api_mocks(add_api_json_response):
         for method_dict in mock_devices:
             for method, device in method_dict.items():
                 for url, payload in device.items():
-                    add_api_json_response(method, url, payload, match_querystring=True, repeat=20)
+                    add_api_json_response(method, url, payload, match_querystring=True)
+
     return _register
 
 

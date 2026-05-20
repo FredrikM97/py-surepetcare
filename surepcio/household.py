@@ -6,6 +6,7 @@ from surepcio.devices import load_device_class
 from surepcio.devices.entities import SurePetcareResponse
 from surepcio.devices.pet import Pet
 from surepcio.enums import ProductId
+from surepcio.security.exceptions import NotLoadedError, UnexpectedDataTypeError
 
 logger = logging.getLogger(__name__)
 
@@ -21,61 +22,72 @@ class Household:
     def get_pets(self) -> Command:
         """Get all pets in the household."""
 
-        def parse(response: SurePetcareResponse):
+        def chain(response: SurePetcareResponse) -> list[Command]:
             if not response.data:
-                return self.data.get("pets", [])
+                raise NotLoadedError("No data returned for get_pets()")
+            if not isinstance(response.data["data"], list):
+                raise UnexpectedDataTypeError("data", list, type(response.data["data"]))
+
             pets = [Pet(p, timezone=self.timezone) for p in response.data["data"]]
             self.data["pets"] = pets
-            return pets
+            cmds: list[Command] = [pet.refresh() for pet in pets]
+            # Helper for now to avoid need to manually call it
+            if self.data.get("devices") is not None:
+                cmds.extend(self.fetch_pet_device_assignments())
+            return cmds
 
         return Command(
             method="GET",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/pet",
             params={"HouseholdId": self.id},
-            callback=parse,
+            chain=lambda response: chain(response),
         )
 
     def get_devices(self) -> Command:
         """Get all devices in the household."""
 
-        def parse(response: SurePetcareResponse):
+        def chain(response: SurePetcareResponse) -> list[Command]:
             if not response.data:
-                logger.info("Returning cached devices")
-                return self.data.get("devices", [])
-            if isinstance(response.data["data"], list):
-                devices = []
-                for device in response.data["data"]:
-                    if device["product_id"] in set(ProductId):
-                        devices.append(
-                            load_device_class(device["product_id"])(device, timezone=self.timezone)
-                        )
-                self.data["devices"] = devices
-                return devices
-            return []
+                raise NotLoadedError("No data returned for get_devices()")
+            if not isinstance(response.data["data"], list):
+                raise UnexpectedDataTypeError("data", list, type(response.data["data"]))
+
+            devices = []
+            for device in response.data["data"]:
+                device_cls = load_device_class(device["product_id"])
+                if device_cls is not None:
+                    devices.append(device_cls(device, timezone=self.timezone))
+            self.data["devices"] = devices
+            cmds: list[Command] = [d.refresh() for d in devices]
+            # Helper for now to avoid need to manually call it
+            if self.data.get("pets") is not None:
+                cmds.extend(self.fetch_pet_device_assignments())
+            return cmds
 
         return Command(
             method="GET",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/device",
             params={"HouseholdId": self.id},
-            callback=parse,
+            chain=lambda response: chain(response),
         )
 
     @staticmethod
     def get_households() -> Command:
         """Get all households for the user."""
 
-        def parse(response: SurePetcareResponse):
+        def parse(response: SurePetcareResponse) -> list["Household"]:
             if not response.data:
-                return []
-            if isinstance(response.data["data"], list):
-                return [Household(h) for h in response.data["data"]]
-            return []
+                raise NotLoadedError("No data returned for get_households()")
+            if not isinstance(response.data["data"], list):
+                raise UnexpectedDataTypeError("data", list, type(response.data["data"]))
+
+            return [Household(h) for h in response.data["data"]]
 
         return Command(
             method="GET",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/household",
             params={},
-            callback=parse,
+            parse=parse,
             reuse=False,
         )
 
@@ -83,17 +95,17 @@ class Household:
     def get_household(household_id: int) -> Command:
         """Get a specific household by ID."""
 
-        def parse(response: SurePetcareResponse):
+        def parse(response: SurePetcareResponse) -> "Household":
             if not response.data:
-                return None
-            if isinstance(response.data["data"], dict):
-                return Household(response.data["data"])
-            return {}
+                raise NotLoadedError(f"No data returned for get_household({household_id})")
+            if not isinstance(response.data["data"], dict):
+                raise UnexpectedDataTypeError("data", dict, type(response.data["data"]))
+            return Household(response.data["data"])
 
         return Command(
             method="GET",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/household/{household_id}",
-            callback=parse,
+            parse=parse,
             reuse=False,
         )
 
@@ -101,17 +113,17 @@ class Household:
     def get_product(product_id: ProductId, device_id: int) -> Command:
         """Get control settings for a specific product and device ID."""
 
-        def parse(response: SurePetcareResponse):
+        def parse(response: SurePetcareResponse) -> dict:
             if not response.data:
-                return None
-            if isinstance(response.data["data"], dict):
-                return response.data["data"]
-            return {}
+                raise NotLoadedError("No data returned for get_product()")
+            if not isinstance(response.data["data"], dict):
+                raise UnexpectedDataTypeError("data", dict, type(response.data["data"]))
+            return response.data["data"]
 
         return Command(
             method="GET",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/product/{product_id}/device/{device_id}/control",
-            callback=parse,
+            parse=parse,
             reuse=False,
         )
 
@@ -128,9 +140,9 @@ class Household:
         devices = self.data.get("devices")
 
         if pets is None:
-            raise RuntimeError("Pets have not been loaded. Call and await get_pets() first.")
+            raise NotLoadedError("Pets have not been loaded. Call and await get_pets() first.")
         if devices is None:
-            raise RuntimeError("Devices have not been loaded. Call and await get_devices() first.")
+            raise NotLoadedError("Devices have not been loaded. Call and await get_devices() first.")
 
         device_tag_ids: set[int] = set()
         for device in devices:
@@ -138,7 +150,7 @@ class Household:
                 for tag in device.control.tags:
                     device_tag_ids.add(tag.id)
             else:
-                logger.warning(
+                logger.debug(
                     "Device %s (%s) has no pet tags — skipping pet assignment lookup.",
                     device.id,
                     device.name,
@@ -162,5 +174,5 @@ class Household:
             method="GET",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/timeline/household/{self.id}",
             params=params,
-            callback=parse,
+            parse=parse,
         )

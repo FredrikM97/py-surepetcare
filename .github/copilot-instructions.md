@@ -48,3 +48,24 @@ async def test_something(register_device_api_mocks, mock_devices):
 ### Remove unused imports and dead code
 Delete any import, helper function, or variable that is no longer referenced after a change.
 Do not leave orphaned imports or stubs behind.
+
+### Always add return type annotations
+Every function and method must have an explicit return type annotation. Do not leave return types empty.
+This applies to `parse` and `chain` closures inside `Command` constructions too.
+
+## Error Handling
+
+### Use custom exceptions from `surepcio.security.exceptions`
+Never raise bare `ValueError` or `RuntimeError` for domain errors. Use or extend the established hierarchy:
+
+- `InvalidCommandError(ValueError)` — a `Command` was constructed or used incorrectly (e.g. both `parse` and `chain` set).
+- `InvalidResponseError(ValueError)` — API response has an unexpected or unprocessable format.
+- `UnexpectedDataTypeError(InvalidResponseError)` — a specific response field has the wrong type. Constructed with `(field, expected_type, actual_type)`:
+  ```python
+  raise UnexpectedDataTypeError("data", dict, type(response.data["data"]))
+  ```
+- `NotLoadedError(RuntimeError)` — household data (pets, devices) accessed before it was fetched.
+- `AuthenticationError` — authentication failures.
+- `ApiError` — HTTP-level API errors (method, endpoint, status, reason).
+
+Add new subclasses to `surepcio/security/exceptions.py` when an existing class is too broad.

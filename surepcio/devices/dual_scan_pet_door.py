@@ -46,7 +46,7 @@ class DualScanPetDoor(DoorDeviceBase[Control, Status]):
         return Command(
             method="GET",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}",
-            callback=parse,
+            parse=parse,
         )
 
     def set_curfew(self, curfew: list[Curfew]) -> Command:

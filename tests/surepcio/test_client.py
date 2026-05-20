@@ -70,7 +70,8 @@ async def test_async_put_with_pending_and_polling(add_api_json_response):
     add_api_json_response(
         "GET",
         f"{API_ENDPOINT_PRODUCTION}/household/7777/device/control/status",
-        {"results": [{"request_id": "abc", "status_id": 0}]},
+        {"results": []},
+        repeat=1,
     )
 
     # Mock device refresh
@@ -78,6 +79,7 @@ async def test_async_put_with_pending_and_polling(add_api_json_response):
         "GET",
         device_endpoint,
         {"data": {"id": 123, "control": {"bowls": None}, "status": {}, "household_id": 7777}},
+        repeat=1,
     )
 
     async with SurePetcareClient() as client:
@@ -146,7 +148,8 @@ async def test_async_post_with_device_refresh(add_api_json_response):
     add_api_json_response(
         "GET",
         f"{API_ENDPOINT_PRODUCTION}/household/8888/device/control/status",
-        {"results": [{"request_id": "post1", "status_id": 0}]},
+        {"results": []},
+        repeat=1,
     )
 
     # Mock device refresh

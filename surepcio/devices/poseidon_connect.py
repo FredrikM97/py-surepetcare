@@ -42,7 +42,7 @@ class PoseidonConnect(DeviceBase[Control, Status]):
         return Command(
             method="GET",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}",
-            callback=parse,
+            parse=parse,
         )
 
     @property

@@ -12,6 +12,7 @@ from surepcio.const import API_ENDPOINT_V1
 from surepcio.devices.entities import DevicePetTag
 from surepcio.devices.entities import SurePetcareResponse
 from surepcio.entities.error_mixin import ImprovedErrorMixin
+from surepcio.security.exceptions import NotLoadedError
 from surepcio.enums import ModifyDeviceTag
 from surepcio.enums import PetDeviceLocationProfile
 from surepcio.enums import PetLocation
@@ -88,19 +89,24 @@ class Pet(PetBase[Control, Status]):
             return None
         return self.entity_info.photo.location
 
-    def refresh(self) -> list[Command]:
+    def refresh(self) -> Command:
         """Refresh the pet's activity and status data."""
-        return [self.fetch_report(), self.properties()]
+        return self.fetch_report()
 
     def fetch_report(self) -> Command:
         def parse(response: SurePetcareResponse) -> "Pet":
+            if not response.data:
+                raise NotLoadedError(
+                    f"No data returned for pet {self.entity_info.id} - {self.entity_info.name}"
+                )
             self.status = Status(**{**self.status.model_dump(), **response.data["data"]["status"]})
+            self.status.last_activity = self.last_activity()
             return self
 
         return Command(
             method="GET",
             endpoint=(f"{API_ENDPOINT_PRODUCTION}/pet/{self.id}"),
-            callback=parse,
+            parse=parse,
         )
 
     def properties(self) -> Command:
@@ -110,7 +116,7 @@ class Pet(PetBase[Control, Status]):
             self.status.last_activity = self.last_activity()
             return self
 
-        return Command(callback=update_properties)
+        return Command(parse=update_properties)
 
     @property
     def product(self) -> ProductId:
@@ -160,7 +166,7 @@ class Pet(PetBase[Control, Status]):
         return Command(
             method="GET",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/tag/{self.tag}/device",
-            callback=parse,
+            parse=parse,
         )
 
     def set_position(self, location: PetLocation) -> Command:
@@ -190,14 +196,15 @@ class Pet(PetBase[Control, Status]):
             endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{device_id}/tag/{self.tag}/async",
             params=data,
             device=self,
+            chain=lambda _: self.fetch_assigned_devices(),
         )
 
     def set_tag(self, device_id: int, action: ModifyDeviceTag) -> list[Command]:
         """Add or remove a device tag on this pet, then refresh assigned devices."""
         return [
             Command(
-                action.value,
-                f"{API_ENDPOINT_V1}/device/{device_id}/tag/{self.tag}/async",
+                method=action.value,
+                endpoint=f"{API_ENDPOINT_V1}/device/{device_id}/tag/{self.tag}/async",
             ),
             self.fetch_assigned_devices(),
         ]
