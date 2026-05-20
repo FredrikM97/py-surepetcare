@@ -12,8 +12,6 @@ from syrupy.assertion import SnapshotAssertion
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from tests import FIXTURES
 
-PRODUCTION_API_HOST = urlparse(API_ENDPOINT_PRODUCTION).netloc
-
 
 def _load_device(device_name: str) -> dict:
     path = Path(f"tests/fixture/{device_name}.json")
@@ -76,7 +74,7 @@ class ApiMockServer:
             if parsed.query:
                 path += "?" + parsed.query
             return parsed.netloc, path
-        return PRODUCTION_API_HOST, endpoint
+        return urlparse(API_ENDPOINT_PRODUCTION).netloc, endpoint
 
     def _existing_routes(self, host: str, path: str, method: str) -> list:
         """Return all registered routes that match the given host, path, and method."""
