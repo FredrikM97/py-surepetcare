@@ -111,6 +111,7 @@ async def test_close_with_and_without_session():
     # With session
     await client.set_session()
     await client.close()
+    assert client.session is not None
     assert client.session.closed
 
 
