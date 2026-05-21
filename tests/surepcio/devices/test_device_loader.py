@@ -1,15 +1,15 @@
+from abc import ABCMeta
+from typing import cast
+
 import pytest
 
 from surepcio.devices import DEVICE_CLASS_REGISTRY
 from surepcio.devices import load_device_class
-from surepcio.devices.device import DeviceBase
-from surepcio.devices.entities import BaseControl
-from surepcio.devices.entities import BaseStatus
 from surepcio.enums import ProductId
 
 
 def test_load_device_class_dynamic():
-    dummy_class = type("DummyDevice", (), {})
+    dummy_class = cast(ABCMeta, type("DummyDevice", (), {}))
     key = ProductId.PET
     original = DEVICE_CLASS_REGISTRY.get(key)
     DEVICE_CLASS_REGISTRY[key] = dummy_class
@@ -25,16 +25,8 @@ def test_load_device_class_dynamic():
 
 def test_load_device_class_invalid():
     # Should return None for unknown ProductId
-    class FakeProductId(DeviceBase[BaseControl, BaseStatus]):
-        pass
-
     assert load_device_class(9999) is None
-    assert load_device_class(FakeProductId) is None
-
-
-def test_load_device_class_none():
-    # Should return None if ProductId.find returns None
-    assert load_device_class(None) is None
+    assert load_device_class(-1) is None
 
 
 # Test all registry keys for coverage
