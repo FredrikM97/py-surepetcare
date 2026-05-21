@@ -109,15 +109,6 @@ class Pet(PetBase[Control, Status]):
             parse=parse,
         )
 
-    def properties(self) -> Command:
-        """Update status properties with last activity data."""
-
-        def update_properties(_) -> "Pet":
-            self.status.last_activity = self.last_activity()
-            return self
-
-        return Command(parse=update_properties)
-
     @property
     def product(self) -> ProductId:
         return ProductId.PET
@@ -190,7 +181,7 @@ class Pet(PetBase[Control, Status]):
             method="PUT",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{device_id}/tag/{self.tag}/async",
             params=data,
-            device=self,
+            household_id=self.household_id,
             chain=lambda _: self.fetch_assigned_devices(),
         )
 
@@ -200,6 +191,7 @@ class Pet(PetBase[Control, Status]):
             Command(
                 method=action.value,
                 endpoint=f"{API_ENDPOINT_V1}/device/{device_id}/tag/{self.tag}/async",
+                household_id=self.household_id,
             ),
             self.fetch_assigned_devices(),
         ]

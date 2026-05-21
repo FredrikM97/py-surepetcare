@@ -9,6 +9,8 @@ from surepcio.devices.entities import SurePetcareResponse
 from surepcio.enums import RequestStatus
 from surepcio.security.auth import AuthClient
 from surepcio.security.exceptions import ApiError
+from surepcio.security.exceptions import InvalidCommandError
+from surepcio.security.exceptions import UnexpectedDataTypeError
 
 logger = logging.getLogger(__name__)
 
@@ -69,9 +71,6 @@ class SurePetcareClient(AuthClient):
         return await self.handle_command(command)
 
     async def handle_command(self, command: Command) -> Any:
-        if command.method is None:
-            raise ValueError("Command missing HTTP method")
-
         # reuse headers if command.reuse is True, otherwise generate new headers for this request
         headers = self._generate_headers(headers=self.headers(command.endpoint) if command.reuse else {})
 
@@ -90,40 +89,40 @@ class SurePetcareClient(AuthClient):
             response.data,
         )
 
-        # Async commands are completed via watcher polling; result is the refreshed device state.
+        # Async commands are completed via watcher polling before parse/chain executes.
         if bool(isinstance(response.data, dict) and response.data.get("pending")):
-            result = await self._watcher_task(response.data, command.device)
-        else:
-            # parse extracts domain data from the response; chain produces follow-up Commands to execute.
-            result = command.parse(response) if command.parse is not None else response
-            if command.chain is not None:
-                follow_up = command.chain(result)
-                # In case the chain returns None,
-                # we want to avoid passing that to api() which expects Command or list[Command]
-                result = await self.api(follow_up) if follow_up else []
+            await self._watcher_task(response.data, command.household_id)
+
+        # parse extracts domain data from the response; chain produces follow-up Commands to execute.
+        result = command.parse(response) if command.parse is not None else response
+        if command.chain is not None:
+            follow_up = command.chain(result)
+            # In case the chain returns None,
+            # we want to avoid passing that to api() which expects Command or list[Command]
+            result = await self.api(follow_up) if follow_up else []
 
         return result
 
     async def _watcher_task(
         self,
         response_data: dict[Any, Any] | None,
-        device_obj,
+        household_id: int | None,
         timeout_sec: int = 30,
     ) -> Any:
         """Poll until tracked requests complete, then return the refreshed device state."""
         remaining_ids = self._tracked_pending_ids(response_data)
         if not remaining_ids:
             raise ValueError("Watcher task invoked with no pending requests to watch.")
-        if device_obj is None:
-            raise ValueError("Watcher task requires a device object to refresh after completion.")
+        if household_id is None:
+            raise InvalidCommandError("Watcher task requires household_id to poll pending request status.")
 
         logger.info("Waiting for %d request(s): %s", len(remaining_ids), remaining_ids)
 
         async for _ in poll_with_backoff(timeout=timeout_sec):
-            remaining_ids &= await self._poll_pending_ids(device_obj)
+            remaining_ids &= await self._poll_pending_ids(household_id)
             logger.debug("%d request(s) still pending", len(remaining_ids))
             if not remaining_ids:
-                return await self.api(device_obj.refresh())
+                return
         else:
             raise TimeoutError(
                 f"Watcher timed out with {len(remaining_ids)} request(s) still pending: {remaining_ids}"
@@ -137,22 +136,22 @@ class SurePetcareClient(AuthClient):
             return set()
         return {request_id for item in pending if (request_id := item.get("request_id"))}
 
-    async def _poll_pending_ids(self, device_obj) -> set[str]:
+    async def _poll_pending_ids(self, household_id: int) -> set[str]:
         """Fetch the latest control status and return request IDs still in progress."""
 
         def parse(response: SurePetcareResponse) -> set[str]:
             if not isinstance(response.data, dict):
                 raise RuntimeError("Expected control status payload to be a dict.")
-            entries = response.data.get("data") or response.data.get("results")
+            data_entries = response.data.get("data")
+            entries = data_entries if data_entries is not None else response.data.get("results")
             if not isinstance(entries, list):
-                raise RuntimeError("Expected control status entries to be a list.")
+                raise UnexpectedDataTypeError("data/results", list, type(entries))
             return {item["request_id"] for item in entries if isinstance(item, dict) and "request_id" in item}
 
         return await self.api(
             Command(
                 method="GET",
-                endpoint=f"{API_ENDPOINT_PRODUCTION}/household/{device_obj.household_id}"
-                "/device/control/status",
+                endpoint=f"{API_ENDPOINT_PRODUCTION}/household/{household_id}" "/device/control/status",
                 params={"status": RequestStatus.not_completed()},
                 parse=parse,
             )

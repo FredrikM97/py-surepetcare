@@ -101,7 +101,7 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
         return Command(
             method=action.value,
             endpoint=f"{API_ENDPOINT_V1}/device/{self.id}/tag/{tag_id}/async",
-            device=self,
+            household_id=self.household_id,
             chain=lambda _: self.refresh(),
         )
 
@@ -111,7 +111,7 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
             method="PUT",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}/control/async",
             params=self.controlCls(**control_settings).model_dump(),
-            device=self,
+            household_id=self.household_id,
             chain=lambda _: self.refresh(),
         )
 
