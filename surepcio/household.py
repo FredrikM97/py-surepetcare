@@ -32,8 +32,6 @@ class Household:
             self.data["pets"] = pets
             cmds: list[Command] = [pet.refresh() for pet in pets]
             # Helper for now to avoid need to manually call it
-            if self.data.get("devices") is not None:
-                cmds.extend(self.fetch_pet_device_assignments())
             return cmds
 
         return Command(
@@ -60,8 +58,7 @@ class Household:
             self.data["devices"] = devices
             cmds: list[Command] = [d.refresh() for d in devices]
             # Helper for now to avoid need to manually call it
-            if self.data.get("pets") is not None:
-                cmds.extend(self.fetch_pet_device_assignments())
+
             return cmds
 
         return Command(
