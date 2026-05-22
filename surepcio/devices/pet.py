@@ -189,7 +189,8 @@ class Pet(PetBase[Control, Status]):
         """Add or remove a device tag on this pet.
 
         Add operations refresh assigned devices from the API.
-        Remove operations update local assigned-device cache without forcing a fetch,
+        Remove operations refresh assigned devices only when another assignment should
+        still remain. Removing the last assignment updates the local cache directly,
         because the API can return an error when no assignments remain.
         """
 
@@ -199,14 +200,17 @@ class Pet(PetBase[Control, Status]):
             self.status.devices = AssignedDevices(items=filtered_items, count=len(filtered_items))
             return self
 
+        assigned_device_count: int = max(self.status.devices.count, len(self.status.devices.items))
+        should_refresh_assigned_devices: bool = action == ModifyDeviceTag.ADD or assigned_device_count > 1
+
         update_command: Command = Command(
             method=action.value,
             endpoint=f"{API_ENDPOINT_V1}/device/{device_id}/tag/{self.tag}/async",
             household_id=self.household_id,
-            parse=parse_remove if action == ModifyDeviceTag.REMOVE else None,
+            parse=parse_remove if not should_refresh_assigned_devices else None,
         )
 
-        if action == ModifyDeviceTag.REMOVE:
-            return [update_command]
+        if should_refresh_assigned_devices:
+            return [update_command, self.fetch_assigned_devices()]
 
-        return [update_command, self.fetch_assigned_devices()]
+        return [update_command]
