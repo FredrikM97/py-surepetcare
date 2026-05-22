@@ -153,7 +153,16 @@ class Household:
                     device.name,
                 )
 
-        return [pet.fetch_assigned_devices() for pet in pets if pet.tag in device_tag_ids]
+        commands: list[Command] = []
+        for pet in pets:
+            if pet.tag in device_tag_ids:
+                commands.append(pet.fetch_assigned_devices())
+            else:
+                # Dummy to handle when pet has no assigned devices
+                pet.status.devices.items = []
+                pet.status.devices.count = 0
+
+        return commands
 
     def get_timeline(self, since_id: int | None = None, before_id: int | None = None) -> Command:
         def parse(response: SurePetcareResponse):

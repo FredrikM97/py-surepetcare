@@ -4,7 +4,7 @@ from syrupy.assertion import SnapshotAssertion
 from surepcio import Household
 from surepcio.client import SurePetcareClient
 from surepcio.command import Command
-from surepcio.devices.entities import SurePetcareResponse
+from surepcio.devices.entities import DevicePetTag, SurePetcareResponse
 from surepcio.devices.feeder_connect import FeederConnect
 from surepcio.devices.hub import Hub
 from surepcio.devices.pet import Pet
@@ -143,17 +143,27 @@ async def test_fetch_pet_device_assignments(register_device_api_mocks, mock_devi
         pets: list[Pet] = await client.api(household.get_pets())
         devices: list[FeederConnect | Hub] = await client.api(household.get_devices())
 
-    matched_tag_ids: set[int] = {
-        tag.id
-        for device in devices
-        if device.control.tags
-        for tag in device.control.tags
-        if tag.id is not None
-    }
-    matched_pets: list[Pet] = [p for p in pets if p.tag in matched_tag_ids]
-    excluded_pets: list[Pet] = [p for p in pets if p.tag not in matched_tag_ids]
+        matched_tag_ids: set[int] = {
+            tag.id
+            for device in devices
+            if device.control.tags
+            for tag in device.control.tags
+            if tag.id is not None
+        }
+        matched_pets: list[Pet] = [p for p in pets if p.tag in matched_tag_ids]
+        excluded_pets: list[Pet] = [p for p in pets if p.tag not in matched_tag_ids]
 
-    assert len(excluded_pets) > 0, "Expected at least one excluded pet — check fixture tags"
-    assert 0 < len(matched_pets) < len(pets)
-    for pet in matched_pets:
-        assert pet.status.devices is not None
+        assert len(excluded_pets) > 0, "Expected at least one excluded pet — check fixture tags"
+        assert 0 < len(matched_pets) < len(pets)
+
+        for pet in excluded_pets:
+            pet.status.devices.items = [DevicePetTag(id=999)]
+            pet.status.devices.count = 1
+
+        commands: list[Command] = household.fetch_pet_device_assignments()
+        assert len(commands) == len(matched_pets)
+        await client.api(commands)
+
+    for pet in excluded_pets:
+        assert pet.status.devices.items == []
+        assert pet.status.devices.count == 0

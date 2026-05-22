@@ -186,12 +186,27 @@ class Pet(PetBase[Control, Status]):
         )
 
     def set_tag(self, device_id: int, action: ModifyDeviceTag) -> list[Command]:
-        """Add or remove a device tag on this pet, then refresh assigned devices."""
-        return [
-            Command(
-                method=action.value,
-                endpoint=f"{API_ENDPOINT_V1}/device/{device_id}/tag/{self.tag}/async",
-                household_id=self.household_id,
-            ),
-            self.fetch_assigned_devices(),
-        ]
+        """Add or remove a device tag on this pet.
+
+        Add operations refresh assigned devices from the API.
+        Remove operations update local assigned-device cache without forcing a fetch,
+        because the API can return an error when no assignments remain.
+        """
+
+        def parse_remove(_response: SurePetcareResponse) -> "Pet":
+            current_items: list[DevicePetTag] = self.status.devices.items
+            filtered_items: list[DevicePetTag] = [item for item in current_items if item.id != device_id]
+            self.status.devices = AssignedDevices(items=filtered_items, count=len(filtered_items))
+            return self
+
+        update_command: Command = Command(
+            method=action.value,
+            endpoint=f"{API_ENDPOINT_V1}/device/{device_id}/tag/{self.tag}/async",
+            household_id=self.household_id,
+            parse=parse_remove if action == ModifyDeviceTag.REMOVE else None,
+        )
+
+        if action == ModifyDeviceTag.REMOVE:
+            return [update_command]
+
+        return [update_command, self.fetch_assigned_devices()]

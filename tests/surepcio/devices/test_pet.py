@@ -100,6 +100,30 @@ async def test_set_tag_add_uses_client_put(register_device_api_mocks, mock_devic
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("device_names", [["pet", "household"]])
+async def test_set_tag_remove_cleans_local_assignments(register_device_api_mocks, mock_devices) -> None:
+    register_device_api_mocks(mock_devices)
+    async with SurePetcareClient() as client:
+        household: Household = await client.api(Household.get_household(7777))
+        pets: list[Pet] = await client.api(household.get_pets())
+
+        for pet in pets:
+            pet.status.devices.items = [DevicePetTag(id=269654), DevicePetTag(id=271836)]
+            pet.status.devices.count = 2
+
+            cmds: list[Command] = pet.set_tag(269654, ModifyDeviceTag.REMOVE)
+
+            assert len(cmds) == 1
+            assert cmds[0].method == "DELETE"
+            assert cmds[0].parse is not None
+
+            result: Pet = cmds[0].parse(SurePetcareResponse(data={}))
+            assert result is pet
+            assert [tag.id for tag in pet.status.devices.items] == [271836]
+            assert pet.status.devices.count == 1
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("device_names", [["pet", "household"]])
 async def test_fetch_assigned_devices_raises_on_forbidden(
     register_device_api_mocks, add_api_json_response, mock_devices
 ) -> None:
