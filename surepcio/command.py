@@ -16,26 +16,34 @@ class Command:
 
     def __init__(
         self,
-        method: str | None = None,
+        method: str,
         endpoint: str = "",
         params: dict[str, Any] | None = None,
         parse: ParseFn | None = None,
         reuse: bool = True,
-        device: Any | None = None,
+        household_id: int | None = None,
         chain: ChainFn | None = None,
     ) -> None:
+        if not method.strip():
+            raise InvalidCommandError("Command method must be a non-empty HTTP method string.")
         if parse is not None and chain is not None:
             raise InvalidCommandError(
                 "Command cannot have both parse and chain. "
                 "Use parse to extract data from a response, "
                 "or chain to produce follow-up commands — not both."
             )
-        self.method: str | None = method
+        if endpoint.endswith("/async"):
+            if household_id is None:
+                raise InvalidCommandError(
+                    "Async write commands must include household_id for pending status polling. "
+                    f"Method={method!r}, endpoint={endpoint!r}"
+                )
+        self.method: str = method
         self.endpoint: str = endpoint
         self.params: dict[str, Any] = params or {}
         self.parse: ParseFn | None = parse
         self.reuse: bool = reuse
-        self.device: Any | None = device
+        self.household_id: int | None = household_id
         self.chain: ChainFn | None = chain
 
     def __str__(self) -> str:

@@ -109,15 +109,6 @@ class Pet(PetBase[Control, Status]):
             parse=parse,
         )
 
-    def properties(self) -> Command:
-        """Update status properties with last activity data."""
-
-        def update_properties(_) -> "Pet":
-            self.status.last_activity = self.last_activity()
-            return self
-
-        return Command(parse=update_properties)
-
     @property
     def product(self) -> ProductId:
         return ProductId.PET
@@ -190,16 +181,36 @@ class Pet(PetBase[Control, Status]):
             method="PUT",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{device_id}/tag/{self.tag}/async",
             params=data,
-            device=self,
+            household_id=self.household_id,
             chain=lambda _: self.fetch_assigned_devices(),
         )
 
     def set_tag(self, device_id: int, action: ModifyDeviceTag) -> list[Command]:
-        """Add or remove a device tag on this pet, then refresh assigned devices."""
-        return [
-            Command(
-                method=action.value,
-                endpoint=f"{API_ENDPOINT_V1}/device/{device_id}/tag/{self.tag}/async",
-            ),
-            self.fetch_assigned_devices(),
-        ]
+        """Add or remove a device tag on this pet.
+
+        Add operations refresh assigned devices from the API.
+        Remove operations refresh assigned devices only when another assignment should
+        still remain. Removing the last assignment updates the local cache directly,
+        because the API can return an error when no assignments remain.
+        """
+
+        def parse_remove(_response: SurePetcareResponse) -> "Pet":
+            current_items: list[DevicePetTag] = self.status.devices.items
+            filtered_items: list[DevicePetTag] = [item for item in current_items if item.id != device_id]
+            self.status.devices = AssignedDevices(items=filtered_items, count=len(filtered_items))
+            return self
+
+        assigned_device_count: int = max(self.status.devices.count, len(self.status.devices.items))
+        should_refresh_assigned_devices: bool = action == ModifyDeviceTag.ADD or assigned_device_count > 1
+
+        update_command: Command = Command(
+            method=action.value,
+            endpoint=f"{API_ENDPOINT_V1}/device/{device_id}/tag/{self.tag}/async",
+            household_id=self.household_id,
+            parse=parse_remove if not should_refresh_assigned_devices else None,
+        )
+
+        if should_refresh_assigned_devices:
+            return [update_command, self.fetch_assigned_devices()]
+
+        return [update_command]

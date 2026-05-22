@@ -2,9 +2,9 @@ import aresponses
 import pytest
 from syrupy.assertion import SnapshotAssertion
 from surepcio import SurePetcareClient
-from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.feeder_connect import FeederConnect
+from surepcio.enums import CloseDelay
 from surepcio.security.exceptions import ApiError
 from tests.conftest import object_snapshot
 
@@ -62,7 +62,7 @@ async def test_async_put_with_pending_and_polling(add_api_json_response):
     # Mock PUT response with pending status (status_id=5)
     add_api_json_response(
         "PUT",
-        f"{device_endpoint}/control",
+        f"{device_endpoint}/control/async",
         {"data": {"id": 123, "control": {}}, "pending": [{"request_id": "abc", "status_id": 5}]},
     )
 
@@ -85,11 +85,7 @@ async def test_async_put_with_pending_and_polling(add_api_json_response):
     async with SurePetcareClient() as client:
         device = FeederConnect({"id": 123, "household_id": 7777})
 
-        cmd = Command(
-            method="PUT",
-            endpoint=f"{device_endpoint}/control",
-            device=device,
-        )
+        cmd = device.set_lid(CloseDelay.NORMAL)
         result = await client.api(cmd)
         assert result is not None
 
@@ -102,7 +98,7 @@ async def test_non_async_put_updates_device(add_api_json_response):
     # Mock PUT response with completed status (status_id=0)
     add_api_json_response(
         "PUT",
-        f"{device_endpoint}/control",
+        f"{device_endpoint}/control/async",
         {
             "data": {
                 "id": 456,
@@ -123,49 +119,7 @@ async def test_non_async_put_updates_device(add_api_json_response):
     async with SurePetcareClient() as client:
         device = FeederConnect({"id": 456, "household_id": 7777})
 
-        cmd = Command(
-            method="PUT",
-            endpoint=f"{device_endpoint}/control",
-            device=device,
-        )
-        result = await client.api(cmd)
-        assert result is not None
+        cmd = device.set_lid(CloseDelay.NORMAL)
 
-
-@pytest.mark.asyncio
-async def test_async_post_with_device_refresh(add_api_json_response):
-    """Test async POST operation with pending results."""
-    device_endpoint = f"{API_ENDPOINT_PRODUCTION}/device/789"
-
-    # Mock POST response with pending status
-    add_api_json_response(
-        "POST",
-        f"{device_endpoint}/control",
-        {"data": {}, "pending": [{"request_id": "post1", "status_id": 5}]},
-    )
-
-    # Mock polling response (completed)
-    add_api_json_response(
-        "GET",
-        f"{API_ENDPOINT_PRODUCTION}/household/8888/device/control/status",
-        {"results": []},
-        repeat=1,
-    )
-
-    # Mock device refresh
-    add_api_json_response(
-        "GET",
-        device_endpoint,
-        {"data": {"id": 789, "control": {}, "status": {}, "household_id": 8888}},
-    )
-
-    async with SurePetcareClient() as client:
-        device = FeederConnect({"id": 789, "household_id": 8888})
-
-        cmd = Command(
-            method="POST",
-            endpoint=f"{device_endpoint}/control",
-            device=device,
-        )
         result = await client.api(cmd)
         assert result is not None
