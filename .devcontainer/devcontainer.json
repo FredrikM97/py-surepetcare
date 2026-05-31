@@ -16,6 +16,6 @@
   "mounts": [
     "type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh"
   ],
-  "postCreateCommand": "pip install uv && uv sync --all-extras --dev && uv run pre-commit install",
+  "postCreateCommand": "pip install uv && uv sync --all-extras --dev && uv run pre-commit install && ln -sf /workspaces/psp/.venv/bin/python /usr/local/bin/python",
   "postStartCommand": "git config --global --unset-all core.hooksPath || true" 
 }
