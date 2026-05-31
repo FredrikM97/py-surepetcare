@@ -4,7 +4,8 @@
   "customizations": {
     "vscode": {
       "settings": {
-        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python"
+        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+        "python.terminal.activateEnvironment": true
       },
       "extensions": [
         "ms-python.python",
@@ -16,6 +17,6 @@
   "mounts": [
     "type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh"
   ],
-  "postCreateCommand": "pip install uv && uv sync --all-extras --dev && uv run pre-commit install && ln -sf /workspaces/psp/.venv/bin/python /usr/local/bin/python",
+  "postCreateCommand": "pip install uv && uv sync --all-extras --dev && uv run pre-commit install",
   "postStartCommand": "git config --global --unset-all core.hooksPath || true" 
 }
