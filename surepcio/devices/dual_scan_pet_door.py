@@ -39,8 +39,12 @@ class DualScanPetDoor(DoorDeviceBase[Control, Status]):
         def parse(response: SurePetcareResponse) -> "DualScanPetDoor":
             if not response.data:
                 return self
-            self.status = BaseStatus(**{**self.status.model_dump(), **response.data["data"]})
-            self.control = BaseControl(**{**self.control.model_dump(), **response.data["data"]})
+            self.status = BaseStatus(
+                **{**self.status.model_dump(), **response.data["data"]}
+            )
+            self.control = BaseControl(
+                **{**self.control.model_dump(), **response.data["data"]}
+            )
             return self
 
         return Command(

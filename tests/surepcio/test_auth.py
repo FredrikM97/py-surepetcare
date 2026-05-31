@@ -37,7 +37,9 @@ async def test_login_token_device_id(aresponses):
         "/api/auth/login",
         "POST",
         aresponses.Response(
-            text='{"data": {"token": "tok"}}', status=200, headers={"Content-Type": "application/json"}
+            text='{"data": {"token": "tok"}}',
+            status=200,
+            headers={"Content-Type": "application/json"},
         ),
     )
     client = AuthClient()
@@ -54,7 +56,9 @@ async def test_login_missing_credentials(aresponses):
         "/api/auth/login",
         "POST",
         aresponses.Response(
-            text='{"data": {"token": "tok"}}', status=200, headers={"Content-Type": "application/json"}
+            text='{"data": {"token": "tok"}}',
+            status=200,
+            headers={"Content-Type": "application/json"},
         ),
     )
     client = AuthClient()
@@ -68,7 +72,11 @@ async def test_login_success_but_token_missing(aresponses):
         "app-api.production.surehub.io",
         "/api/auth/login",
         "POST",
-        aresponses.Response(text='{"data": {}}', status=200, headers={"Content-Type": "application/json"}),
+        aresponses.Response(
+            text='{"data": {}}',
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
     )
     client = AuthClient()
     with pytest.raises(Exception, match="Token not found in response"):
@@ -158,4 +166,7 @@ def test_del_warns(monkeypatch):
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
         del client
-        assert any("was deleted without closing the aiohttp session" in str(warn.message) for warn in w)
+        assert any(
+            "was deleted without closing the aiohttp session" in str(warn.message)
+            for warn in w
+        )

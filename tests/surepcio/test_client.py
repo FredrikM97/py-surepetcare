@@ -16,7 +16,9 @@ async def test_get_none_status(aresponses: aresponses.ResponsesMockServer, statu
         "example.com",
         "/endpoint",
         "GET",
-        aresponses.Response(text="", status=status, headers={"Content-Type": "application/json"}),
+        aresponses.Response(
+            text="", status=status, headers={"Content-Type": "application/json"}
+        ),
     )
     async with SurePetcareClient() as client:
         result = await client.get("https://example.com/endpoint", params=None)
@@ -63,7 +65,10 @@ async def test_async_put_with_pending_and_polling(add_api_json_response):
     add_api_json_response(
         "PUT",
         f"{device_endpoint}/control/async",
-        {"data": {"id": 123, "control": {}}, "pending": [{"request_id": "abc", "status_id": 5}]},
+        {
+            "data": {"id": 123, "control": {}},
+            "pending": [{"request_id": "abc", "status_id": 5}],
+        },
     )
 
     # Mock polling response (status changed to 0=completed)
@@ -78,7 +83,14 @@ async def test_async_put_with_pending_and_polling(add_api_json_response):
     add_api_json_response(
         "GET",
         device_endpoint,
-        {"data": {"id": 123, "control": {"bowls": None}, "status": {}, "household_id": 7777}},
+        {
+            "data": {
+                "id": 123,
+                "control": {"bowls": None},
+                "status": {},
+                "household_id": 7777,
+            }
+        },
         repeat=1,
     )
 
@@ -113,7 +125,13 @@ async def test_non_async_put_updates_device(add_api_json_response):
     add_api_json_response(
         "GET",
         device_endpoint,
-        {"data": {"id": 456, "control": {"bowls": {"type": 1}}, "status": {"online": True}}},
+        {
+            "data": {
+                "id": 456,
+                "control": {"bowls": {"type": 1}},
+                "status": {"online": True},
+            }
+        },
     )
 
     async with SurePetcareClient() as client:

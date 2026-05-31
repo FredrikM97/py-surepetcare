@@ -101,7 +101,9 @@ class ApiMockServer:
 
         if overwrite:
             self._server._responses[:] = [
-                (r, res) for r, res in self._server._responses if (r, res) not in existing
+                (r, res)
+                for r, res in self._server._responses
+                if (r, res) not in existing
             ]
         elif existing:
             warnings.warn(
@@ -184,7 +186,9 @@ def serialize(obj):
         return obj
 
 
-def object_snapshot(data, snapshot: SnapshotAssertion, skip_fields=None, any_fields=None):
+def object_snapshot(
+    data, snapshot: SnapshotAssertion, skip_fields=None, any_fields=None
+):
     data = mask_fields(
         data,
         skip_fields=skip_fields,

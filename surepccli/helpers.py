@@ -41,7 +41,9 @@ def device_id_option():
         callback=lambda c, p, v: (
             v
             if v
-            else _bad_param("No device selected. Use --device-id or 'surepccli devices list --store' first.")
+            else _bad_param(
+                "No device selected. Use --device-id or 'surepccli devices list --store' first."
+            )
         ),
     )
 
@@ -54,7 +56,11 @@ def pet_id_option():
         help="Pet ID.",
         show_envvar=False,
         callback=lambda c, p, v: (
-            v if v else _bad_param("No Pet selected. Use --pet-id or 'surepccli pet connect' first.")
+            v
+            if v
+            else _bad_param(
+                "No Pet selected. Use --pet-id or 'surepccli pet connect' first."
+            )
         ),
     )
 
@@ -90,12 +96,18 @@ def state_option(help: str = "", **kwargs) -> typer.Option:
 
 def print_table(rows, headers):
     """Reusable function to print a compact, aligned table."""
-    col_widths = [max(len(str(row[i])) for row in rows + [headers]) for i in range(len(headers))]
-    header_line = " | ".join(f"{headers[i]:<{col_widths[i]}}" for i in range(len(headers)))
+    col_widths = [
+        max(len(str(row[i])) for row in rows + [headers]) for i in range(len(headers))
+    ]
+    header_line = " | ".join(
+        f"{headers[i]:<{col_widths[i]}}" for i in range(len(headers))
+    )
     typer.echo(header_line)
     typer.echo("-" * len(header_line))
     for row in rows:
-        typer.echo(" | ".join(f"{str(row[i]):<{col_widths[i]}}" for i in range(len(row))))
+        typer.echo(
+            " | ".join(f"{str(row[i]):<{col_widths[i]}}" for i in range(len(row)))
+        )
 
 
 async def _fetch_all_devices(household_id: str) -> list[DeviceBase]:
@@ -109,8 +121,16 @@ def _apply_filters(
     product_id: Optional[str | ProductId] = None,
 ) -> list[DeviceBase]:
     if product_id:
-        pid = str(product_id.value) if isinstance(product_id, ProductId) else str(product_id)
-        devices = [d for d in devices if str(getattr(d.product_id, "value", d.product_id)) == pid]
+        pid = (
+            str(product_id.value)
+            if isinstance(product_id, ProductId)
+            else str(product_id)
+        )
+        devices = [
+            d
+            for d in devices
+            if str(getattr(d.product_id, "value", d.product_id)) == pid
+        ]
     if device_id:
         devices = [d for d in devices if str(d.id) == str(device_id)]
     return devices
@@ -149,7 +169,9 @@ async def list_devices(
                 idx,
                 d.id,
                 d.name,
-                getattr(d.product_id, "name", getattr(d.product_id, "value", d.product_id)),
+                getattr(
+                    d.product_id, "name", getattr(d.product_id, "value", d.product_id)
+                ),
             ]
             for idx, d in enumerate(items)
         ],

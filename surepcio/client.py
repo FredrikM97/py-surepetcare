@@ -18,7 +18,9 @@ logger = logging.getLogger(__name__)
 class SurePetcareClient(AuthClient):
     """SurePetcare API client. Main object to interact with the API."""
 
-    async def _request(self, method: str, endpoint: str, **kwargs) -> SurePetcareResponse:
+    async def _request(
+        self, method: str, endpoint: str, **kwargs
+    ) -> SurePetcareResponse:
         await self.set_session()
         http_method = getattr(self.session, method)
         async with http_method(endpoint, **kwargs) as response:
@@ -40,20 +42,28 @@ class SurePetcareClient(AuthClient):
                     payload=data,
                 )
 
-            return SurePetcareResponse(data=data, status=response.status, reason=response.reason)
+            return SurePetcareResponse(
+                data=data, status=response.status, reason=response.reason
+            )
 
     async def get(
         self, endpoint: str, params: dict[str, Any] | None = None, headers=None
     ) -> SurePetcareResponse:
         return await self._request("get", endpoint, params=params, headers=headers)
 
-    async def post(self, endpoint: str, params: dict | None = None, headers=None) -> SurePetcareResponse:
+    async def post(
+        self, endpoint: str, params: dict | None = None, headers=None
+    ) -> SurePetcareResponse:
         return await self._request("post", endpoint, json=params, headers=headers)
 
-    async def put(self, endpoint: str, params: dict | None = None, headers=None) -> SurePetcareResponse:
+    async def put(
+        self, endpoint: str, params: dict | None = None, headers=None
+    ) -> SurePetcareResponse:
         return await self._request("put", endpoint, json=params, headers=headers)
 
-    async def delete(self, endpoint: str, params: dict | None = None, headers=None) -> SurePetcareResponse:
+    async def delete(
+        self, endpoint: str, params: dict | None = None, headers=None
+    ) -> SurePetcareResponse:
         return await self._request("delete", endpoint, json=params, headers=headers)
 
     async def api(self, command: Union[Command, list[Command]]) -> Any:
@@ -63,7 +73,9 @@ class SurePetcareClient(AuthClient):
         For PUT/POST commands it also coordinates async polling and device refresh.
         """
         if command is None:
-            raise TypeError("api() received None — every command in a pipeline must be non-None")
+            raise TypeError(
+                "api() received None — every command in a pipeline must be non-None"
+            )
 
         if isinstance(command, list):
             return [await self.api(cmd) for cmd in command]
@@ -72,7 +84,9 @@ class SurePetcareClient(AuthClient):
 
     async def handle_command(self, command: Command) -> Any:
         # reuse headers if command.reuse is True, otherwise generate new headers for this request
-        headers = self._generate_headers(headers=self.headers(command.endpoint) if command.reuse else {})
+        headers = self._generate_headers(
+            headers=self.headers(command.endpoint) if command.reuse else {}
+        )
 
         response: SurePetcareResponse = await getattr(self, command.method.lower())(
             command.endpoint,
@@ -114,7 +128,9 @@ class SurePetcareClient(AuthClient):
         if not remaining_ids:
             raise ValueError("Watcher task invoked with no pending requests to watch.")
         if household_id is None:
-            raise InvalidCommandError("Watcher task requires household_id to poll pending request status.")
+            raise InvalidCommandError(
+                "Watcher task requires household_id to poll pending request status."
+            )
 
         logger.info("Waiting for %d request(s): %s", len(remaining_ids), remaining_ids)
 
@@ -134,7 +150,9 @@ class SurePetcareClient(AuthClient):
         pending = response_data.get("pending") if response_data else None
         if not pending:
             return set()
-        return {request_id for item in pending if (request_id := item.get("request_id"))}
+        return {
+            request_id for item in pending if (request_id := item.get("request_id"))
+        }
 
     async def _poll_pending_ids(self, household_id: int) -> set[str]:
         """Fetch the latest control status and return request IDs still in progress."""
@@ -143,15 +161,24 @@ class SurePetcareClient(AuthClient):
             if not isinstance(response.data, dict):
                 raise RuntimeError("Expected control status payload to be a dict.")
             data_entries = response.data.get("data")
-            entries = data_entries if data_entries is not None else response.data.get("results")
+            entries = (
+                data_entries
+                if data_entries is not None
+                else response.data.get("results")
+            )
             if not isinstance(entries, list):
                 raise UnexpectedDataTypeError("data/results", list, type(entries))
-            return {item["request_id"] for item in entries if isinstance(item, dict) and "request_id" in item}
+            return {
+                item["request_id"]
+                for item in entries
+                if isinstance(item, dict) and "request_id" in item
+            }
 
         return await self.api(
             Command(
                 method="GET",
-                endpoint=f"{API_ENDPOINT_PRODUCTION}/household/{household_id}" "/device/control/status",
+                endpoint=f"{API_ENDPOINT_PRODUCTION}/household/{household_id}"
+                "/device/control/status",
                 params={"status": RequestStatus.not_completed()},
                 parse=parse,
             )
@@ -159,7 +186,10 @@ class SurePetcareClient(AuthClient):
 
 
 async def poll_with_backoff(
-    initial: float = 2.0, factor: float = 1.1, max_sleep: float = 10.0, timeout: float = 30.0
+    initial: float = 2.0,
+    factor: float = 1.1,
+    max_sleep: float = 10.0,
+    timeout: float = 30.0,
 ):
     """Yield on a growing interval until timeout is reached."""
     elapsed = 0.0

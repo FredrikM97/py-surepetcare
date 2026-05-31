@@ -18,15 +18,23 @@ household = AsyncTyper(help="Household commands")
 async def login(
     email: str,
     password: str = typer.Option(
-        None, "--password", prompt=True, hide_input=True, help="Account password (prompted, hidden)."
+        None,
+        "--password",
+        prompt=True,
+        hide_input=True,
+        help="Account password (prompted, hidden).",
     ),
-    store: bool = typer.Option(True, "--no-store", help="Do not store session in environment."),
+    store: bool = typer.Option(
+        True, "--no-store", help="Do not store session in environment."
+    ),
 ):
     """Login with email and password."""
     async with get_session_manager() as sm:
         await sm.client.login(email=email, password=password)
     if store:
-        save_session({Envs.TOKEN: sm.client.token, Envs.CLIENT_ID: str(sm.client.device_id)})
+        save_session(
+            {Envs.TOKEN: sm.client.token, Envs.CLIENT_ID: str(sm.client.device_id)}
+        )
 
     typer.echo(f"Logged in as {email}.")
 
@@ -96,14 +104,20 @@ async def connect() -> None:
 
 @household.command(login_required=True)
 async def timeline(
-    since_id: int = typer.Option(None, "--since-id", help="Return events with ID greater than this."),
-    before_id: int = typer.Option(None, "--before-id", help="Return events with ID less than this."),
+    since_id: int = typer.Option(
+        None, "--since-id", help="Return events with ID greater than this."
+    ),
+    before_id: int = typer.Option(
+        None, "--before-id", help="Return events with ID less than this."
+    ),
 ) -> None:
     """List timeline events with optional pagination."""
     async with get_session_manager() as sm:
         households: list[Household] = await sm.client.api(Household.get_households())
 
         for household in households:
-            timeline = await sm.client.api(household.get_timeline(since_id=since_id, before_id=before_id))
+            timeline = await sm.client.api(
+                household.get_timeline(since_id=since_id, before_id=before_id)
+            )
             typer.echo(f"timeline for household {household.id}:")
             typer.echo(timeline)

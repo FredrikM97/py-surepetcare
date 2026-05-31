@@ -30,6 +30,8 @@ def test_load_device_class_invalid():
 
 
 # Test all registry keys for coverage
-@pytest.mark.parametrize("product_id,expected_class", list(DEVICE_CLASS_REGISTRY.items()))
+@pytest.mark.parametrize(
+    "product_id,expected_class", list(DEVICE_CLASS_REGISTRY.items())
+)
 def test_load_device_class_registry_coverage(product_id, expected_class):
     assert load_device_class(product_id) is expected_class

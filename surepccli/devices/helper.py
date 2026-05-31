@@ -38,7 +38,9 @@ class EnumChoice(click.ParamType):
     def get_metavar(self, param: click.Parameter, ctx: Context) -> str | None:
         return f"[{'|'.join(self.enum_cls._member_names_)}]"
 
-    def get_missing_message(self, param: click.Parameter, ctx: Context | None) -> str | None:
+    def get_missing_message(
+        self, param: click.Parameter, ctx: Context | None
+    ) -> str | None:
         return f"Choose from: {', '.join(self.enum_cls._member_names_)}"
 
     def convert(self, value: str, param, ctx):

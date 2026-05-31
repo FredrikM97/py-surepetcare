@@ -47,7 +47,9 @@ class Status(BaseStatus):
     # pet_status: Optional[dict] = None
     bowl_status: Optional[list[BowlState]] = None
     bowl_type_options: Optional[str] = None
-    fill_percentages: Optional[dict[str, Optional[float] | dict[int, Optional[float]]]] = None
+    fill_percentages: Optional[
+        dict[str, Optional[float] | dict[int, Optional[float]]]
+    ] = None
     tare_options: Optional[list[str]] = None
 
 
@@ -71,8 +73,12 @@ class FeederConnect(DeviceBase[Control, Status]):
         def parse(response: SurePetcareResponse) -> "FeederConnect":
             if not response.data:
                 return self
-            self.status = self.statusCls(**{**self.status.model_dump(), **response.data["data"]})
-            self.control = self.controlCls(**{**self.control.model_dump(), **response.data["data"]})
+            self.status = self.statusCls(
+                **{**self.status.model_dump(), **response.data["data"]}
+            )
+            self.control = self.controlCls(
+                **{**self.control.model_dump(), **response.data["data"]}
+            )
 
             # Post-process bowl_status based on bowls.type
             bowls_type = None
@@ -126,8 +132,12 @@ class FeederConnect(DeviceBase[Control, Status]):
         """Set the bowl type/settings on the device using BowlTypeOptions enum."""
         if not isinstance(option, BowlTypeOptions):
             return None
-        settings = [BowlSetting(food_type=ft.value, target=0) for ft in option.food_types]
-        return self.set_control(bowls=Bowls(type=option.bowl_type.value, settings=settings))
+        settings = [
+            BowlSetting(food_type=ft.value, target=0) for ft in option.food_types
+        ]
+        return self.set_control(
+            bowls=Bowls(type=option.bowl_type.value, settings=settings)
+        )
 
     def get_bowl_type_option(self) -> str | None:
         """Return the BowlTypeOptions name matching the current device bowl settings."""
@@ -135,10 +145,14 @@ class FeederConnect(DeviceBase[Control, Status]):
         if not bowls or not bowls.type or not bowls.settings:
             return None
         bowl_type = bowls.type
-        settings = bowls.settings if isinstance(bowls.settings, list) else list(bowls.settings)
+        settings = (
+            bowls.settings if isinstance(bowls.settings, list) else list(bowls.settings)
+        )
         food_types = tuple(getattr(s, "food_type", None) for s in settings)
         for option in BowlTypeOptions:
-            if option.bowl_type == bowl_type and tuple(option.food_types) == tuple(food_types):
+            if option.bowl_type == bowl_type and tuple(option.food_types) == tuple(
+                food_types
+            ):
                 return option.name
         return None
 

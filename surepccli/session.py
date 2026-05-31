@@ -74,7 +74,9 @@ class SessionManager:
 
     def _is_closed(self) -> bool:
         """Check if the underlying client session is closed."""
-        return self.client is None or (self.client.session is not None and self.client.session.closed)
+        return self.client is None or (
+            self.client.session is not None and self.client.session.closed
+        )
 
     async def __aenter__(self):
         return self
