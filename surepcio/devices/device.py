@@ -131,7 +131,10 @@ class DoorDeviceBase(DeviceBase[C, S]):
             c.enabled
             and (
                 (c.lock_time <= c.unlock_time and c.lock_time <= now <= c.unlock_time)
-                or (c.lock_time > c.unlock_time and (now >= c.lock_time or now <= c.unlock_time))
+                or (
+                    c.lock_time > c.unlock_time
+                    and (now >= c.lock_time or now <= c.unlock_time)
+                )
             )
             for c in curfews
         )

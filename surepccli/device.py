@@ -39,7 +39,9 @@ async def connect(
         save_session(
             {
                 Envs.SELECTED_DEVICE: str(sel.id),
-                Envs.SELECTED_PRODUCT_ID: str(getattr(sel.product_id, "value", sel.product_id)),
+                Envs.SELECTED_PRODUCT_ID: str(
+                    getattr(sel.product_id, "value", sel.product_id)
+                ),
             }
         )
 

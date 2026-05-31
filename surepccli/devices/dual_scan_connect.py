@@ -14,7 +14,9 @@ from surepcio.devices.dual_scan_connect import DualScanConnect
 from surepcio.devices.entities import Curfew
 from surepcio.enums import FlapLocking
 
-dualscanconnect = AsyncTyper(name="dualscanconnect", help="Flap device commands", login_required=True)
+dualscanconnect = AsyncTyper(
+    name="dualscanconnect", help="Flap device commands", login_required=True
+)
 
 
 @dualscanconnect.command("curfew", help="Set flap curfew mode")
@@ -26,11 +28,15 @@ async def curfew(
     household_id: str = household_option(),
 ):
     """Curfew times, using the household's timezone"""
-    device: DualScanConnect = cast(DualScanConnect, await fetch_device(household_id, device_id))
+    device: DualScanConnect = cast(
+        DualScanConnect, await fetch_device(household_id, device_id)
+    )
 
     if state is None:
         curfews = getattr(device.control, "curfew")
-        typer.echo(f"Device {device.id}\ncurfew: {[curfew.model_dump() for curfew in curfews]}")
+        typer.echo(
+            f"Device {device.id}\ncurfew: {[curfew.model_dump() for curfew in curfews]}"
+        )
         return
     async with get_session_manager() as sm:
         await sm.client.api(device.set_curfew(state))
@@ -41,13 +47,16 @@ async def curfew(
 @dualscanconnect.command("locking", help="Set flap locking mode")
 async def locking(
     state: FlapLocking = state_option(
-        "Set new locking mode (omit to show current).", click_type=EnumChoice(FlapLocking)
+        "Set new locking mode (omit to show current).",
+        click_type=EnumChoice(FlapLocking),
     ),
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
     """Locking mode"""
-    device: DualScanConnect = cast(DualScanConnect, await fetch_device(household_id, device_id))
+    device: DualScanConnect = cast(
+        DualScanConnect, await fetch_device(household_id, device_id)
+    )
 
     if state is None:
         locking = getattr(device.control, "locking")

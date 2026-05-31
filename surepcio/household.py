@@ -94,7 +94,9 @@ class Household:
 
         def parse(response: SurePetcareResponse) -> "Household":
             if not response.data:
-                raise NotLoadedError(f"No data returned for get_household({household_id})")
+                raise NotLoadedError(
+                    f"No data returned for get_household({household_id})"
+                )
             if not isinstance(response.data["data"], dict):
                 raise UnexpectedDataTypeError("data", dict, type(response.data["data"]))
             return Household(response.data["data"])
@@ -137,9 +139,13 @@ class Household:
         devices = self.data.get("devices")
 
         if pets is None:
-            raise NotLoadedError("Pets have not been loaded. Call and await get_pets() first.")
+            raise NotLoadedError(
+                "Pets have not been loaded. Call and await get_pets() first."
+            )
         if devices is None:
-            raise NotLoadedError("Devices have not been loaded. Call and await get_devices() first.")
+            raise NotLoadedError(
+                "Devices have not been loaded. Call and await get_devices() first."
+            )
 
         device_tag_ids: set[int] = set()
         for device in devices:
@@ -164,7 +170,9 @@ class Household:
 
         return commands
 
-    def get_timeline(self, since_id: int | None = None, before_id: int | None = None) -> Command:
+    def get_timeline(
+        self, since_id: int | None = None, before_id: int | None = None
+    ) -> Command:
         def parse(response: SurePetcareResponse):
             if not response.data:
                 return []

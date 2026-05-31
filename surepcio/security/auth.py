@@ -48,7 +48,9 @@ class AuthClient(CacheHeaders):
                 email_address=email, password=password, device_id=device_id
             )
         else:
-            raise AuthenticationError("Email and password or token and device_id must be provided")
+            raise AuthenticationError(
+                "Email and password or token and device_id must be provided"
+            )
 
         async with self.session.request(
             "POST",

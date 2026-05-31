@@ -15,7 +15,9 @@ from surepcio.devices.entities import Curfew
 from surepcio.devices.pet_door import PetDoor
 from surepcio.enums import FlapLocking
 
-petdoor = AsyncTyper(name="petdoor", help="PetDoor device commands", login_required=True)
+petdoor = AsyncTyper(
+    name="petdoor", help="PetDoor device commands", login_required=True
+)
 
 
 @petdoor.command("curfew", help="Set locking mode")
@@ -42,7 +44,8 @@ async def curfew(
 @petdoor.command("locking", help="Set flap locking mode")
 async def locking(
     state: FlapLocking = state_option(
-        "Set new locking mode (omit to show current).", click_type=EnumChoice(FlapLocking)
+        "Set new locking mode (omit to show current).",
+        click_type=EnumChoice(FlapLocking),
     ),
     device_id: str = device_id_option(),
     household_id: str = household_option(),

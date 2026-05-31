@@ -64,8 +64,20 @@ def test_get_devices_skips_invalid_product() -> None:
     mock_data = SurePetcareResponse(
         data={
             "data": [
-                {"id": 10, "household_id": 1, "name": "Hub1", "product_id": 999, "status": {"online": True}},
-                {"id": 11, "household_id": 1, "name": "Feeder1", "product_id": 4, "status": {"online": True}},
+                {
+                    "id": 10,
+                    "household_id": 1,
+                    "name": "Hub1",
+                    "product_id": 999,
+                    "status": {"online": True},
+                },
+                {
+                    "id": 11,
+                    "household_id": 1,
+                    "name": "Feeder1",
+                    "product_id": 4,
+                    "status": {"online": True},
+                },
             ]
         }
     )
@@ -96,7 +108,9 @@ async def test_get_pets_empty_household(
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("device_names", [["household"]])
-async def test_snapshot(snapshot: SnapshotAssertion, register_device_api_mocks, mock_devices) -> None:
+async def test_snapshot(
+    snapshot: SnapshotAssertion, register_device_api_mocks, mock_devices
+) -> None:
     register_device_api_mocks(mock_devices)
     async with SurePetcareClient() as client:
         household: list[Household] = await client.api(Household.get_households())
@@ -105,7 +119,9 @@ async def test_snapshot(snapshot: SnapshotAssertion, register_device_api_mocks, 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("device_names", [["household", "product"]])
-async def test_get_product(snapshot: SnapshotAssertion, register_device_api_mocks, mock_devices) -> None:
+async def test_get_product(
+    snapshot: SnapshotAssertion, register_device_api_mocks, mock_devices
+) -> None:
     """Test fetching a product for a device using aresponses and household fixture."""
     register_device_api_mocks(mock_devices)
     async with SurePetcareClient() as client:
@@ -130,8 +146,12 @@ def test_fetch_pet_device_assignments_requires_both_loaded() -> None:
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("device_names", [["pet", "feeder_connect_without_tags", "household"]])
-async def test_fetch_pet_device_assignments(register_device_api_mocks, mock_devices) -> None:
+@pytest.mark.parametrize(
+    "device_names", [["pet", "feeder_connect_without_tags", "household"]]
+)
+async def test_fetch_pet_device_assignments(
+    register_device_api_mocks, mock_devices
+) -> None:
     """fetch_pet_device_assignments refreshes devices, then maps pets to matched device tags.
 
     Pet "Maui" (tag.id=60978) matches feeder device 269654 (tags[0].id=60978).
@@ -153,7 +173,9 @@ async def test_fetch_pet_device_assignments(register_device_api_mocks, mock_devi
         matched_pets: list[Pet] = [p for p in pets if p.tag in matched_tag_ids]
         excluded_pets: list[Pet] = [p for p in pets if p.tag not in matched_tag_ids]
 
-        assert len(excluded_pets) > 0, "Expected at least one excluded pet — check fixture tags"
+        assert len(excluded_pets) > 0, (
+            "Expected at least one excluded pet — check fixture tags"
+        )
         assert 0 < len(matched_pets) < len(pets)
 
         for pet in excluded_pets:

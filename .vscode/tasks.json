@@ -34,7 +34,17 @@
     {
       "label": "Lint (Ruff)",
       "type": "shell",
-      "command": "uv run ruff .",
+      "command": "uv run ruff check .",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Format (Ruff)",
+      "type": "shell",
+      "command": "uv run ruff format .",
       "group": "test",
       "presentation": {
         "reveal": "always",
@@ -54,7 +64,17 @@
     {
       "label": "Pre-commit Autoupdate",
       "type": "shell",
-      "command": "uv tool run --from pre-commit pre-commit autoupdate",
+      "command": "uv run pre-commit autoupdate",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Pre-commit format",
+      "type": "shell",
+      "command": "uv run pre-commit run --all-files",
       "group": "test",
       "presentation": {
         "reveal": "always",
@@ -65,7 +85,7 @@
       "label": "Update uv Lock",
       "type": "shell",
       "command": "uv lock",
-      "group": "test",
+      "group": "build",
       "presentation": {
         "reveal": "always",
         "panel": "new"

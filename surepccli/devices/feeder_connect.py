@@ -16,7 +16,9 @@ from surepcio.enums import CloseDelay
 from surepcio.enums import FeederTrainingMode
 from surepcio.enums import Tare
 
-feederconnect = AsyncTyper(name="feederconnect", help="Feeder device commands", login_required=True)
+feederconnect = AsyncTyper(
+    name="feederconnect", help="Feeder device commands", login_required=True
+)
 
 
 @feederconnect.command(login_required=True)
@@ -24,7 +26,9 @@ async def fill_percentages(
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
-    device: FeederConnect = cast(FeederConnect, await fetch_device(household_id, device_id))
+    device: FeederConnect = cast(
+        FeederConnect, await fetch_device(household_id, device_id)
+    )
 
     if not device:
         return
@@ -35,7 +39,10 @@ async def fill_percentages(
         total = result.get("total")
         bowls = result.get("per_bowl", {})
 
-    rows = [[f"Bowl {b}", f"{round(p, 2) if p is not None else 'N/A'}"] for b, p in (bowls or {}).items()]
+    rows = [
+        [f"Bowl {b}", f"{round(p, 2) if p is not None else 'N/A'}"]
+        for b, p in (bowls or {}).items()
+    ]
     if total is not None:
         rows.append(["Total", f"{int(total)}"])
     print_table(rows, headers=["Type", "Percentage"])
@@ -44,12 +51,15 @@ async def fill_percentages(
 @feederconnect.command(login_required=True)
 async def lid_delay(
     state: CloseDelay = state_option(
-        "Set new lid close delay (omit to show current).", click_type=EnumChoice(CloseDelay)
+        "Set new lid close delay (omit to show current).",
+        click_type=EnumChoice(CloseDelay),
     ),
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
-    device: FeederConnect = cast(FeederConnect, await fetch_device(household_id, device_id))
+    device: FeederConnect = cast(
+        FeederConnect, await fetch_device(household_id, device_id)
+    )
     if state is None:
         delay = getattr(device.control.lid, "close_delay")
         typer.echo(f"Device {device.id}\nlid_delay: {delay.name}")
@@ -62,12 +72,15 @@ async def lid_delay(
 @feederconnect.command(login_required=True)
 async def training_mode(
     state: FeederTrainingMode = state_option(
-        "Set new training mode (omit to show current).", click_type=EnumChoice(FeederTrainingMode)
+        "Set new training mode (omit to show current).",
+        click_type=EnumChoice(FeederTrainingMode),
     ),
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
-    device: FeederConnect = cast(FeederConnect, await fetch_device(household_id, device_id))
+    device: FeederConnect = cast(
+        FeederConnect, await fetch_device(household_id, device_id)
+    )
 
     if state is None:
         training_mode = getattr(device.control, "training_mode")
@@ -81,11 +94,15 @@ async def training_mode(
 
 @feederconnect.command(login_required=True)
 async def tare(
-    state: Tare = state_option("Set tare settings (omit to show current).", click_type=EnumChoice(Tare)),
+    state: Tare = state_option(
+        "Set tare settings (omit to show current).", click_type=EnumChoice(Tare)
+    ),
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
-    device: FeederConnect = cast(FeederConnect, await fetch_device(household_id, device_id))
+    device: FeederConnect = cast(
+        FeederConnect, await fetch_device(household_id, device_id)
+    )
 
     if state is None:
         tare = getattr(device.control, "tare")
@@ -101,12 +118,15 @@ async def tare(
 @feederconnect.command(login_required=True)
 async def bowl_type(
     state: BowlTypeOptions = state_option(
-        "Set bowl type/settings (omit to show current).", click_type=EnumChoice(BowlTypeOptions)
+        "Set bowl type/settings (omit to show current).",
+        click_type=EnumChoice(BowlTypeOptions),
     ),
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
-    device: FeederConnect = cast(FeederConnect, await fetch_device(household_id, device_id))
+    device: FeederConnect = cast(
+        FeederConnect, await fetch_device(household_id, device_id)
+    )
 
     if state is None:
         bowls = getattr(device.control, "bowls")
@@ -123,5 +143,9 @@ async def bowl_type_options(
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
-    device: FeederConnect = cast(FeederConnect, await fetch_device(household_id, device_id))
-    typer.echo(f"Device {device_id}\nAvailable Options:\n{device.get_bowl_type_option()}")
+    device: FeederConnect = cast(
+        FeederConnect, await fetch_device(household_id, device_id)
+    )
+    typer.echo(
+        f"Device {device_id}\nAvailable Options:\n{device.get_bowl_type_option()}"
+    )
