@@ -181,8 +181,10 @@ class Pet(PetBase[Control, Status]):
             "since": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
         }
         return Command(
-            method="POST", endpoint=f"{API_ENDPOINT_PRODUCTION}/pet/{self.id}/position", params=data,
-            chain=lambda _: self.refresh()
+            method="POST",
+            endpoint=f"{API_ENDPOINT_PRODUCTION}/pet/{self.id}/position",
+            params=data,
+            chain=lambda _: self.refresh(),
         )
 
     def set_profile(self, device_id: int, profile: PetDeviceLocationProfile) -> Command:
