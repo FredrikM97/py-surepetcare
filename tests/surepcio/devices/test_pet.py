@@ -43,9 +43,8 @@ async def test_set_position_command(register_device_api_mocks, mock_devices) -> 
             assert "/async" not in cmd.endpoint
             assert cmd.params["where"] == PetLocation.INSIDE.value
             assert cmd.params["since"]
-            response: SurePetcareResponse = await client.api(cmd)
-            assert response.data is not None
-            assert response.data["data"] == {}
+            response: Pet = await client.api(cmd)
+            assert response is not None
 
 
 @pytest.mark.asyncio

@@ -184,6 +184,7 @@ class Pet(PetBase[Control, Status]):
             method="POST",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/pet/{self.id}/position",
             params=data,
+            chain=lambda _: self.refresh(),
         )
 
     def set_profile(self, device_id: int, profile: PetDeviceLocationProfile) -> Command:
