@@ -29,5 +29,7 @@ def load_device_class(product: ProductId | int) -> Optional[type]:
     """Load the device class based on the product ID."""
     cls = DEVICE_CLASS_REGISTRY.get(ProductId.find(product))
     if cls is None:
-        logger.warning("Unknown product id: %r (type: %s)", product, type(product).__name__)
+        logger.warning(
+            "Unknown product id: %r (type: %s)", product, type(product).__name__
+        )
     return cls

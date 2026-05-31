@@ -50,7 +50,9 @@ async def list_pets(household_id: str = household_option()) -> None:
 
 
 @pet.command()
-async def last_activity(household_id: str = household_option(), pet_id: str = pet_id_option()) -> None:
+async def last_activity(
+    household_id: str = household_option(), pet_id: str = pet_id_option()
+) -> None:
     """Show last activity for a pet"""
     pet: Pet = await _fetch_pet(household_id, pet_id)
 
@@ -66,7 +68,9 @@ async def last_activity(household_id: str = household_option(), pet_id: str = pe
 
 
 @pet.command()
-async def assign_devices(household_id: str = household_option(), pet_id: str = pet_id_option()) -> None:
+async def assign_devices(
+    household_id: str = household_option(), pet_id: str = pet_id_option()
+) -> None:
     """Fetch assigned devices for a pet"""
     pet: Pet = await _fetch_pet(household_id, pet_id)
 

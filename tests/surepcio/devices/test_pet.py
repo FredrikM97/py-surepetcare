@@ -16,7 +16,9 @@ from tests.conftest import object_snapshot
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("device_names", [["pet", "household"]])
-async def test_snapshot(snapshot: SnapshotAssertion, register_device_api_mocks, mock_devices) -> None:
+async def test_snapshot(
+    snapshot: SnapshotAssertion, register_device_api_mocks, mock_devices
+) -> None:
     register_device_api_mocks(mock_devices)
     async with SurePetcareClient() as client:
         household: Household = await client.api(Household.get_household(7777))
@@ -84,7 +86,9 @@ async def test_set_profile_for_unassigned_device_raises_value_error(
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("device_names", [["pet", "household"]])
-async def test_set_tag_add_uses_client_put(register_device_api_mocks, mock_devices) -> None:
+async def test_set_tag_add_uses_client_put(
+    register_device_api_mocks, mock_devices
+) -> None:
     register_device_api_mocks(mock_devices)
     async with SurePetcareClient() as client:
         household: Household = await client.api(Household.get_household(7777))
@@ -109,7 +113,10 @@ async def test_set_tag_remove_refreshes_when_other_assignments_remain(
         pets: list[Pet] = await client.api(household.get_pets())
 
         for pet in pets:
-            pet.status.devices.items = [DevicePetTag(id=269654), DevicePetTag(id=271836)]
+            pet.status.devices.items = [
+                DevicePetTag(id=269654),
+                DevicePetTag(id=271836),
+            ]
             pet.status.devices.count = 2
 
             cmds: list[Command] = pet.set_tag(269654, ModifyDeviceTag.REMOVE)

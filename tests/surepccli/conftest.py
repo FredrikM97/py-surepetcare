@@ -65,7 +65,9 @@ def cli_capture(snapshot: SnapshotAssertion):
     Same as cli_run but asserts snapshot.
     """
 
-    async def _run(args: list[str], input_text: str | None = None, name: str | None = None):
+    async def _run(
+        args: list[str], input_text: str | None = None, name: str | None = None
+    ):
         result, _ = await run_cli(args, input_text)
         cap = {
             "exit_code": result.exit_code,
@@ -124,7 +126,9 @@ def cli_commands(request):
     commands: list[list[str]] = []
     for arg in mark.args:
         if not isinstance(arg, (list, tuple)):
-            raise TypeError(f"cli_commands marker argument must be list/tuple, got {type(arg)}")
+            raise TypeError(
+                f"cli_commands marker argument must be list/tuple, got {type(arg)}"
+            )
         commands.append([str(x) for x in arg])
     if not commands:
         raise ValueError("cli_commands marker provided no command lists")
@@ -197,7 +201,8 @@ def list_all_typer_commands(obj, prefix=None, filters=None):
             commands.append(cmd_path)
             command_obj = getattr(cmd, "command", None)
             if command_obj and (
-                hasattr(command_obj, "registered_commands") or hasattr(command_obj, "registered_groups")
+                hasattr(command_obj, "registered_commands")
+                or hasattr(command_obj, "registered_groups")
             ):
                 commands.extend(list_all_typer_commands(command_obj, cmd_path, filters))
     # Add all subgroups at this level
@@ -208,7 +213,9 @@ def list_all_typer_commands(obj, prefix=None, filters=None):
             if group_app and group_name:
                 group_name = group_name.replace("_", "-")
                 commands.append(prefix + [group_name])
-                commands.extend(list_all_typer_commands(group_app, prefix + [group_name], filters))
+                commands.extend(
+                    list_all_typer_commands(group_app, prefix + [group_name], filters)
+                )
             elif group_app:
                 commands.extend(list_all_typer_commands(group_app, prefix, filters))
     # Handle wrapped Typer instances

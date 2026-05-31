@@ -59,14 +59,18 @@ def test_logging_redacts_sensitive_data(caplog, snapshot):
 
     # Collect all log messages that start with "Sensitive: "
     messages = [
-        record.getMessage() for record in caplog.records if record.getMessage().startswith("Sensitive: ")
+        record.getMessage()
+        for record in caplog.records
+        if record.getMessage().startswith("Sensitive: ")
     ]
     # Join messages if there are multiple, or just use the first
     object_snapshot(messages, snapshot)
 
 
 @pytest.mark.asyncio
-async def test_snapshot(snapshot: SnapshotAssertion, register_device_api_mocks, mock_all_devices, caplog):
+async def test_snapshot(
+    snapshot: SnapshotAssertion, register_device_api_mocks, mock_all_devices, caplog
+):
     logger = logging.getLogger("surepcio")
     logger.setLevel(logging.DEBUG)
 

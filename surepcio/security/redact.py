@@ -4,7 +4,9 @@ from surepcio.const import DEFAULT_SENSITIVE_FIELDS
 from surepcio.const import REDACTED_STRING
 
 
-def redact_sensitive(data, keys_to_redact=DEFAULT_SENSITIVE_FIELDS, mask=REDACTED_STRING):
+def redact_sensitive(
+    data, keys_to_redact=DEFAULT_SENSITIVE_FIELDS, mask=REDACTED_STRING
+):
     """
     Recursively redact sensitive fields in a nested dict or list.
     By default, redacts common sensitive keys including 'name'.
@@ -16,7 +18,11 @@ def redact_sensitive(data, keys_to_redact=DEFAULT_SENSITIVE_FIELDS, mask=REDACTE
         if not data:
             return data
         return {
-            k: (mask if k in keys_to_redact else redact_sensitive(v, keys_to_redact, mask))
+            k: (
+                mask
+                if k in keys_to_redact
+                else redact_sensitive(v, keys_to_redact, mask)
+            )
             for k, v in data.items()
         }
     elif isinstance(data, list):
@@ -39,6 +45,7 @@ class RedactSensitiveFilter(logging.Filter):
             if not record.args:
                 return True
             record.args = tuple(
-                redact_sensitive(arg) if isinstance(arg, (dict, list)) else arg for arg in record.args
+                redact_sensitive(arg) if isinstance(arg, (dict, list)) else arg
+                for arg in record.args
             )
         return True

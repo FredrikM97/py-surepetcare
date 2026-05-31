@@ -25,7 +25,9 @@ class Command:
         chain: ChainFn | None = None,
     ) -> None:
         if not method.strip():
-            raise InvalidCommandError("Command method must be a non-empty HTTP method string.")
+            raise InvalidCommandError(
+                "Command method must be a non-empty HTTP method string."
+            )
         if parse is not None and chain is not None:
             raise InvalidCommandError(
                 "Command cannot have both parse and chain. "

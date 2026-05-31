@@ -24,7 +24,8 @@ async def test_household_connect(register_mocks, cli_capture, cli_command, cli_i
 
 
 @pytest.mark.parametrize(
-    "command_path", [cmd + ["--help"] for cmd in list_all_typer_commands(app, filters=["household"])]
+    "command_path",
+    [cmd + ["--help"] for cmd in list_all_typer_commands(app, filters=["household"])],
 )
 async def test_household_cmd_help(command_path, cli_capture):
     await cli_capture(command_path)

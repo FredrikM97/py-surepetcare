@@ -36,9 +36,7 @@ class Hub(DeviceBase[Control, Status]):
 
     @property
     def photo(self) -> str:
-        return (
-            "https://www.surepetcare.io/assets/assets/products/hub/hub.6475b3a385180ab8fb96731c4bfd1eda.png"
-        )
+        return "https://www.surepetcare.io/assets/assets/products/hub/hub.6475b3a385180ab8fb96731c4bfd1eda.png"
 
     def refresh(self):
         """Refresh the device status and control settings from the API."""
@@ -47,8 +45,12 @@ class Hub(DeviceBase[Control, Status]):
             if not response.data:
                 return self
 
-            self.status = Status(**{**self.status.model_dump(), **response.data["data"]})
-            self.control = Control(**{**self.control.model_dump(), **response.data["data"]})
+            self.status = Status(
+                **{**self.status.model_dump(), **response.data["data"]}
+            )
+            self.control = Control(
+                **{**self.control.model_dump(), **response.data["data"]}
+            )
             return self
 
         return Command(

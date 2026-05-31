@@ -42,8 +42,12 @@ class DualScanConnect(DoorDeviceBase[Control, Status]):
         def parse(response: SurePetcareResponse) -> "DualScanConnect":
             if not response.data:
                 return self
-            self.status = Status(**{**self.status.model_dump(), **response.data["data"]})
-            self.control = Control(**{**self.control.model_dump(), **response.data["data"]})
+            self.status = Status(
+                **{**self.status.model_dump(), **response.data["data"]}
+            )
+            self.control = Control(
+                **{**self.control.model_dump(), **response.data["data"]}
+            )
             return self
 
         return Command(

@@ -63,8 +63,12 @@ class Control(ImprovedErrorMixin):
 
 class Status(ImprovedErrorMixin):
     activity: Optional[PetPositionResource] = Field(default_factory=PetPositionResource)
-    feeding: Optional[PetConsumtionResource] = Field(default_factory=PetConsumtionResource)
-    drinking: Optional[PetConsumtionResource] = Field(default_factory=PetConsumtionResource)
+    feeding: Optional[PetConsumtionResource] = Field(
+        default_factory=PetConsumtionResource
+    )
+    drinking: Optional[PetConsumtionResource] = Field(
+        default_factory=PetConsumtionResource
+    )
     devices: AssignedDevices = Field(default_factory=AssignedDevices)
     last_activity: Optional[LastActivity] = None
 
@@ -99,7 +103,9 @@ class Pet(PetBase[Control, Status]):
                 raise NotLoadedError(
                     f"No data returned for pet {self.entity_info.id} - {self.entity_info.name}"
                 )
-            self.status = Status(**{**self.status.model_dump(), **response.data["data"]["status"]})
+            self.status = Status(
+                **{**self.status.model_dump(), **response.data["data"]["status"]}
+            )
             self.status.last_activity = self.last_activity()
             return self
 
@@ -129,8 +135,14 @@ class Pet(PetBase[Control, Status]):
                 activities.append((at, device_id))
 
         # Check activity/position (uses 'since' field)
-        if self.status.activity and self.status.activity.since and self.status.activity.device_id:
-            activities.append((self.status.activity.since, self.status.activity.device_id))
+        if (
+            self.status.activity
+            and self.status.activity.since
+            and self.status.activity.device_id
+        ):
+            activities.append(
+                (self.status.activity.since, self.status.activity.device_id)
+            )
 
         if not activities:
             return None
@@ -143,9 +155,15 @@ class Pet(PetBase[Control, Status]):
 
         def parse(response: SurePetcareResponse) -> "Pet":
             if not response.data:
-                raise NotLoadedError(f"No data returned for assigned devices of pet {self.id} - {self.name}")
-            devices_list = [DevicePetTag(**item) for item in response.data.get("data", [])]
-            self.status.devices = AssignedDevices(items=devices_list, count=len(devices_list))
+                raise NotLoadedError(
+                    f"No data returned for assigned devices of pet {self.id} - {self.name}"
+                )
+            devices_list = [
+                DevicePetTag(**item) for item in response.data.get("data", [])
+            ]
+            self.status.devices = AssignedDevices(
+                items=devices_list, count=len(devices_list)
+            )
             return self
 
         # A 403 Forbidden response is returned by the API when the pet has no assigned devices.
@@ -163,7 +181,9 @@ class Pet(PetBase[Control, Status]):
             "since": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
         }
         return Command(
-            method="POST", endpoint=f"{API_ENDPOINT_PRODUCTION}/pet/{self.id}/position", params=data
+            method="POST",
+            endpoint=f"{API_ENDPOINT_PRODUCTION}/pet/{self.id}/position",
+            params=data,
         )
 
     def set_profile(self, device_id: int, profile: PetDeviceLocationProfile) -> Command:
@@ -175,8 +195,10 @@ class Pet(PetBase[Control, Status]):
         }
         available_device_ids = [tag.id for tag in self.status.devices.items]
         if device_id not in available_device_ids:
-            raise ValueError(f"Device ID {device_id} is not assigned to pet with tag {self.tag}. \
-                    Available tags: {available_device_ids}")
+            raise ValueError(
+                f"Device ID {device_id} is not assigned to pet with tag {self.tag}. \
+                    Available tags: {available_device_ids}"
+            )
         return Command(
             method="PUT",
             endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{device_id}/tag/{self.tag}/async",
@@ -196,12 +218,20 @@ class Pet(PetBase[Control, Status]):
 
         def parse_remove(_response: SurePetcareResponse) -> "Pet":
             current_items: list[DevicePetTag] = self.status.devices.items
-            filtered_items: list[DevicePetTag] = [item for item in current_items if item.id != device_id]
-            self.status.devices = AssignedDevices(items=filtered_items, count=len(filtered_items))
+            filtered_items: list[DevicePetTag] = [
+                item for item in current_items if item.id != device_id
+            ]
+            self.status.devices = AssignedDevices(
+                items=filtered_items, count=len(filtered_items)
+            )
             return self
 
-        assigned_device_count: int = max(self.status.devices.count, len(self.status.devices.items))
-        should_refresh_assigned_devices: bool = action == ModifyDeviceTag.ADD or assigned_device_count > 1
+        assigned_device_count: int = max(
+            self.status.devices.count, len(self.status.devices.items)
+        )
+        should_refresh_assigned_devices: bool = (
+            action == ModifyDeviceTag.ADD or assigned_device_count > 1
+        )
 
         update_command: Command = Command(
             method=action.value,

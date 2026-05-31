@@ -29,11 +29,15 @@ async def curfew(
     household_id: str = household_option(),
 ):
     """Curfew times, using the household's timezone"""
-    device: DualScanPetDoor = cast(DualScanPetDoor, await fetch_device(household_id, device_id))
+    device: DualScanPetDoor = cast(
+        DualScanPetDoor, await fetch_device(household_id, device_id)
+    )
 
     if state is None:
         curfews = getattr(device.control, "curfew")
-        typer.echo(f"Device {device.id}\ncurfew: {[curfew.model_dump() for curfew in curfews]}")
+        typer.echo(
+            f"Device {device.id}\ncurfew: {[curfew.model_dump() for curfew in curfews]}"
+        )
         return
     async with get_session_manager() as sm:
         await sm.client.api(device.set_curfew(state))
@@ -44,13 +48,16 @@ async def curfew(
 @dualscanpetdoor.command("locking", help="Set flap locking mode")
 async def locking(
     state: FlapLocking = state_option(
-        "Set new locking mode (omit to show current).", click_type=EnumChoice(FlapLocking)
+        "Set new locking mode (omit to show current).",
+        click_type=EnumChoice(FlapLocking),
     ),
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
     """Locking mode"""
-    device: DualScanPetDoor = cast(DualScanPetDoor, await fetch_device(household_id, device_id))
+    device: DualScanPetDoor = cast(
+        DualScanPetDoor, await fetch_device(household_id, device_id)
+    )
 
     if state is None:
         locking = getattr(device.control, "locking")

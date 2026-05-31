@@ -19,7 +19,9 @@ class UnexpectedDataTypeError(InvalidResponseError):
     """
 
     def __init__(self, field: str, expected: type, got: type) -> None:
-        super().__init__(f"Expected {expected.__name__} for '{field}' but got {got.__name__}")
+        super().__init__(
+            f"Expected {expected.__name__} for '{field}' but got {got.__name__}"
+        )
         self.field = field
         self.expected = expected
         self.got = got
@@ -32,14 +34,17 @@ class NotLoadedError(RuntimeError):
 class ApiError(Exception):
     """Base exception for all API HTTP errors."""
 
-    def __init__(self, method: str, endpoint: str, status: int, reason: str | None, payload=None):
+    def __init__(
+        self, method: str, endpoint: str, status: int, reason: str | None, payload=None
+    ):
         self.method = method.upper()
         self.endpoint = endpoint
         self.status = status
         self.reason = reason
         self.payload = payload
         message = (
-            f"API error: {self.method} {self.endpoint} " f"returned {self.status} {self.reason or ''}".strip()
+            f"API error: {self.method} {self.endpoint} "
+            f"returned {self.status} {self.reason or ''}".strip()
         )
         super().__init__(message)
 

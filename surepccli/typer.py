@@ -48,7 +48,9 @@ class AsyncTyper(typer.Typer):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             if not os.getenv(Envs.TOKEN):
-                typer.echo("You are not logged in. Please run: surepccli account login <email> <password>")
+                typer.echo(
+                    "You are not logged in. Please run: surepccli account login <email> <password>"
+                )
                 raise typer.Exit(code=1)
             return func(*args, **kwargs)
 
