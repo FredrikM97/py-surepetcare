@@ -32,7 +32,7 @@ class Bowls(ImprovedErrorMixin):
 
 
 class Lid(ImprovedErrorMixin):
-    close_delay: CloseDelay
+    close_delay: Optional[CloseDelay] = None
 
 
 class Control(BaseControl):
