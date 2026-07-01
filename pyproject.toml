@@ -38,6 +38,7 @@ dev = [
     "nest_asyncio",
 ]
 cli = [
+   "click>=8.1",
    "typer>=0.19.2",
    "rich==15.0.0",
    "python-dotenv>=1.1.0",
