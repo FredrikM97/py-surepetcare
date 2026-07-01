@@ -604,6 +604,7 @@ dependencies = [
 
 [package.optional-dependencies]
 cli = [
+    { name = "click" },
     { name = "python-dotenv" },
     { name = "rich" },
     { name = "typer" },
@@ -623,6 +624,7 @@ dev = [
 requires-dist = [
     { name = "aiohttp", specifier = ">=3.9.0" },
     { name = "aresponses", marker = "extra == 'dev'" },
+    { name = "click", marker = "extra == 'cli'", specifier = ">=8.1" },
     { name = "nest-asyncio", marker = "extra == 'dev'" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.2.0" },
     { name = "pydantic", specifier = ">=2.11.7" },
