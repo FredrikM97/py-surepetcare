@@ -172,24 +172,32 @@ class FeederConnect(DeviceBase[Control, Status]):
             return ["reset_left", "reset_right", "reset_both"]
 
     def fill_percentages(self):
-        """Return (total_percent, {bowl_index: percent or None, ...}) for all bowls."""
+        """Return total + per-bowl percentages (never negative, never None)."""
         bowl_status = getattr(self.status, "bowl_status", [])
         bowl_settings = getattr(self.control.bowls, "settings", [])
-
+    
         if not bowl_status or not bowl_settings:
-            return None, {}
+            return {"total": 0, "per_bowl": {}}
+    
         total_weight = 0
         total_target = 0
         individual = {}
+    
         for i, (bowl, setting) in enumerate(zip(bowl_status, bowl_settings)):
-            weight = getattr(bowl, "current_weight", None)
-            target = getattr(setting, "target", 0)
-            if weight is not None and target > 0:
+            weight = getattr(bowl, "current_weight", 0) or 0
+            target = getattr(setting, "target", 0) or 0
+    
+            if target > 0:
+                weight = max(weight, 0)
                 percent = (weight / target) * 100
-                individual[i] = percent
+                individual[i] = max(percent, 0)
+    
                 total_weight += weight
                 total_target += target
             else:
-                individual[i] = None
-        total = (total_weight / total_target * 100) if total_target > 0 else None
+                individual[i] = 0
+    
+        total = (total_weight / total_target * 100) if total_target > 0 else 0
+        total = max(total, 0)
+    
         return {"total": total, "per_bowl": individual}
