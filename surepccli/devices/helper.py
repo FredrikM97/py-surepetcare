@@ -1,6 +1,5 @@
 import enum
 import json
-from typing import Any
 
 import click
 
@@ -43,7 +42,9 @@ class EnumChoice(click.ParamType):
     ) -> str | None:
         return f"Choose from: {', '.join(self.enum_cls._member_names_)}"
 
-    def convert(self, value: str, param: Any, ctx: Any) -> enum.Enum:
+    def convert(
+        self, value: str, param: click.Parameter | None, ctx: click.Context | None
+    ) -> enum.Enum:
         if isinstance(value, self.enum_cls):
             return value
         try:

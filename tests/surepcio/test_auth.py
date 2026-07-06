@@ -1,5 +1,5 @@
 import pytest
-from typing import Any
+import aiohttp
 from typing import cast
 
 from surepcio.const import API_ENDPOINT_PRODUCTION
@@ -138,7 +138,7 @@ async def test_set_session():
             return False
 
     s = DummyWithClosed()
-    client.session = cast(Any, s)
+    client.session = cast(aiohttp.ClientSession, s)
     await client.set_session()
     assert client.session is s
 
@@ -164,7 +164,7 @@ def test_del_warns(monkeypatch):
     class DummySession:
         closed = False
 
-    client.session = cast(Any, DummySession())
+    client.session = cast(aiohttp.ClientSession, DummySession())
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
         del client
