@@ -178,9 +178,9 @@
       'bowl_type_options': 'LARGE_DRY',
       'fill_percentages': dict({
         'per_bowl': dict({
-          0: -61.587786259541986,
+          0: 0.0,
         }),
-        'total': -61.587786259541986,
+        'total': 0.0,
       }),
       'learn_mode': False,
       'online': True,
@@ -216,9 +216,9 @@
   dict({
     'fill_percentages': dict({
       'per_bowl': dict({
-        0: -61.587786259541986,
+        0: 0.0,
       }),
-      'total': -61.587786259541986,
+      'total': 0.0,
     }),
     'get_bowl_type_option': 'LARGE_DRY',
   })
@@ -402,9 +402,9 @@
       'bowl_type_options': 'LARGE_DRY',
       'fill_percentages': dict({
         'per_bowl': dict({
-          0: -61.587786259541986,
+          0: 0.0,
         }),
-        'total': -61.587786259541986,
+        'total': 0.0,
       }),
       'learn_mode': False,
       'online': True,

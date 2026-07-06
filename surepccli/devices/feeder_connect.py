@@ -33,11 +33,11 @@ async def fill_percentages(
     if not device:
         return
     result = device.fill_percentages()
-    if result is None:
-        total, bowls = None, {}
-    else:
-        total = result.get("total")
-        bowls = result.get("per_bowl", {})
+    total_value = result.get("total")
+    total = total_value if isinstance(total_value, (int, float)) else None
+
+    bowls_value = result.get("per_bowl", {})
+    bowls = bowls_value if isinstance(bowls_value, dict) else {}
 
     rows = [
         [f"Bowl {b}", f"{round(p, 2) if p is not None else 'N/A'}"]

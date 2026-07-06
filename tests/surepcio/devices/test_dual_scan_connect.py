@@ -9,7 +9,10 @@ from tests.conftest import object_snapshot
 @pytest.mark.asyncio
 @pytest.mark.parametrize("device_names", [["dual_scan_connect", "household"]])
 async def test_snapshot(
-    snapshot: SnapshotAssertion, register_device_api_mocks, mock_devices
+    snapshot: SnapshotAssertion,
+    register_device_api_mocks,
+    mock_devices,
+    freeze_time_for_snapshots,
 ):
     register_device_api_mocks(mock_devices)
     async with SurePetcareClient() as client:

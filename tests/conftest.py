@@ -8,6 +8,7 @@ import warnings
 import aresponses
 import pytest
 from syrupy.assertion import SnapshotAssertion
+import time_machine
 
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from tests import FIXTURES
@@ -143,6 +144,13 @@ def add_api_json_response(aresponses: aresponses.ResponsesMockServer) -> ApiMock
     Pass ``overwrite=True`` to replace an already-registered route for the same endpoint.
     """
     return ApiMockServer(aresponses)
+
+
+@pytest.fixture
+def freeze_time_for_snapshots() -> None:
+    """Freeze process time for deterministic snapshot tests."""
+    with time_machine.travel("2026-01-01 12:00:00", tick=False):
+        yield
 
 
 def mask_fields(obj, skip_fields=None, any_fields=None):
