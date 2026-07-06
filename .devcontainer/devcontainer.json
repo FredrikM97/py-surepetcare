@@ -1,22 +1,32 @@
 {
   "name": "Python Dev Container",
-  "image": "mcr.microsoft.com/devcontainers/python:3.13",
+
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+
+  "remoteUser": "vscode",
+
   "customizations": {
     "vscode": {
-      "settings": {
-        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-        "python.terminal.activateEnvironment": true
-      },
       "extensions": [
         "ms-python.python",
         "charliermarsh.ruff",
         "GitHub.copilot"
-      ]
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/home/vscode/.venv/bin/python",
+            "python.terminal.activateEnvironment": true,
+            "terminal.integrated.env.linux": {
+          "PATH": "/home/vscode/.venv/bin:/workspaces/psp/.venv/bin:${env:PATH}"
+            }
+      }
     }
   },
+
   "mounts": [
-    "type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh"
+    "type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,readonly"
   ],
-  "postCreateCommand": "pip install uv && uv sync --all-extras --dev && uv run pre-commit install",
-  "postStartCommand": "git config --global --unset-all core.hooksPath || true" 
+  "postCreateCommand": "uv sync --extra dev --extra cli && uv run pre-commit install"
 }

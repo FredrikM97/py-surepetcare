@@ -171,33 +171,47 @@ class FeederConnect(DeviceBase[Control, Status]):
         else:
             return ["reset_left", "reset_right", "reset_both"]
 
-    def fill_percentages(self):
-        """Return total + per-bowl percentages (never negative, never None)."""
-        bowl_status = getattr(self.status, "bowl_status", [])
-        bowl_settings = getattr(self.control.bowls, "settings", [])
-    
+    def fill_percentages(
+        self,
+    ) -> dict[str, Optional[float] | dict[int, Optional[float]]]:
+        """Return total and per-bowl fill percentages.
+
+        Rules:
+        - Negative calculated percentages are clamped to 0.
+        - If weight is None, target is None, or target <= 0, that bowl returns None.
+        - If no valid target values are available, total returns None.
+        """
+        bowl_status = getattr(self.status, "bowl_status", None)
+        bowls = getattr(self.control, "bowls", None)
+        bowl_settings = getattr(bowls, "settings", None)
+
         if not bowl_status or not bowl_settings:
-            return {"total": 0, "per_bowl": {}}
-    
-        total_weight = 0
-        total_target = 0
-        individual = {}
-    
+            return {"total": None, "per_bowl": {}}
+
+        total_weight = 0.0
+        total_target = 0.0
+        individual: dict[int, Optional[float]] = {}
+
         for i, (bowl, setting) in enumerate(zip(bowl_status, bowl_settings)):
-            weight = getattr(bowl, "current_weight", 0) or 0
-            target = getattr(setting, "target", 0) or 0
-    
-            if target > 0:
-                weight = max(weight, 0)
-                percent = (weight / target) * 100
-                individual[i] = max(percent, 0)
-    
-                total_weight += weight
-                total_target += target
-            else:
-                individual[i] = 0
-    
-        total = (total_weight / total_target * 100) if total_target > 0 else 0
-        total = max(total, 0)
-    
+            weight = getattr(bowl, "current_weight", None)
+            target = getattr(setting, "target", None)
+
+            if weight is None or target is None:
+                individual[i] = None
+                continue
+
+            if target <= 0:
+                individual[i] = None
+                continue
+
+            clamped_weight = max(weight, 0)
+            percent = max((clamped_weight / target) * 100, 0)
+            individual[i] = percent
+
+            total_weight += clamped_weight
+            total_target += target
+
+        total: Optional[float] = (
+            max((total_weight / total_target) * 100, 0) if total_target > 0 else None
+        )
         return {"total": total, "per_bowl": individual}

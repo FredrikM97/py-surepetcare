@@ -511,8 +511,8 @@
     'output': '''
       Type   | Percentage
       -------------------
-      Bowl 0 | -61.59
-      Total  | -61
+      Bowl 0 | 0.0
+      Total  | 0
     ''',
   })
 # ---
