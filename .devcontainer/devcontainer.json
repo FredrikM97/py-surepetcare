@@ -28,5 +28,5 @@
   "mounts": [
     "type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,readonly"
   ],
-  "postCreateCommand": "uv sync --extra dev --extra cli && uv run pre-commit install"
+  "postCreateCommand": "git config --global --unset-all core.hooksPath || true && git config --local --unset-all core.hooksPath || true && uv sync --extra dev --extra cli && uv run pre-commit install --install-hooks"
 }
