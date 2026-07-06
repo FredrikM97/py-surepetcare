@@ -44,7 +44,9 @@ async def curfew(
     elif isinstance(state, list) and all(isinstance(item, Curfew) for item in state):
         curfew_list = state
     else:
-        raise typer.BadParameter("Curfew must be a Curfew object or list of Curfew objects")
+        raise typer.BadParameter(
+            "Curfew must be a Curfew object or list of Curfew objects"
+        )
 
     async with get_session_manager() as sm:
         await sm.client.api(device.set_curfew(curfew_list))
