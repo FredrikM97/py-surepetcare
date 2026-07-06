@@ -21,7 +21,7 @@ dualscanconnect = AsyncTyper(
 
 @dualscanconnect.command("curfew", help="Set flap curfew mode")
 async def curfew(
-    state: Curfew = state_option(  # typer works poorly with List[Curfew] but Curfew works.. fix later
+    state: object | None = state_option(
         "Set new curfew times (omit to show current).", click_type=CurfewParamType()
     ),
     device_id: str = device_id_option(),
@@ -38,8 +38,16 @@ async def curfew(
             f"Device {device.id}\ncurfew: {[curfew.model_dump() for curfew in curfews]}"
         )
         return
+
+    if isinstance(state, Curfew):
+        curfew_list: list[Curfew] = [state]
+    elif isinstance(state, list) and all(isinstance(item, Curfew) for item in state):
+        curfew_list = state
+    else:
+        raise typer.BadParameter("Curfew must be a Curfew object or list of Curfew objects")
+
     async with get_session_manager() as sm:
-        await sm.client.api(device.set_curfew(state))
+        await sm.client.api(device.set_curfew(curfew_list))
 
     typer.echo(f"Device {device_id} curfew set to {state}.")
 

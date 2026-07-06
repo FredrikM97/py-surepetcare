@@ -1,6 +1,7 @@
 import enum
 import inspect
 import json
+from collections.abc import Generator
 from pathlib import Path
 from unittest.mock import ANY, MagicMock
 from urllib.parse import urlparse
@@ -147,7 +148,7 @@ def add_api_json_response(aresponses: aresponses.ResponsesMockServer) -> ApiMock
 
 
 @pytest.fixture
-def freeze_time_for_snapshots() -> None:
+def freeze_time_for_snapshots() -> Generator[None, None, None]:
     """Freeze process time for deterministic snapshot tests."""
     with time_machine.travel("2026-01-01 12:00:00", tick=False):
         yield

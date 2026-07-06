@@ -1,3 +1,4 @@
+from typing import Any
 from typing import Optional
 
 import typer
@@ -83,7 +84,7 @@ def product_id_option(optional: bool = False):
     )
 
 
-def state_option(help: str = "", **kwargs) -> typer.Option:
+def state_option(help: str = "", **kwargs) -> Any:
     return Option(
         None,
         "--state",
