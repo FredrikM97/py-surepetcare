@@ -132,7 +132,7 @@ class FeederConnect(DeviceBase[Control, Status]):
         """Set the bowl type/settings on the device using BowlTypeOptions enum."""
         if not isinstance(option, BowlTypeOptions):
             return None
-        settings = [
+        settings: list[Optional[BowlSetting]] = [
             BowlSetting(food_type=ft.value, target=0) for ft in option.food_types
         ]
         return self.set_control(

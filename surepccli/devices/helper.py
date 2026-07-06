@@ -2,7 +2,6 @@ import enum
 import json
 
 import click
-from typer import Context
 
 from surepcio.devices.entities import Curfew
 
@@ -29,21 +28,23 @@ class CurfewParamType(click.ParamType):
 class EnumChoice(click.ParamType):
     """A Click param type that shows enum choices and returns the enum instance."""
 
-    def __init__(self, enum_cls):
+    def __init__(self, enum_cls: type[enum.Enum]) -> None:
         if not issubclass(enum_cls, enum.Enum):
             raise TypeError(f"{enum_cls} is not an Enum type")
         self.enum_cls = enum_cls
         self.name = enum_cls.__name__
 
-    def get_metavar(self, param: click.Parameter, ctx: Context) -> str | None:
+    def get_metavar(self, param: click.Parameter, ctx: click.Context) -> str | None:
         return f"[{'|'.join(self.enum_cls._member_names_)}]"
 
     def get_missing_message(
-        self, param: click.Parameter, ctx: Context | None
+        self, param: click.Parameter, ctx: click.Context | None
     ) -> str | None:
         return f"Choose from: {', '.join(self.enum_cls._member_names_)}"
 
-    def convert(self, value: str, param, ctx):
+    def convert(
+        self, value: str, param: click.Parameter | None, ctx: click.Context | None
+    ) -> enum.Enum:
         if isinstance(value, self.enum_cls):
             return value
         try:

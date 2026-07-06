@@ -3,9 +3,11 @@ from syrupy.assertion import SnapshotAssertion
 
 from surepcio import Household
 from surepcio.client import SurePetcareClient
+from surepcio.devices.entities import BowlState
 from surepcio.devices.feeder_connect import Bowls
 from surepcio.devices.feeder_connect import BowlSetting
 from surepcio.devices.feeder_connect import FeederConnect
+from surepcio.enums import BowlPosition
 from surepcio.enums import BowlType
 from surepcio.enums import FoodType
 from tests.conftest import object_snapshot
@@ -71,13 +73,19 @@ def test_fill_percentages_clamps_negative_and_preserves_none() -> None:
     device = FeederConnect({"id": 1, "household_id": 7777})
     device.status = device.statusCls(
         bowl_status=[
-            {"index": 0, "current_weight": -5.0},
-            {"index": 1, "current_weight": None},
-            {"index": 2, "current_weight": 10.0},
+            BowlState(index=BowlPosition.ONE, current_weight=-5.0),
+            BowlState(index=BowlPosition.TWO, current_weight=None),
+            BowlState(index=BowlPosition.BOTH, current_weight=10.0),
         ]
     )
     device.control = device.controlCls(
-        bowls={"settings": [{"target": 20.0}, {"target": 20.0}, {"target": None}]}
+        bowls=Bowls(
+            settings=[
+                BowlSetting(target=20.0),
+                BowlSetting(target=20.0),
+                BowlSetting(target=None),
+            ]
+        )
     )
 
     result = device.fill_percentages()
@@ -98,12 +106,12 @@ def test_fill_percentages_returns_none_for_non_positive_targets() -> None:
     device = FeederConnect({"id": 1, "household_id": 7777})
     device.status = device.statusCls(
         bowl_status=[
-            {"index": 0, "current_weight": 10.0},
-            {"index": 1, "current_weight": -5.0},
+            BowlState(index=BowlPosition.ONE, current_weight=10.0),
+            BowlState(index=BowlPosition.TWO, current_weight=-5.0),
         ]
     )
     device.control = device.controlCls(
-        bowls={"settings": [{"target": 0.0}, {"target": -10.0}]}
+        bowls=Bowls(settings=[BowlSetting(target=0.0), BowlSetting(target=-10.0)])
     )
 
     result = device.fill_percentages()

@@ -3,11 +3,10 @@ import logging
 from abc import ABC
 from abc import abstractmethod
 from typing import Any
+from typing import cast
 from typing import Generic
 from typing import Optional
 from typing import TypeVar
-
-from pydantic import Field
 
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
@@ -16,30 +15,31 @@ from surepcio.devices.entities import BaseControl
 from surepcio.devices.entities import BaseStatus
 from surepcio.devices.entities import EntityInfo
 from surepcio.entities.battery_mixin import BatteryMixin
+from surepcio.entities.error_mixin import ImprovedErrorMixin
 from surepcio.enums import FlapLocking, ModifyDeviceTag
 from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
 
-C = TypeVar("C", bound=BaseControl)
-S = TypeVar("S", bound=BaseStatus)
+C = TypeVar("C", bound=ImprovedErrorMixin)
+S = TypeVar("S", bound=ImprovedErrorMixin)
 
 
 class ModelFactoryMixin(Generic[C, S]):
-    controlCls: type[C] = BaseControl
-    statusCls: type[S] = BaseStatus
+    controlCls: type[C] = cast(type[C], BaseControl)
+    statusCls: type[S] = cast(type[S], BaseStatus)
 
 
 class SurePetCareBase(ABC, ModelFactoryMixin[C, S]):
     """Base class for Sure PetCare entities."""
 
-    entity_info: EntityInfo = Field(default_factory=EntityInfo)
+    entity_info: EntityInfo
 
     def __init__(self, data: dict, timezone=None, **kwargs) -> None:
         try:
             self.entity_info = EntityInfo(**{**data, "product_id": self.product_id})
-            self.status: S = self.statusCls(**data)
-            self.control: C = self.controlCls(**data)
+            self.status: S = cast(S, self.statusCls(**data))
+            self.control: C = cast(C, self.controlCls(**data))
         except Exception as e:
             logger.warning("Error while storing data %s", data)
             raise e
@@ -75,7 +75,7 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
 
     @property
     def available(self) -> Optional[bool]:
-        return self.status.online if self.status is not None else None
+        return getattr(self.status, "online", None) if self.status is not None else None
 
     @property
     def photo(self) -> str | None:
@@ -121,10 +121,11 @@ class DoorDeviceBase(DeviceBase[C, S]):
 
     @property
     def is_curfew_active(self) -> bool:
+        curfew_value = getattr(self.control, "curfew", None)
         curfews = (
-            self.control.curfew
-            if isinstance(self.control.curfew, list)
-            else ([self.control.curfew] if self.control.curfew else [])
+            curfew_value
+            if isinstance(curfew_value, list)
+            else ([curfew_value] if curfew_value else [])
         )
         now = datetime.now().time()
         return any(
@@ -153,7 +154,7 @@ class PetBase(SurePetCareBase[C, S]):
 
     @property
     def available(self) -> Optional[bool]:
-        return self.status.online
+        return getattr(self.status, "online", None)
 
     @property
     def photo(self) -> str | None:
