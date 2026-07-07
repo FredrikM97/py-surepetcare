@@ -1,4 +1,5 @@
 from datetime import datetime
+from datetime import timezone
 import logging
 from abc import ABC
 from abc import abstractmethod
@@ -127,7 +128,9 @@ class DoorDeviceBase(DeviceBase[C, S]):
             if isinstance(curfew_value, list)
             else ([curfew_value] if curfew_value else [])
         )
-        now = datetime.now().time()
+        # The API reports curfew lock/unlock times in UTC, so compare
+        # against the current UTC time rather than the host's local time.
+        now = datetime.now(timezone.utc).time()
         return any(
             c.enabled
             and (
