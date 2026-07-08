@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from datetime import timezone
 from datetime import tzinfo as datetime_tzinfo
 from zoneinfo import ZoneInfo
 from zoneinfo import ZoneInfoNotFoundError
@@ -27,7 +28,9 @@ class Household:
         self._tzinfo: datetime_tzinfo = self._resolve_tzinfo()
 
     def _resolve_tzinfo(self) -> datetime_tzinfo:
-        system_tzinfo = datetime.now().astimezone().tzinfo
+        system_tzinfo: datetime_tzinfo = (
+            datetime.now().astimezone().tzinfo or timezone.utc
+        )
         timezone_name = (self.data.get("timezone") or {}).get("timezone")
         if not timezone_name:
             return system_tzinfo
