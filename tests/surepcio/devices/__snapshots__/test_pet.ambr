@@ -84,7 +84,6 @@
         'device_id': 269654,
       }),
     }),
-    'timezone': 'Europe/Stockholm',
   })
 # ---
 # name: test_snapshot[device_names0].1
@@ -172,6 +171,5 @@
         'device_id': 269654,
       }),
     }),
-    'timezone': 'Europe/Stockholm',
   })
 # ---

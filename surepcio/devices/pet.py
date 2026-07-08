@@ -1,6 +1,5 @@
 import logging
 from datetime import datetime
-from datetime import timezone
 from typing import Optional
 
 from pydantic import Field
@@ -178,7 +177,7 @@ class Pet(PetBase[Control, Status]):
 
         data = {
             "where": int(location.value),
-            "since": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
+            "since": datetime.now(self._tzinfo).strftime("%Y-%m-%d %H:%M:%S"),
         }
         return Command(
             method="POST",

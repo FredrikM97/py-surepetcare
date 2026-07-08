@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 from syrupy.assertion import SnapshotAssertion
 
@@ -9,7 +11,10 @@ from surepcio.devices.feeder_connect import FeederConnect
 from surepcio.devices.hub import Hub
 from surepcio.devices.pet import Pet
 from surepcio.enums import ProductId
-from surepcio.security.exceptions import NotLoadedError, UnexpectedDataTypeError
+from surepcio.security.exceptions import (
+    NotLoadedError,
+    UnexpectedDataTypeError,
+)
 from tests.conftest import object_snapshot
 
 
@@ -88,6 +93,13 @@ def test_get_devices_skips_invalid_product() -> None:
     devices: list = household.data["devices"]
     assert len(devices) == 1
     assert devices[0].id == 11
+
+
+def test_invalid_household_timezone_falls_back_to_system_timezone() -> None:
+    expected_tzinfo = datetime.now().astimezone().tzinfo
+    household = Household({"id": 1, "timezone": {"timezone": "Invalid/Timezone"}})
+
+    assert str(household._tzinfo) == str(expected_tzinfo)
 
 
 @pytest.mark.asyncio

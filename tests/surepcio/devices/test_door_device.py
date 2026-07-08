@@ -1,5 +1,7 @@
 from datetime import datetime
 from datetime import time
+from datetime import timezone
+from zoneinfo import ZoneInfo
 
 import pytest
 
@@ -23,8 +25,10 @@ class DummyDateTime:
     def __init__(self, fixed_datetime: datetime):
         self._fixed_datetime = fixed_datetime
 
-    def now(self):
-        return self._fixed_datetime
+    def now(self, tz=None):
+        if tz is None:
+            return self._fixed_datetime
+        return self._fixed_datetime.astimezone(tz)
 
 
 @pytest.mark.parametrize(
@@ -75,8 +79,64 @@ class DummyDateTime:
     ],
 )
 def test_is_curfew_active_with_various_times(monkeypatch, curfew_values, now, expected):
-    fake = FakeDoor({"id": 1, "household_id": 1})
+    fake = FakeDoor({"id": 1, "household_id": 1}, tzinfo=timezone.utc)
     fake.control = type("Control", (), {"curfew": curfew_values})()
     monkeypatch.setattr("surepcio.devices.device.datetime", DummyDateTime(now))
+
+    assert fake.is_curfew_active is expected
+
+
+def test_is_curfew_active_uses_household_timezone(monkeypatch) -> None:
+    fake = FakeDoor({"id": 1, "household_id": 1}, tzinfo=ZoneInfo("Europe/London"))
+    fake.control = type(
+        "Control",
+        (),
+        {
+            "curfew": [
+                Curfew(
+                    enabled=True,
+                    lock_time=time(12, 30),
+                    unlock_time=time(13, 30),
+                )
+            ]
+        },
+    )()
+    monkeypatch.setattr(
+        "surepcio.devices.device.datetime",
+        DummyDateTime(datetime(2025, 6, 1, 11, 45, tzinfo=timezone.utc)),
+    )
+
+    assert fake.is_curfew_active is True
+
+
+@pytest.mark.parametrize(
+    "tz_name, expected",
+    [
+        ("Europe/Stockholm", True),
+        ("America/New_York", False),
+    ],
+)
+def test_is_curfew_active_respects_timezone_conversion(
+    monkeypatch, tz_name: str, expected: bool
+) -> None:
+    fake = FakeDoor({"id": 1, "household_id": 1}, tzinfo=ZoneInfo(tz_name))
+    fake.control = type(
+        "Control",
+        (),
+        {
+            "curfew": [
+                Curfew(
+                    enabled=True,
+                    lock_time=time(14, 30),
+                    unlock_time=time(15, 30),
+                )
+            ]
+        },
+    )()
+    # 12:45 UTC => 14:45 in Europe/Stockholm and 08:45 in America/New_York.
+    monkeypatch.setattr(
+        "surepcio.devices.device.datetime",
+        DummyDateTime(datetime(2025, 6, 1, 12, 45, tzinfo=timezone.utc)),
+    )
 
     assert fake.is_curfew_active is expected

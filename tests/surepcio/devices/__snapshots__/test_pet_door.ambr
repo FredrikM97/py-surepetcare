@@ -59,7 +59,6 @@
         }),
       }),
     }),
-    'timezone': 'Europe/Stockholm',
   })
 # ---
 # name: test_snapshot[device_names0].1
@@ -122,6 +121,5 @@
         }),
       }),
     }),
-    'timezone': 'Europe/Stockholm',
   })
 # ---

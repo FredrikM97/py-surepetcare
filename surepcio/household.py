@@ -1,4 +1,8 @@
 import logging
+from datetime import datetime
+from datetime import tzinfo as datetime_tzinfo
+from zoneinfo import ZoneInfo
+from zoneinfo import ZoneInfoNotFoundError
 
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
@@ -6,7 +10,10 @@ from surepcio.devices import load_device_class
 from surepcio.devices.entities import SurePetcareResponse
 from surepcio.devices.pet import Pet
 from surepcio.enums import ProductId
-from surepcio.security.exceptions import NotLoadedError, UnexpectedDataTypeError
+from surepcio.security.exceptions import (
+    NotLoadedError,
+    UnexpectedDataTypeError,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +24,23 @@ class Household:
     def __init__(self, data: dict):
         self.data = data
         self.id = data["id"]
-        self.timezone = (data.get("timezone") or {}).get("timezone")
+        self._tzinfo: datetime_tzinfo = self._resolve_tzinfo()
+
+    def _resolve_tzinfo(self) -> datetime_tzinfo:
+        system_tzinfo = datetime.now().astimezone().tzinfo
+        timezone_name = (self.data.get("timezone") or {}).get("timezone")
+        if not timezone_name:
+            return system_tzinfo
+
+        try:
+            return ZoneInfo(timezone_name)
+        except ZoneInfoNotFoundError:
+            logger.debug(
+                "Unknown timezone '%s' for household %s, using system timezone",
+                timezone_name,
+                self.id,
+            )
+            return system_tzinfo
 
     def get_pets(self) -> Command:
         """Get all pets in the household."""
@@ -28,7 +51,7 @@ class Household:
             if not isinstance(response.data["data"], list):
                 raise UnexpectedDataTypeError("data", list, type(response.data["data"]))
 
-            pets = [Pet(p, timezone=self.timezone) for p in response.data["data"]]
+            pets = [Pet(p, tzinfo=self._tzinfo) for p in response.data["data"]]
             self.data["pets"] = pets
             cmds: list[Command] = [pet.refresh() for pet in pets]
             # Helper for now to avoid need to manually call it
@@ -54,7 +77,7 @@ class Household:
             for device in response.data["data"]:
                 device_cls = load_device_class(device["product_id"])
                 if device_cls is not None:
-                    devices.append(device_cls(device, timezone=self.timezone))
+                    devices.append(device_cls(device, tzinfo=self._tzinfo))
             self.data["devices"] = devices
             cmds: list[Command] = [d.refresh() for d in devices]
             # Helper for now to avoid need to manually call it

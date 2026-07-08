@@ -1,4 +1,5 @@
 import aresponses
+from datetime import timezone
 import pytest
 from syrupy.assertion import SnapshotAssertion
 from surepcio import SurePetcareClient
@@ -95,7 +96,7 @@ async def test_async_put_with_pending_and_polling(add_api_json_response):
     )
 
     async with SurePetcareClient() as client:
-        device = FeederConnect({"id": 123, "household_id": 7777})
+        device = FeederConnect({"id": 123, "household_id": 7777}, tzinfo=timezone.utc)
 
         cmd = device.set_lid(CloseDelay.NORMAL)
         result = await client.api(cmd)
@@ -135,7 +136,7 @@ async def test_non_async_put_updates_device(add_api_json_response):
     )
 
     async with SurePetcareClient() as client:
-        device = FeederConnect({"id": 456, "household_id": 7777})
+        device = FeederConnect({"id": 456, "household_id": 7777}, tzinfo=timezone.utc)
 
         cmd = device.set_lid(CloseDelay.NORMAL)
 

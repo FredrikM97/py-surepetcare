@@ -36,7 +36,6 @@
         }),
       }),
       'id': 7777,
-      'timezone': 'Europe/Stockholm',
     }),
     dict({
       'data': dict({
@@ -50,7 +49,6 @@
         }),
       }),
       'id': 1,
-      'timezone': 'Europe/Stockholm',
     }),
     dict({
       'data': dict({
@@ -64,7 +62,6 @@
         }),
       }),
       'id': 2,
-      'timezone': 'Europe/Stockholm',
     }),
     dict({
       'data': dict({
@@ -133,7 +130,6 @@
         'version': 2,
       }),
       'id': 222527,
-      'timezone': 'Europe/Stockholm',
     }),
   ])
 # ---

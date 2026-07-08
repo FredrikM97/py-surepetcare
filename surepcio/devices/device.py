@@ -1,4 +1,5 @@
 from datetime import datetime
+from datetime import tzinfo as datetime_tzinfo
 import logging
 from abc import ABC
 from abc import abstractmethod
@@ -35,7 +36,12 @@ class SurePetCareBase(ABC, ModelFactoryMixin[C, S]):
 
     entity_info: EntityInfo
 
-    def __init__(self, data: dict, timezone=None, **kwargs) -> None:
+    def __init__(
+        self,
+        data: dict,
+        tzinfo: datetime_tzinfo,
+        **kwargs,
+    ) -> None:
         try:
             self.entity_info = EntityInfo(**{**data, "product_id": self.product_id})
             self.status: S = cast(S, self.statusCls(**data))
@@ -43,7 +49,7 @@ class SurePetCareBase(ABC, ModelFactoryMixin[C, S]):
         except Exception as e:
             logger.warning("Error while storing data %s", data)
             raise e
-        self.timezone = timezone
+        self._tzinfo: datetime_tzinfo = tzinfo
 
     @property
     @abstractmethod
@@ -127,7 +133,7 @@ class DoorDeviceBase(DeviceBase[C, S]):
             if isinstance(curfew_value, list)
             else ([curfew_value] if curfew_value else [])
         )
-        now = datetime.now().time()
+        now = datetime.now(self._tzinfo).time()
         return any(
             c.enabled
             and (

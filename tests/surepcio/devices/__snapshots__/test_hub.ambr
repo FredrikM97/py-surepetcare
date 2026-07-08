@@ -42,6 +42,5 @@
         }),
       }),
     }),
-    'timezone': 'Europe/Stockholm',
   })
 # ---

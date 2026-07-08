@@ -1,3 +1,5 @@
+from datetime import timezone
+
 import pytest
 from syrupy.assertion import SnapshotAssertion
 
@@ -70,7 +72,7 @@ async def test_snapshot_get_functions(
 
 
 def test_fill_percentages_clamps_negative_and_preserves_none() -> None:
-    device = FeederConnect({"id": 1, "household_id": 7777})
+    device = FeederConnect({"id": 1, "household_id": 7777}, tzinfo=timezone.utc)
     device.status = device.statusCls(
         bowl_status=[
             BowlState(index=BowlPosition.ONE, current_weight=-5.0),
@@ -95,7 +97,7 @@ def test_fill_percentages_clamps_negative_and_preserves_none() -> None:
 
 
 def test_fill_percentages_returns_none_when_no_data() -> None:
-    device = FeederConnect({"id": 1, "household_id": 7777})
+    device = FeederConnect({"id": 1, "household_id": 7777}, tzinfo=timezone.utc)
 
     result = device.fill_percentages()
 
@@ -103,7 +105,7 @@ def test_fill_percentages_returns_none_when_no_data() -> None:
 
 
 def test_fill_percentages_returns_none_for_non_positive_targets() -> None:
-    device = FeederConnect({"id": 1, "household_id": 7777})
+    device = FeederConnect({"id": 1, "household_id": 7777}, tzinfo=timezone.utc)
     device.status = device.statusCls(
         bowl_status=[
             BowlState(index=BowlPosition.ONE, current_weight=10.0),
