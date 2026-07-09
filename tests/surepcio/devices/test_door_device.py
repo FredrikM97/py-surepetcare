@@ -1,5 +1,6 @@
 import os
 import time as time_module
+from contextlib import ExitStack
 from datetime import datetime
 from datetime import time
 from datetime import timezone
@@ -90,7 +91,7 @@ def test_is_curfew_active_with_various_times(monkeypatch, curfew_values, now, ex
 @pytest.mark.skipif(
     not hasattr(time_module, "tzset"), reason="requires POSIX tzset to change local time"
 )
-def test_is_curfew_active_uses_utc_not_host_local_time():
+def test_is_curfew_active_uses_utc_not_host_local_time(monkeypatch) -> None:
     """Curfew times from the API are UTC; a host in UTC+1 must not shift the window."""
     fake = FakeDoor({"id": 1, "household_id": 1})
     fake.control = type(
@@ -99,18 +100,15 @@ def test_is_curfew_active_uses_utc_not_host_local_time():
         {"curfew": [Curfew(enabled=True, lock_time=time(21, 0), unlock_time=time(5, 0))]},
     )()
 
-    old_tz = os.environ.get("TZ")
-    os.environ["TZ"] = "Europe/London"  # UTC+1 (BST) on the frozen date
-    time_module.tzset()
-    try:
+    with ExitStack() as cleanup:
+        # Ensure tzset is called after TZ restoration, even when assertions fail.
+        cleanup.callback(time_module.tzset)
+        tz_context = cleanup.enter_context(monkeypatch.context())
+        tz_context.setenv("TZ", "Europe/London")  # UTC+1 (BST) on the frozen date
+        time_module.tzset()
+
         # 20:30 UTC is 21:30 local: local clock is past lock_time but UTC is not
         with time_machine.travel("2026-07-06 20:30:00 +00:00", tick=False):
             assert fake.is_curfew_active is False
         with time_machine.travel("2026-07-06 21:30:00 +00:00", tick=False):
             assert fake.is_curfew_active is True
-    finally:
-        if old_tz is None:
-            os.environ.pop("TZ", None)
-        else:
-            os.environ["TZ"] = old_tz
-        time_module.tzset()
