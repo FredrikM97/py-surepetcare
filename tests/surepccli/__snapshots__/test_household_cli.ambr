@@ -81,9 +81,9 @@
        List timeline events with optional pagination.
       
       ╭─ Options ────────────────────────────────────────────────────────────────────╮
-      │ --since-id         INTEGER  Return events with ID greater than this.         │
-      │ --before-id        INTEGER  Return events with ID less than this.            │
-      │ --help                      Show this message and exit.                      │
+      │ --since-id         <int>  Return events with ID greater than this.           │
+      │ --before-id        <int>  Return events with ID less than this.              │
+      │ --help                    Show this message and exit.                        │
       ╰──────────────────────────────────────────────────────────────────────────────╯
   
     ''',

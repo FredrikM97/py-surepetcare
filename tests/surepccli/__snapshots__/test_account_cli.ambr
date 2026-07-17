@@ -58,17 +58,18 @@
     'exit_code': 0,
     'output': '''
       
-       Usage: root account login [OPTIONS] EMAIL
+       Usage: root account login [OPTIONS] {email}
       
        Login with email and password.
       
       ╭─ Arguments ──────────────────────────────────────────────────────────────────╮
-      │ *    email      TEXT  [required]                                             │
+      │ *    email      <str>  [required]                                            │
       ╰──────────────────────────────────────────────────────────────────────────────╯
       ╭─ Options ────────────────────────────────────────────────────────────────────╮
-      │ --password        TEXT  Account password (prompted, hidden).                 │
-      │ --no-store              Do not store session in environment. [default: True] │
-      │ --help                  Show this message and exit.                          │
+      │ --password        <str>  Account password (prompted, hidden).                │
+      │ --no-store               Do not store session in environment.                │
+      │                          [default: True]                                     │
+      │ --help                   Show this message and exit.                         │
       ╰──────────────────────────────────────────────────────────────────────────────╯
   
     ''',
