@@ -1,4 +1,3 @@
-import os
 import time as time_module
 from contextlib import ExitStack
 from datetime import datetime
@@ -89,7 +88,8 @@ def test_is_curfew_active_with_various_times(monkeypatch, curfew_values, now, ex
 
 
 @pytest.mark.skipif(
-    not hasattr(time_module, "tzset"), reason="requires POSIX tzset to change local time"
+    not hasattr(time_module, "tzset"),
+    reason="requires POSIX tzset to change local time",
 )
 def test_is_curfew_active_uses_utc_not_host_local_time(monkeypatch) -> None:
     """Curfew times from the API are UTC; a host in UTC+1 must not shift the window."""
@@ -97,7 +97,11 @@ def test_is_curfew_active_uses_utc_not_host_local_time(monkeypatch) -> None:
     fake.control = type(
         "Control",
         (),
-        {"curfew": [Curfew(enabled=True, lock_time=time(21, 0), unlock_time=time(5, 0))]},
+        {
+            "curfew": [
+                Curfew(enabled=True, lock_time=time(21, 0), unlock_time=time(5, 0))
+            ]
+        },
     )()
 
     with ExitStack() as cleanup:
