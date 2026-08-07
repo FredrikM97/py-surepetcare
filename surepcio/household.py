@@ -7,6 +7,7 @@ from surepcio.devices.entities import SurePetcareResponse
 from surepcio.devices.pet import Pet
 from surepcio.enums import ProductId
 from surepcio.security.exceptions import NotLoadedError, UnexpectedDataTypeError
+from surepcio.timeline import TimelineEvent
 
 logger = logging.getLogger(__name__)
 
@@ -171,18 +172,33 @@ class Household:
         return commands
 
     def get_timeline(
-        self, since_id: int | None = None, before_id: int | None = None
+        self,
+        since_id: int | None = None,
+        before_id: int | None = None,
+        page_size: int | None = None,
     ) -> Command:
-        def parse(response: SurePetcareResponse):
+        """Fetch timeline events for this household.
+
+        Use ``since_id`` to retrieve events after a known cursor (incremental polling).
+        Use ``before_id`` to page backwards through history.
+        Use ``page_size`` to control how many events are returned per request (default 25).
+        """
+
+        def parse(response: SurePetcareResponse) -> list[TimelineEvent]:
             if not response.data:
                 return []
-            return response.data.get("data", [])
+            raw: list[dict] = response.data.get("data", [])
+            if not isinstance(raw, list):
+                raise UnexpectedDataTypeError("data", list, type(raw))
+            return [TimelineEvent(**item) for item in raw]
 
-        params = {}
+        params: dict = {}
         if since_id is not None:
             params["since_id"] = since_id
         if before_id is not None:
             params["before_id"] = before_id
+        if page_size is not None:
+            params["page_size"] = page_size
 
         return Command(
             method="GET",

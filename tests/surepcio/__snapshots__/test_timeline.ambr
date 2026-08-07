@@ -1,0 +1,252 @@
+# serializer version: 1
+# name: test_timeline_snapshot[device_names0]
+  dict({
+    'created_at': datetime.datetime(2025, 11, 12, 13, 16, 35, tzinfo=TzInfo(0)),
+    'data': 'null',
+    'devices': list([
+      dict({
+        'household_id': 7777,
+        'id': 555,
+        'name': '***',
+        'product_id': 6,
+        'tag_id': None,
+      }),
+      dict({
+        'household_id': 7777,
+        'id': 100,
+        'name': '***',
+        'product_id': 1,
+        'tag_id': None,
+      }),
+    ]),
+    'event_type': <TimelineEventType.MOVEMENT: 0>,
+    'households': list([
+      dict({
+        'household_id': 7777,
+        'id': 7777,
+        'name': '***',
+        'product_id': 0,
+        'tag_id': None,
+      }),
+    ]),
+    'id': 100001,
+    'movements': list([
+      dict({
+        'created_at': datetime.datetime(2025, 11, 12, 13, 16, 35, tzinfo=TzInfo(0)),
+        'device_id': 555,
+        'direction': <DoorDirection.LOOKED_THROUGH: 0>,
+        'id': 9001,
+        'movement_type': 0,
+        'side': <DoorSide.INSIDE: 1>,
+        'tag_id': 8001,
+        'updated_at': datetime.datetime(2025, 11, 12, 13, 16, 44, tzinfo=TzInfo(0)),
+        'user_id': None,
+      }),
+    ]),
+    'pets': list([
+      dict({
+        'household_id': 7777,
+        'id': 3001,
+        'name': '***',
+        'product_id': 0,
+        'tag_id': 8001,
+      }),
+    ]),
+    'tags': list([
+      dict({
+        'household_id': 7777,
+        'id': 8001,
+        'name': None,
+        'product_id': 0,
+        'tag_id': None,
+      }),
+    ]),
+    'updated_at': datetime.datetime(2025, 11, 12, 13, 16, 44, tzinfo=TzInfo(0)),
+    'users': list([
+    ]),
+    'weights': list([
+    ]),
+  })
+# ---
+# name: test_timeline_snapshot[device_names0].1
+  dict({
+    'created_at': datetime.datetime(2025, 11, 12, 10, 5, 20, tzinfo=TzInfo(0)),
+    'data': 'null',
+    'devices': list([
+      dict({
+        'household_id': 7777,
+        'id': 555,
+        'name': '***',
+        'product_id': 6,
+        'tag_id': None,
+      }),
+      dict({
+        'household_id': 7777,
+        'id': 100,
+        'name': '***',
+        'product_id': 1,
+        'tag_id': None,
+      }),
+    ]),
+    'event_type': <TimelineEventType.MOVEMENT: 0>,
+    'households': list([
+      dict({
+        'household_id': 7777,
+        'id': 7777,
+        'name': '***',
+        'product_id': 0,
+        'tag_id': None,
+      }),
+    ]),
+    'id': 100002,
+    'movements': list([
+      dict({
+        'created_at': datetime.datetime(2025, 11, 12, 10, 5, 20, tzinfo=TzInfo(0)),
+        'device_id': 555,
+        'direction': <DoorDirection.ENTERED: 1>,
+        'id': 9002,
+        'movement_type': 6,
+        'side': <DoorSide.OUTSIDE: 0>,
+        'tag_id': 8001,
+        'updated_at': datetime.datetime(2025, 11, 12, 10, 5, 29, tzinfo=TzInfo(0)),
+        'user_id': None,
+      }),
+    ]),
+    'pets': list([
+      dict({
+        'household_id': 7777,
+        'id': 3001,
+        'name': '***',
+        'product_id': 0,
+        'tag_id': 8001,
+      }),
+    ]),
+    'tags': list([
+      dict({
+        'household_id': 7777,
+        'id': 8001,
+        'name': None,
+        'product_id': 0,
+        'tag_id': None,
+      }),
+    ]),
+    'updated_at': datetime.datetime(2025, 11, 12, 10, 5, 29, tzinfo=TzInfo(0)),
+    'users': list([
+    ]),
+    'weights': list([
+    ]),
+  })
+# ---
+# name: test_timeline_snapshot[device_names0].2
+  dict({
+    'created_at': datetime.datetime(2025, 11, 12, 9, 44, 11, tzinfo=TzInfo(0)),
+    'data': 'null',
+    'devices': list([
+      dict({
+        'household_id': 7777,
+        'id': 555,
+        'name': '***',
+        'product_id': 6,
+        'tag_id': None,
+      }),
+      dict({
+        'household_id': 7777,
+        'id': 100,
+        'name': '***',
+        'product_id': 1,
+        'tag_id': None,
+      }),
+    ]),
+    'event_type': <TimelineEventType.MOVEMENT: 0>,
+    'households': list([
+      dict({
+        'household_id': 7777,
+        'id': 7777,
+        'name': '***',
+        'product_id': 0,
+        'tag_id': None,
+      }),
+    ]),
+    'id': 100003,
+    'movements': list([
+      dict({
+        'created_at': datetime.datetime(2025, 11, 12, 9, 44, 11, tzinfo=TzInfo(0)),
+        'device_id': 555,
+        'direction': <DoorDirection.LEFT: 2>,
+        'id': 9003,
+        'movement_type': 6,
+        'side': <DoorSide.INSIDE: 1>,
+        'tag_id': 8001,
+        'updated_at': datetime.datetime(2025, 11, 12, 9, 44, 20, tzinfo=TzInfo(0)),
+        'user_id': None,
+      }),
+    ]),
+    'pets': list([
+      dict({
+        'household_id': 7777,
+        'id': 3001,
+        'name': '***',
+        'product_id': 0,
+        'tag_id': 8001,
+      }),
+    ]),
+    'tags': list([
+      dict({
+        'household_id': 7777,
+        'id': 8001,
+        'name': None,
+        'product_id': 0,
+        'tag_id': None,
+      }),
+    ]),
+    'updated_at': datetime.datetime(2025, 11, 12, 9, 44, 20, tzinfo=TzInfo(0)),
+    'users': list([
+    ]),
+    'weights': list([
+    ]),
+  })
+# ---
+# name: test_timeline_snapshot[device_names0].3
+  dict({
+    'created_at': datetime.datetime(2025, 11, 11, 23, 0, tzinfo=TzInfo(0)),
+    'data': '{"curfew":[],"mode":0,"last_mode":1}',
+    'devices': list([
+      dict({
+        'household_id': 7777,
+        'id': 555,
+        'name': '***',
+        'product_id': 6,
+        'tag_id': None,
+      }),
+    ]),
+    'event_type': <TimelineEventType.DOOR_LOCKING_MODE: 6>,
+    'households': list([
+      dict({
+        'household_id': 7777,
+        'id': 7777,
+        'name': '***',
+        'product_id': 0,
+        'tag_id': None,
+      }),
+    ]),
+    'id': 100004,
+    'movements': list([
+    ]),
+    'pets': list([
+    ]),
+    'tags': list([
+    ]),
+    'updated_at': datetime.datetime(2025, 11, 11, 23, 0, 5, tzinfo=TzInfo(0)),
+    'users': list([
+      dict({
+        'household_id': 7777,
+        'id': 4001,
+        'name': None,
+        'product_id': 0,
+        'tag_id': None,
+      }),
+    ]),
+    'weights': list([
+    ]),
+  })
+# ---

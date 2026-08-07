@@ -183,3 +183,70 @@ class RequestStatus(Enum):
     def not_completed(cls):
         """Return all enum members that are not COMPLETED."""
         return [status.value for status in cls if status != cls.COMPLETED]
+
+
+class TimelineEventType(SureEnum):
+    """Timeline event types from the SurePetCare API."""
+
+    MOVEMENT = 0
+    LOW_BATTERY = 1
+    NEW_TAG = 2
+    NEW_DEVICE = 3
+    HUB_PAIRING_MODE = 4
+    LEARN_MODE = 5
+    DOOR_LOCKING_MODE = 6
+    INTRUDER_MOVEMENT = 7
+    HUB_CHILD_ONLINE = 9
+    PENDING_INVITE = 10
+    INVITE_HANDLED = 11
+    USER_JOINED_HOUSEHOLD = 12
+    NEW_PET = 13
+    NEW_PHOTO = 14
+    ACCOUNT_CREATED = 17
+    DEVICE_ONLINE = 18
+    NEW_USER_PROFILE_PHOTO = 19
+    CURFEW_LOCK_STATUS = 20
+    WEIGHT_CHANGED = 21
+    FEEDING = 22
+    TARGET_WEIGHT_SET = 23
+    TARE = 24
+    PET_PERMISSIONS_CHANGED = 25
+    WEIGHT_CHANGED_TARGET_MET = 27
+    TRAINING_MODE = 28
+    POSEIDON_DRINKING = 29
+    POSEIDON_WEIGHT_CHANGED = 30
+    POSEIDON_TARE = 31
+    POSEIDON_WATER_FRESHNESS = 32
+    POSEIDON_LOW_WATER = 33
+    WATER_REMOVED = 34
+    CURFEW_TIMEZONE_CHANGE = 40
+    WCI_ALERT = 51
+    TARING_REQUIRED = 52
+    TARRING_OCCURRED = 53
+
+    @classmethod
+    def find(cls, value: int) -> "TimelineEventType | None":
+        try:
+            return cls(value)
+        except ValueError:
+            return None
+
+
+class DoorDirection(SureEnum):
+    """Direction of a pet through a door (from SurePetCare timeline movements)."""
+
+    LOOKED_THROUGH = 0
+    ENTERED = 1
+    LEFT = 2
+    UNKNOWN = 3
+
+
+class DoorSide(SureEnum):
+    """Side of the door a pet was on."""
+
+    OUTSIDE = 0
+    INSIDE = 1
+    UNKNOWN = 2
+
+
+

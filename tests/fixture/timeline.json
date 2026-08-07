@@ -1,0 +1,116 @@
+{
+    "GET": {
+        "https://app-api.production.surehub.io/api/timeline/household/7777": {
+            "data": [
+                {
+                    "id": 100001,
+                    "type": 0,
+                    "data": "null",
+                    "created_at": "2025-11-12T13:16:35+00:00",
+                    "updated_at": "2025-11-12T13:16:44+00:00",
+                    "households": [{"id": 7777, "name": "***", "household_id": 7777, "product_id": 0}],
+                    "devices": [
+                        {"id": 555, "name": "***", "household_id": 7777, "product_id": 6},
+                        {"id": 100, "name": "***", "household_id": 7777, "product_id": 1}
+                    ],
+                    "movements": [
+                        {
+                            "id": 9001,
+                            "device_id": 555,
+                            "tag_id": 8001,
+                            "direction": 0,
+                            "side": 1,
+                            "type": 0,
+                            "created_at": "2025-11-12T13:16:35+00:00",
+                            "updated_at": "2025-11-12T13:16:44+00:00"
+                        }
+                    ],
+                    "pets": [{"id": 3001, "name": "***", "household_id": 7777, "product_id": 0, "tag_id": 8001}],
+                    "tags": [{"id": 8001, "household_id": 7777, "product_id": 0}],
+                    "users": [],
+                    "weights": []
+                },
+                {
+                    "id": 100002,
+                    "type": 0,
+                    "data": "null",
+                    "created_at": "2025-11-12T10:05:20+00:00",
+                    "updated_at": "2025-11-12T10:05:29+00:00",
+                    "households": [{"id": 7777, "name": "***", "household_id": 7777, "product_id": 0}],
+                    "devices": [
+                        {"id": 555, "name": "***", "household_id": 7777, "product_id": 6},
+                        {"id": 100, "name": "***", "household_id": 7777, "product_id": 1}
+                    ],
+                    "movements": [
+                        {
+                            "id": 9002,
+                            "device_id": 555,
+                            "tag_id": 8001,
+                            "direction": 1,
+                            "side": 0,
+                            "type": 6,
+                            "created_at": "2025-11-12T10:05:20+00:00",
+                            "updated_at": "2025-11-12T10:05:29+00:00"
+                        }
+                    ],
+                    "pets": [{"id": 3001, "name": "***", "household_id": 7777, "product_id": 0, "tag_id": 8001}],
+                    "tags": [{"id": 8001, "household_id": 7777, "product_id": 0}],
+                    "users": [],
+                    "weights": []
+                },
+                {
+                    "id": 100003,
+                    "type": 0,
+                    "data": "null",
+                    "created_at": "2025-11-12T09:44:11+00:00",
+                    "updated_at": "2025-11-12T09:44:20+00:00",
+                    "households": [{"id": 7777, "name": "***", "household_id": 7777, "product_id": 0}],
+                    "devices": [
+                        {"id": 555, "name": "***", "household_id": 7777, "product_id": 6},
+                        {"id": 100, "name": "***", "household_id": 7777, "product_id": 1}
+                    ],
+                    "movements": [
+                        {
+                            "id": 9003,
+                            "device_id": 555,
+                            "tag_id": 8001,
+                            "direction": 2,
+                            "side": 1,
+                            "type": 6,
+                            "created_at": "2025-11-12T09:44:11+00:00",
+                            "updated_at": "2025-11-12T09:44:20+00:00"
+                        }
+                    ],
+                    "pets": [{"id": 3001, "name": "***", "household_id": 7777, "product_id": 0, "tag_id": 8001}],
+                    "tags": [{"id": 8001, "household_id": 7777, "product_id": 0}],
+                    "users": [],
+                    "weights": []
+                },
+                {
+                    "id": 100004,
+                    "type": 6,
+                    "data": "{\"curfew\":[],\"mode\":0,\"last_mode\":1}",
+                    "created_at": "2025-11-11T23:00:00+00:00",
+                    "updated_at": "2025-11-11T23:00:05+00:00",
+                    "households": [{"id": 7777, "name": "***", "household_id": 7777, "product_id": 0}],
+                    "devices": [
+                        {"id": 555, "name": "***", "household_id": 7777, "product_id": 6}
+                    ],
+                    "movements": [],
+                    "pets": [],
+                    "tags": [],
+                    "users": [
+                        {"id": 4001, "household_id": 7777, "product_id": 0}
+                    ],
+                    "weights": []
+                }
+            ],
+            "meta": {
+                "page": 1,
+                "page_size": 25,
+                "count": 4,
+                "total_pages": 1
+            }
+        }
+    }
+}
