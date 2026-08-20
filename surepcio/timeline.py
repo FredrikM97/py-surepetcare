@@ -21,21 +21,6 @@ class MovementResource(ImprovedErrorMixin):
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
-    @property
-    def is_look_through(self) -> bool:
-        """Return True when the pet looked through without crossing the flap."""
-        return self.direction == DoorDirection.LOOKED_THROUGH
-
-    @property
-    def is_entry(self) -> bool:
-        """Return True when the pet entered the house."""
-        return self.direction == DoorDirection.ENTERED
-
-    @property
-    def is_exit(self) -> bool:
-        """Return True when the pet left the house."""
-        return self.direction == DoorDirection.LEFT
-
 
 class TimelineEntityInfo(ImprovedErrorMixin):
     """Minimal entity reference embedded in a timeline event."""
