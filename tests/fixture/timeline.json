@@ -103,12 +103,56 @@
                         {"id": 4001, "household_id": 7777, "product_id": 0}
                     ],
                     "weights": []
+                },
+                {
+                    "id": 100005,
+                    "type": 22,
+                    "data": "{\"encounter_source\":null,\"weight\":{\"count\":1,\"food_type\":[2,null],\"plate\":{\"half\":21.9,\"full\":54.3},\"bowl\":{\"half\":31.3,\"full\":57.18},\"target\":[198,0],\"tare_value\":null},\"tare_type\":null}",
+                    "created_at": "2026-08-20T16:07:57+00:00",
+                    "updated_at": "2026-08-20T16:07:57+00:00",
+                    "households": [{"id": 7777, "name": "***", "household_id": 7777, "product_id": 0}],
+                    "devices": [
+                        {"id": 555, "name": "***", "household_id": 7777, "product_id": 4}
+                    ],
+                    "movements": [],
+                    "pets": [{"id": 3001, "name": "***", "household_id": 7777, "product_id": 0, "tag_id": 8001}],
+                    "tags": [{"id": 8001, "household_id": 7777, "product_id": 0}],
+                    "users": [],
+                    "weights": [
+                        {
+                            "id": 1563486479,
+                            "device_id": 555,
+                            "tag_id": 8001,
+                            "context": 1,
+                            "duration": 61,
+                            "created_at": "2026-08-20T16:07:57+00:00",
+                            "updated_at": "2026-08-20T16:08:21+00:00",
+                            "frames": [
+                                {
+                                    "id": 3062324823,
+                                    "index": 0,
+                                    "current_weight": 47,
+                                    "change": -3,
+                                    "created_at": "2026-08-20T16:07:57+00:00",
+                                    "updated_at": "2026-08-20T16:08:21+00:00"
+                                },
+                                {
+                                    "id": 3062324825,
+                                    "index": 1,
+                                    "current_weight": 0,
+                                    "change": 0,
+                                    "created_at": "2026-08-20T16:07:57+00:00",
+                                    "updated_at": "2026-08-20T16:08:21+00:00"
+                                }
+                            ]
+                        }
+                    ]
                 }
             ],
             "meta": {
                 "page": 1,
                 "page_size": 25,
-                "count": 4,
+                "count": 5,
                 "total_pages": 1
             }
         }
