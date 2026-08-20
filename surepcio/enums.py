@@ -247,6 +247,3 @@ class DoorSide(SureEnum):
     OUTSIDE = 0
     INSIDE = 1
     UNKNOWN = 2
-
-
-
