@@ -55,8 +55,7 @@ jobs:
 
             if echo "$subject" | grep -qiE '^deps(\([^)]*\))?!?:'; then
               # Dependabot commits (deps(package), deps(workflow)) go to Maintenance
-              DESC=$(echo "$subject" | sed -E 's/^deps(\([^)]*\))?!?:[[:space:]]*//I')
-              CHORES="${CHORES}- ${DESC} (${author})"$'\n'
+              CHORES="${CHORES}- ${subject} (${author})"$'\n'
             else
               CHANGELOG="${CHANGELOG}- ${subject} (${author})"$'\n'
             fi
