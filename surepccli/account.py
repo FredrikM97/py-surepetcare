@@ -2,13 +2,12 @@ import os
 
 import typer
 
+from surepccli.session import clear_session, get_session_manager, save_session
+from surepcio.household import Household
+
 from .const import Envs
 from .helpers import print_table
 from .typer import AsyncTyper
-from surepccli.session import clear_session
-from surepccli.session import get_session_manager
-from surepccli.session import save_session
-from surepcio.household import Household
 
 account = AsyncTyper(help="Account commands")
 household = AsyncTyper(help="Household commands")

@@ -5,8 +5,7 @@ import pytest
 from syrupy.assertion import SnapshotAssertion
 
 from surepcio.client import SurePetcareClient
-from surepcio.const import DEFAULT_SENSITIVE_FIELDS
-from surepcio.const import REDACTED_STRING
+from surepcio.const import DEFAULT_SENSITIVE_FIELDS, REDACTED_STRING
 from surepcio.household import Household
 from surepcio.security.redact import redact_sensitive
 from tests.conftest import object_snapshot

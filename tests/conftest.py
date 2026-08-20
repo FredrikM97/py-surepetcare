@@ -1,15 +1,16 @@
 import enum
 import inspect
 import json
+import warnings
 from collections.abc import Generator
 from pathlib import Path
 from unittest.mock import ANY, MagicMock
 from urllib.parse import urlparse
-import warnings
+
 import aresponses
 import pytest
-from syrupy.assertion import SnapshotAssertion
 import time_machine
+from syrupy.assertion import SnapshotAssertion
 
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from tests import FIXTURES
@@ -70,7 +71,7 @@ class ApiMockServer:
     @staticmethod
     def _parse_endpoint(endpoint: str) -> tuple[str, str]:
         """Return (host, path) from a full URL or a bare path relative to the production API."""
-        if endpoint.startswith("http://") or endpoint.startswith("https://"):
+        if endpoint.startswith(("http://", "https://")):
             parsed = urlparse(endpoint)
             path = parsed.path
             if parsed.query:
@@ -148,7 +149,7 @@ def add_api_json_response(aresponses: aresponses.ResponsesMockServer) -> ApiMock
 
 
 @pytest.fixture
-def freeze_time_for_snapshots() -> Generator[None, None, None]:
+def freeze_time_for_snapshots() -> Generator[None]:
     """Freeze process time for deterministic snapshot tests."""
     with time_machine.travel("2026-01-01 12:00:00", tick=False):
         yield
@@ -186,7 +187,7 @@ def serialize(obj):
             if isinstance(member, property) and not name.startswith("_"):
                 try:
                     properties[name] = serialize(getattr(obj, name))
-                except Exception:
+                except Exception:  # noqa: BLE001 - property impls can raise anything
                     properties[name] = "<error>"
         if properties:
             data["properties"] = properties

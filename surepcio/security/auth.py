@@ -5,17 +5,17 @@ from uuid import uuid1
 
 import aiohttp
 
+from surepcio.const import HEADER_TEMPLATE, LOGIN_ENDPOINT, USER_AGENT
+
 from .cache import CacheHeaders
 from .exceptions import AuthenticationError
-from surepcio.const import HEADER_TEMPLATE
-from surepcio.const import LOGIN_ENDPOINT
-from surepcio.const import USER_AGENT
 
 logger = logging.getLogger(__name__)
 
 
 class AuthClient(CacheHeaders):
     def __init__(self):
+        super().__init__()
         self._token = None
         self.session: aiohttp.ClientSession | None = None
         self._device_id = None
@@ -44,9 +44,11 @@ class AuthClient(CacheHeaders):
             logger.info("Using email and password for authentication")
             device_id = device_id if device_id else str(uuid1())
             self._device_id = device_id
-            authentication_data: dict[str, str | None] = dict(
-                email_address=email, password=password, device_id=device_id
-            )
+            authentication_data: dict[str, str | None] = {
+                "email_address": email,
+                "password": password,
+                "device_id": device_id,
+            }
         else:
             raise AuthenticationError(
                 "Email and password or token and device_id must be provided"
@@ -61,7 +63,7 @@ class AuthClient(CacheHeaders):
             if response.status == HTTPStatus.OK:
                 self._token = (await response.json()).get("data").get("token")
                 if not self._token:
-                    raise Exception("Token not found in response")
+                    raise AuthenticationError("Token not found in response")
 
                 return self
             else:
@@ -69,8 +71,9 @@ class AuthClient(CacheHeaders):
                     "Authentication error %s %s", response.status, await response.json()
                 )
 
-    def _generate_headers(self, token=None, headers={}):
+    def _generate_headers(self, token=None, headers=None):
         """Build a HTTP header accepted by the API"""
+        headers = headers or {}
         user_agent = USER_AGENT.format(version=None)
 
         headers = get_formatted_header(
@@ -96,14 +99,14 @@ class AuthClient(CacheHeaders):
     def token(self):
         """Return the authentication token."""
         if not self._token:
-            raise Exception("Authentication token is missing")
+            raise AuthenticationError("Authentication token is missing")
         return self._token
 
     @property
     def device_id(self):
         """Return the device ID."""
         if not self._device_id:
-            raise Exception("Device ID is missing")
+            raise AuthenticationError("Device ID is missing")
         return self._device_id
 
     async def __aenter__(self):

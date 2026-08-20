@@ -7,9 +7,7 @@ from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.entities import DevicePetTag, SurePetcareResponse
 from surepcio.devices.pet import Pet
-from surepcio.enums import ModifyDeviceTag
-from surepcio.enums import PetDeviceLocationProfile
-from surepcio.enums import PetLocation
+from surepcio.enums import ModifyDeviceTag, PetDeviceLocationProfile, PetLocation
 from surepcio.security.exceptions import ApiError
 from tests.conftest import object_snapshot
 

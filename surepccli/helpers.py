@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 import typer
 from typer import Option
@@ -84,8 +84,9 @@ def product_id_option(optional: bool = False):
 
 
 def state_option(help: str = "", **kwargs) -> Any:
+    # Used only as Annotated[...] metadata; the actual default lives on the
+    # function parameter itself, so no leading default is passed here.
     return Option(
-        None,
         "--state",
         "-s",
         help=help,
@@ -105,9 +106,7 @@ def print_table(rows, headers):
     typer.echo(header_line)
     typer.echo("-" * len(header_line))
     for row in rows:
-        typer.echo(
-            " | ".join(f"{str(row[i]):<{col_widths[i]}}" for i in range(len(row)))
-        )
+        typer.echo(" | ".join(f"{row[i]!s:<{col_widths[i]}}" for i in range(len(row))))
 
 
 async def _fetch_all_devices(household_id: str) -> list[DeviceBase]:
@@ -117,8 +116,8 @@ async def _fetch_all_devices(household_id: str) -> list[DeviceBase]:
 
 def _apply_filters(
     devices: list[DeviceBase],
-    device_id: Optional[str] = None,
-    product_id: Optional[str | ProductId] = None,
+    device_id: str | None = None,
+    product_id: str | ProductId | None = None,
 ) -> list[DeviceBase]:
     if product_id:
         pid = (
@@ -138,8 +137,8 @@ def _apply_filters(
 
 async def fetch_devices(
     household_id: str,
-    device_id: Optional[str] = None,
-    product_id: Optional[str | ProductId] = None,
+    device_id: str | None = None,
+    product_id: str | ProductId | None = None,
 ) -> list[DeviceBase]:
     devices = await _fetch_all_devices(household_id)
     return _apply_filters(devices, device_id=device_id, product_id=product_id)
@@ -156,7 +155,7 @@ async def fetch_device(household_id: str, device_id: str) -> DeviceBase:
 
 async def list_devices(
     household_id: str,
-    product_id: Optional[str] = None,
+    product_id: str | None = None,
 ) -> list[DeviceBase]:
     typer.echo(f"Listing devices for household {household_id}\n")
     items = await fetch_devices(household_id, product_id=product_id)

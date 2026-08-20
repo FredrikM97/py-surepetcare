@@ -1,16 +1,12 @@
 import time as time_module
 from contextlib import ExitStack
-from datetime import datetime
-from datetime import time
-from datetime import timezone
+from datetime import UTC, datetime, time
 
 import pytest
 import time_machine
 
 from surepcio.devices.device import DoorDeviceBase
-from surepcio.devices.entities import BaseControl
-from surepcio.devices.entities import BaseStatus
-from surepcio.devices.entities import Curfew
+from surepcio.devices.entities import BaseControl, BaseStatus, Curfew
 from surepcio.enums import ProductId
 
 
@@ -28,7 +24,7 @@ class DummyDateTime:
         self._fixed_datetime = fixed_datetime
 
     def now(self, tz=None):
-        assert tz is timezone.utc, "is_curfew_active must compare in UTC"
+        assert tz is UTC, "is_curfew_active must compare in UTC"
         return self._fixed_datetime.replace(tzinfo=tz)
 
 
@@ -38,43 +34,43 @@ class DummyDateTime:
         # Single curfew inside the same-day interval
         (
             [Curfew(enabled=True, lock_time=time(6, 0), unlock_time=time(18, 0))],
-            datetime(2025, 1, 1, 10, 0),
+            datetime(2025, 1, 1, 10, 0, tzinfo=UTC),
             True,
         ),
         # Single curfew outside the same-day interval
         (
             [Curfew(enabled=True, lock_time=time(6, 0), unlock_time=time(18, 0))],
-            datetime(2025, 1, 1, 19, 0),
+            datetime(2025, 1, 1, 19, 0, tzinfo=UTC),
             False,
         ),
         # Single curfew crossing midnight active before midnight
         (
             [Curfew(enabled=True, lock_time=time(22, 0), unlock_time=time(6, 0))],
-            datetime(2025, 1, 1, 23, 0),
+            datetime(2025, 1, 1, 23, 0, tzinfo=UTC),
             True,
         ),
         # Single curfew crossing midnight active after midnight
         (
             [Curfew(enabled=True, lock_time=time(22, 0), unlock_time=time(6, 0))],
-            datetime(2025, 1, 2, 1, 0),
+            datetime(2025, 1, 2, 1, 0, tzinfo=UTC),
             True,
         ),
         # Single curfew crossing midnight inactive during the day
         (
             [Curfew(enabled=True, lock_time=time(22, 0), unlock_time=time(6, 0))],
-            datetime(2025, 1, 1, 13, 0),
+            datetime(2025, 1, 1, 13, 0, tzinfo=UTC),
             False,
         ),
         # Curfew disabled
         (
             [Curfew(enabled=False, lock_time=time(6, 0), unlock_time=time(18, 0))],
-            datetime(2025, 1, 1, 10, 0),
+            datetime(2025, 1, 1, 10, 0, tzinfo=UTC),
             False,
         ),
         # Single curfew object instead of list
         (
             Curfew(enabled=True, lock_time=time(6, 0), unlock_time=time(18, 0)),
-            datetime(2025, 1, 1, 10, 0),
+            datetime(2025, 1, 1, 10, 0, tzinfo=UTC),
             True,
         ),
     ],

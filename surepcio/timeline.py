@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from pydantic import Field
 
@@ -10,66 +9,66 @@ from surepcio.enums import DoorDirection, DoorSide, TimelineEventType
 class MovementResource(ImprovedErrorMixin):
     """Represents a single movement entry within a timeline event."""
 
-    id: Optional[int] = None
-    device_id: Optional[int] = None
-    tag_id: Optional[int] = None
-    user_id: Optional[int] = None
-    direction: Optional[DoorDirection] = None
-    side: Optional[DoorSide] = None
-    movement_type: Optional[int] = Field(default=None, alias="type")
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    id: int | None = None
+    device_id: int | None = None
+    tag_id: int | None = None
+    user_id: int | None = None
+    direction: DoorDirection | None = None
+    side: DoorSide | None = None
+    movement_type: int | None = Field(default=None, alias="type")
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
 
 class WeightFrame(ImprovedErrorMixin):
     """Represents a single weight reading within a weight resource."""
 
-    id: Optional[int] = None
-    index: Optional[int] = None
-    current_weight: Optional[int] = None
-    change: Optional[int] = None
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    id: int | None = None
+    index: int | None = None
+    current_weight: int | None = None
+    change: int | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
 
 class WeightResource(ImprovedErrorMixin):
     """Represents a feeding/drinking weight entry within a timeline event."""
 
-    id: Optional[int] = None
-    device_id: Optional[int] = None
-    tag_id: Optional[int] = None
-    context: Optional[int] = None
-    duration: Optional[int] = None
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
-    frames: list[WeightFrame] = []
+    id: int | None = None
+    device_id: int | None = None
+    tag_id: int | None = None
+    context: int | None = None
+    duration: int | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    frames: list[WeightFrame] = Field(default_factory=list)
 
 
 class TimelineEntityInfo(ImprovedErrorMixin):
     """Minimal entity reference embedded in a timeline event."""
 
     id: int
-    name: Optional[str] = None
-    household_id: Optional[int] = None
-    product_id: Optional[int] = None
-    tag_id: Optional[int] = None
+    name: str | None = None
+    household_id: int | None = None
+    product_id: int | None = None
+    tag_id: int | None = None
 
 
 class TimelineEvent(ImprovedErrorMixin):
     """Represents a single event returned by the timeline API."""
 
     id: int
-    event_type: Optional[TimelineEventType] = Field(default=None, alias="type")
-    data: Optional[str] = None
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
-    households: list[TimelineEntityInfo] = []
-    devices: list[TimelineEntityInfo] = []
-    movements: list[MovementResource] = []
-    pets: list[TimelineEntityInfo] = []
-    tags: list[TimelineEntityInfo] = []
-    users: list[TimelineEntityInfo] = []
-    weights: list[WeightResource] = []
+    event_type: TimelineEventType | None = Field(default=None, alias="type")
+    data: str | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    households: list[TimelineEntityInfo] = Field(default_factory=list)
+    devices: list[TimelineEntityInfo] = Field(default_factory=list)
+    movements: list[MovementResource] = Field(default_factory=list)
+    pets: list[TimelineEntityInfo] = Field(default_factory=list)
+    tags: list[TimelineEntityInfo] = Field(default_factory=list)
+    users: list[TimelineEntityInfo] = Field(default_factory=list)
+    weights: list[WeightResource] = Field(default_factory=list)
 
     @property
     def is_movement_event(self) -> bool:

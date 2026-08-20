@@ -1,22 +1,21 @@
 import logging
-from datetime import datetime
-from datetime import timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 from pydantic import Field
 
-from .device import PetBase
 from surepcio.command import Command
-from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.const import API_ENDPOINT_V1
-from surepcio.devices.entities import DevicePetTag
-from surepcio.devices.entities import SurePetcareResponse
+from surepcio.const import API_ENDPOINT_PRODUCTION, API_ENDPOINT_V1
+from surepcio.devices.entities import DevicePetTag, SurePetcareResponse
 from surepcio.entities.error_mixin import ImprovedErrorMixin
+from surepcio.enums import (
+    ModifyDeviceTag,
+    PetDeviceLocationProfile,
+    PetLocation,
+    ProductId,
+)
 from surepcio.security.exceptions import NotLoadedError
-from surepcio.enums import ModifyDeviceTag
-from surepcio.enums import PetDeviceLocationProfile
-from surepcio.enums import PetLocation
-from surepcio.enums import ProductId
+
+from .device import PetBase
 
 logger = logging.getLogger(__name__)
 
@@ -24,23 +23,23 @@ logger = logging.getLogger(__name__)
 class PetConsumtionResource(ImprovedErrorMixin):
     """Represents a activity resource."""
 
-    id: Optional[int] = None
-    tag_id: Optional[int] = None
-    device_id: Optional[int] = None
-    change: Optional[list] = None
-    at: Optional[datetime] = None
+    id: int | None = None
+    tag_id: int | None = None
+    device_id: int | None = None
+    change: list | None = None
+    at: datetime | None = None
 
 
 class PetPositionResource(ImprovedErrorMixin):
     """Represents a Position resource."""
 
-    id: Optional[int] = None
-    pet_id: Optional[int] = None
-    tag_id: Optional[int] = None
-    device_id: Optional[int] = None
-    user_id: Optional[int] = None
-    where: Optional[PetLocation] = None
-    since: Optional[datetime] = None
+    id: int | None = None
+    pet_id: int | None = None
+    tag_id: int | None = None
+    device_id: int | None = None
+    user_id: int | None = None
+    where: PetLocation | None = None
+    since: datetime | None = None
 
 
 class AssignedDevices(ImprovedErrorMixin):
@@ -62,15 +61,13 @@ class Control(ImprovedErrorMixin):
 
 
 class Status(ImprovedErrorMixin):
-    activity: Optional[PetPositionResource] = Field(default_factory=PetPositionResource)
-    feeding: Optional[PetConsumtionResource] = Field(
-        default_factory=PetConsumtionResource
-    )
-    drinking: Optional[PetConsumtionResource] = Field(
+    activity: PetPositionResource | None = Field(default_factory=PetPositionResource)
+    feeding: PetConsumtionResource | None = Field(default_factory=PetConsumtionResource)
+    drinking: PetConsumtionResource | None = Field(
         default_factory=PetConsumtionResource
     )
     devices: AssignedDevices = Field(default_factory=AssignedDevices)
-    last_activity: Optional[LastActivity] = None
+    last_activity: LastActivity | None = None
 
 
 class Pet(PetBase[Control, Status]):
@@ -126,7 +123,7 @@ class Pet(PetBase[Control, Status]):
             return None
         return self.entity_info.tag.id
 
-    def last_activity(self) -> Optional[LastActivity]:
+    def last_activity(self) -> LastActivity | None:
         activities = []
 
         # Check feeding and drinking (use 'at' field)
@@ -178,7 +175,7 @@ class Pet(PetBase[Control, Status]):
 
         data = {
             "where": int(location.value),
-            "since": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
+            "since": datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S"),
         }
         return Command(
             method="POST",

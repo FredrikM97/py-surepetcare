@@ -3,8 +3,7 @@ from typing import cast
 
 import pytest
 
-from surepcio.devices import DEVICE_CLASS_REGISTRY
-from surepcio.devices import load_device_class
+from surepcio.devices import DEVICE_CLASS_REGISTRY, load_device_class
 from surepcio.enums import ProductId
 
 

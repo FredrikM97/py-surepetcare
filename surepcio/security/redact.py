@@ -1,7 +1,6 @@
 import logging
 
-from surepcio.const import DEFAULT_SENSITIVE_FIELDS
-from surepcio.const import REDACTED_STRING
+from surepcio.const import DEFAULT_SENSITIVE_FIELDS, REDACTED_STRING
 
 
 def redact_sensitive(

@@ -1,9 +1,9 @@
-from .account import account
-from .account import household
-from .device import devices
-from .pet import pet
 from surepccli.session import load_env_once
 from surepccli.typer import AsyncTyper
+
+from .account import account, household
+from .device import devices
+from .pet import pet
 
 app = AsyncTyper(help="SurePetcare CLI")
 app.add_typer(account, name="account")

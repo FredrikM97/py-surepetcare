@@ -1,27 +1,23 @@
 import logging
-from typing import Optional
 
-from .device import BaseControl
-from .device import BaseStatus
-from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.entities import SurePetcareResponse
-from surepcio.enums import HubLedMode
-from surepcio.enums import HubPairMode
-from surepcio.enums import ProductId
+from surepcio.enums import HubLedMode, HubPairMode, ProductId
+
+from .device import BaseControl, BaseStatus, DeviceBase
 
 logger = logging.getLogger(__name__)
 
 
 class Control(BaseControl):
-    led_mode: Optional[HubLedMode] = None
-    pairing_mode: Optional[HubPairMode] = None
+    led_mode: HubLedMode | None = None
+    pairing_mode: HubPairMode | None = None
 
 
 class Status(BaseStatus):
-    led_mode: Optional[HubLedMode] = None
-    pairing_mode: Optional[HubPairMode] = None
+    led_mode: HubLedMode | None = None
+    pairing_mode: HubPairMode | None = None
 
 
 class Hub(DeviceBase[Control, Status]):

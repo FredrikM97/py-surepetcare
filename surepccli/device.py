@@ -1,15 +1,11 @@
-from typing import Optional
-
 import typer
 
-from .const import Envs
 from surepccli.devices import device_subgroups
-from surepccli.helpers import household_option
-from surepccli.helpers import list_devices
-from surepccli.helpers import product_id_option
-from surepccli.session import clear_env
-from surepccli.session import save_session
+from surepccli.helpers import household_option, list_devices, product_id_option
+from surepccli.session import clear_env, save_session
 from surepccli.typer import AsyncTyper
+
+from .const import Envs
 
 devices = AsyncTyper(help="Devices commands", login_required=True)
 for subgroup in device_subgroups():
@@ -18,7 +14,7 @@ for subgroup in device_subgroups():
 
 @devices.command("list", help="List devices")
 async def list_device(
-    product_id: Optional[str] = product_id_option(optional=True),
+    product_id: str | None = product_id_option(optional=True),
     household_id: str = household_option(),
 ):
     await list_devices(household_id=household_id, product_id=product_id)
@@ -26,7 +22,7 @@ async def list_device(
 
 @devices.command("connect", help="Select a device to work with")
 async def connect(
-    product_id: Optional[str] = product_id_option(optional=True),
+    product_id: str | None = product_id_option(optional=True),
     household_id: str = household_option(),
 ):
     items = await list_devices(household_id=household_id, product_id=product_id)

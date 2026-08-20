@@ -30,7 +30,7 @@ This repo also support (to some extent) cli commands. The cli can be installed w
 
 To see available commands use:
 ```python
-surepccli --help
+surepccli - -help
 ```
 However, most functionality requires login therefore use the
 

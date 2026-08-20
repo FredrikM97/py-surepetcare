@@ -1,18 +1,17 @@
 from dataclasses import dataclass
-from datetime import datetime
-from datetime import time
+from datetime import datetime, time
 from typing import Any
-from typing import Optional
 
-from pydantic import Field
-from pydantic import field_serializer
-from pydantic import model_validator
+from pydantic import Field, field_serializer, model_validator
 
 from surepcio.entities.error_mixin import ImprovedErrorMixin
-from surepcio.enums import BowlPosition, PetDeviceLocationProfile
-from surepcio.enums import FlapLocking
-from surepcio.enums import FoodType
-from surepcio.enums import SubstanceType
+from surepcio.enums import (
+    BowlPosition,
+    FlapLocking,
+    FoodType,
+    PetDeviceLocationProfile,
+    SubstanceType,
+)
 
 
 class PetTag(ImprovedErrorMixin):
@@ -20,48 +19,48 @@ class PetTag(ImprovedErrorMixin):
 
     id: int
     tag: str
-    supported_product_ids: Optional[list[int]] = None
-    version: Optional[int] = None
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    supported_product_ids: list[int] | None = None
+    version: int | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
 
 class DevicePetTag(ImprovedErrorMixin):
     """Represents a Pet Tag assigned to a Device."""
 
-    id: Optional[int] = None
-    device_id: Optional[int] = None
-    index: Optional[int] = None
-    profile: Optional[PetDeviceLocationProfile] = None
-    version: Optional[int] = None
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    id: int | None = None
+    device_id: int | None = None
+    index: int | None = None
+    profile: PetDeviceLocationProfile | None = None
+    version: int | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
 
 class PetPhoto(ImprovedErrorMixin):
     """Represents a Pet Photo."""
 
     id: int
-    title: Optional[str] = None
+    title: str | None = None
     location: str
     hash: str
     uploading_user_id: int
     version: int
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
 
 class EntityInfo(ImprovedErrorMixin):
     """Represents basic information about an entity."""
 
     id: int
-    name: Optional[str] = None
+    name: str | None = None
     household_id: int
     product_id: int
-    tag_id: Optional[int] = None
-    photo: Optional[PetPhoto] = None
-    tag: Optional[PetTag] = None
-    parent_device_id: Optional[int] = None
+    tag_id: int | None = None
+    photo: PetPhoto | None = None
+    tag: PetTag | None = None
+    parent_device_id: int | None = None
 
     @model_validator(mode="before")
     def ignore_status_control(cls, values):
@@ -74,7 +73,7 @@ class EntityInfo(ImprovedErrorMixin):
 class BaseControl(ImprovedErrorMixin):
     """Base class for device control settings."""
 
-    tags: Optional[list[DevicePetTag]] = None
+    tags: list[DevicePetTag] | None = None
 
     @model_validator(mode="before")
     def extract_control(cls, values):
@@ -83,7 +82,7 @@ class BaseControl(ImprovedErrorMixin):
             return values
         if "control" in values:
             merged.update(values["control"])
-        if "tags" in values and values["tags"]:
+        if values.get("tags"):
             merged["tags"] = values["tags"]
         # Return None if merged is empty (length 0), else merged
         return merged if len(merged) > 0 else {}
@@ -92,17 +91,17 @@ class BaseControl(ImprovedErrorMixin):
 class Signal(ImprovedErrorMixin):
     """Represents signal information."""
 
-    device_rssi: Optional[int] = None
+    device_rssi: int | None = None
 
 
 class BaseStatus(ImprovedErrorMixin):
     """Base class for device status information."""
 
-    battery: Optional[float] = None
-    learn_mode: Optional[bool] = None
-    signal: Optional[Signal] = None
-    version: Optional[Any] = None
-    online: Optional[bool] = None
+    battery: float | None = None
+    learn_mode: bool | None = None
+    signal: Signal | None = None
+    version: Any | None = None
+    online: bool | None = None
 
     @model_validator(mode="before")
     def extract_status(cls, values):
@@ -112,9 +111,9 @@ class BaseStatus(ImprovedErrorMixin):
 
 
 class Curfew(ImprovedErrorMixin):
-    enabled: Optional[bool] = None
-    lock_time: Optional[time] = None
-    unlock_time: Optional[time] = None
+    enabled: bool | None = None
+    lock_time: time | None = None
+    unlock_time: time | None = None
 
     @field_serializer("lock_time", "unlock_time")
     def serialize_time(self, value: time, _info):
@@ -122,22 +121,22 @@ class Curfew(ImprovedErrorMixin):
 
 
 class Locking(ImprovedErrorMixin):
-    mode: Optional[FlapLocking] = None
+    mode: FlapLocking | None = None
 
 
 @dataclass
 class SurePetcareResponse:
-    data: Optional[dict] | None = None
+    data: dict | None = None
     status: int = 0
-    reason: Optional[str] = None
+    reason: str | None = None
 
 
 class BowlState(ImprovedErrorMixin):
-    position: Optional[BowlPosition] = Field(default=None, alias="index")
-    food_type: Optional[FoodType] = None
-    substance_type: Optional[SubstanceType] = None
-    current_weight: Optional[float] = None
-    last_filled_at: Optional[datetime] = None
-    last_zeroed_at: Optional[datetime] = None
-    last_fill_weight: Optional[float] = None
-    fill_percent: Optional[int] = None
+    position: BowlPosition | None = Field(default=None, alias="index")
+    food_type: FoodType | None = None
+    substance_type: SubstanceType | None = None
+    current_weight: float | None = None
+    last_filled_at: datetime | None = None
+    last_zeroed_at: datetime | None = None
+    last_fill_weight: float | None = None
+    fill_percent: int | None = None

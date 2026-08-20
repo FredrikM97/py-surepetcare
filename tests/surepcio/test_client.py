@@ -1,6 +1,7 @@
 import aresponses
 import pytest
 from syrupy.assertion import SnapshotAssertion
+
 from surepcio import SurePetcareClient
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.feeder_connect import FeederConnect

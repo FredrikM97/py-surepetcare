@@ -53,7 +53,7 @@ def cli_run():
     """
 
     async def _run(args: list[str], input_text: str | None = None):
-        result, rv = await run_cli(args, input_text)
+        result, _rv = await run_cli(args, input_text)
         return result
 
     return _run

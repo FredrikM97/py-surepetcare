@@ -1,14 +1,14 @@
-from typing import cast
-from typing import Optional
+from typing import Annotated, cast
 
 import typer
 
-from surepccli.devices.helper import CurfewParamType
-from surepccli.devices.helper import EnumChoice
-from surepccli.helpers import device_id_option
-from surepccli.helpers import fetch_device
-from surepccli.helpers import household_option
-from surepccli.helpers import state_option
+from surepccli.devices.helper import CurfewParamType, EnumChoice
+from surepccli.helpers import (
+    device_id_option,
+    fetch_device,
+    household_option,
+    state_option,
+)
 from surepccli.session import get_session_manager
 from surepccli.typer import AsyncTyper
 from surepcio.devices.dual_scan_pet_door import DualScanPetDoor
@@ -22,9 +22,12 @@ dualscanpetdoor = AsyncTyper(
 
 @dualscanpetdoor.command("curfew", help="Set flap locking mode")
 async def curfew(
-    state: Optional[list[Curfew]] = state_option(
-        "Set new curfew times (omit to show current).", click_type=CurfewParamType()
-    ),
+    state: Annotated[
+        list[Curfew] | None,
+        state_option(
+            "Set new curfew times (omit to show current).", click_type=CurfewParamType()
+        ),
+    ] = None,
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
@@ -34,7 +37,7 @@ async def curfew(
     )
 
     if state is None:
-        curfews = getattr(device.control, "curfew")
+        curfews = device.control.curfew or []
         typer.echo(
             f"Device {device.id}\ncurfew: {[curfew.model_dump() for curfew in curfews]}"
         )
@@ -47,10 +50,13 @@ async def curfew(
 
 @dualscanpetdoor.command("locking", help="Set flap locking mode")
 async def locking(
-    state: FlapLocking = state_option(
-        "Set new locking mode (omit to show current).",
-        click_type=EnumChoice(FlapLocking),
-    ),
+    state: Annotated[
+        FlapLocking | None,
+        state_option(
+            "Set new locking mode (omit to show current).",
+            click_type=EnumChoice(FlapLocking),
+        ),
+    ] = None,
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
@@ -60,8 +66,9 @@ async def locking(
     )
 
     if state is None:
-        locking = getattr(device.control, "locking")
-        typer.echo(f"Device {device.id}\nlocking: {locking.name}")
+        locking = device.control.locking
+        name = locking.name if locking is not None else None
+        typer.echo(f"Device {device.id}\nlocking: {name}")
         return
     async with get_session_manager() as sm:
         await sm.client.api(device.set_locking(state))

@@ -1,26 +1,30 @@
-from typing import cast
+from typing import Annotated, cast
 
 import typer
 
 from surepccli.devices.helper import EnumChoice
-from surepccli.helpers import device_id_option
-from surepccli.helpers import fetch_device
-from surepccli.helpers import household_option
-from surepccli.helpers import state_option
+from surepccli.helpers import (
+    device_id_option,
+    fetch_device,
+    household_option,
+    state_option,
+)
 from surepccli.session import get_session_manager
 from surepccli.typer import AsyncTyper
 from surepcio.devices.hub import Hub
-from surepcio.enums import HubLedMode
-from surepcio.enums import HubPairMode
+from surepcio.enums import HubLedMode, HubPairMode
 
 hub = AsyncTyper(name="hub", help="PetDoor device commands", login_required=True)
 
 
 @hub.command()
 async def led_mode(
-    state: HubLedMode = state_option(
-        "Set LED mode (omit to show current).", click_type=EnumChoice(HubLedMode)
-    ),
+    state: Annotated[
+        HubLedMode | None,
+        state_option(
+            "Set LED mode (omit to show current).", click_type=EnumChoice(HubLedMode)
+        ),
+    ] = None,
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
@@ -28,8 +32,9 @@ async def led_mode(
     device: Hub = cast(Hub, await fetch_device(household_id, device_id))
 
     if state is None:
-        led_mode = getattr(device.control, "led_mode")
-        typer.echo(f"Device {device.id}\nled_mode: {led_mode.name}")
+        led_mode = device.control.led_mode
+        name = led_mode.name if led_mode is not None else None
+        typer.echo(f"Device {device.id}\nled_mode: {name}")
         return
     async with get_session_manager() as sm:
         await sm.client.api(device.set_led_mode(state))
@@ -39,9 +44,13 @@ async def led_mode(
 
 @hub.command()
 async def pairing_mode(
-    state: HubPairMode = state_option(
-        "Set pairing mode (omit to show current).", click_type=EnumChoice(HubPairMode)
-    ),
+    state: Annotated[
+        HubPairMode | None,
+        state_option(
+            "Set pairing mode (omit to show current).",
+            click_type=EnumChoice(HubPairMode),
+        ),
+    ] = None,
     device_id: str = device_id_option(),
     household_id: str = household_option(),
 ):
@@ -49,8 +58,9 @@ async def pairing_mode(
     device: Hub = cast(Hub, await fetch_device(household_id, device_id))
 
     if state is None:
-        pairing_mode = getattr(device.control, "pairing_mode")
-        typer.echo(f"Device {device.id}\npairing_mode: {pairing_mode.name}")
+        pairing_mode = device.control.pairing_mode
+        name = pairing_mode.name if pairing_mode is not None else None
+        typer.echo(f"Device {device.id}\npairing_mode: {name}")
         return
     async with get_session_manager() as sm:
         await sm.client.api(device.set_pairing_mode(state))

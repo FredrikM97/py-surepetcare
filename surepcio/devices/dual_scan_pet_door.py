@@ -1,29 +1,25 @@
 import logging
-from typing import Optional
 
-from .device import BaseControl
-from .device import BaseStatus
-from .device import DoorDeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.dual_scan_connect import Curfew
-from surepcio.devices.entities import Locking
-from surepcio.devices.entities import SurePetcareResponse
-from surepcio.enums import FlapLocking
-from surepcio.enums import ProductId
+from surepcio.devices.entities import Locking, SurePetcareResponse
+from surepcio.enums import FlapLocking, ProductId
+
+from .device import BaseControl, BaseStatus, DoorDeviceBase
 
 logger = logging.getLogger(__name__)
 
 
 class Control(BaseControl):
-    curfew: Optional[list[Curfew]] = None
-    locking: Optional[FlapLocking] = None
-    fail_safe: Optional[int] = None
-    fast_polling: Optional[bool] = None
+    curfew: list[Curfew] | None = None
+    locking: FlapLocking | None = None
+    fail_safe: int | None = None
+    fast_polling: bool | None = None
 
 
 class Status(BaseStatus):
-    locking: Optional[Locking] = None
+    locking: Locking | None = None
 
 
 class DualScanPetDoor(DoorDeviceBase[Control, Status]):

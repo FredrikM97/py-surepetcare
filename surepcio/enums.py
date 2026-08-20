@@ -1,5 +1,4 @@
-from enum import Enum
-from enum import IntEnum
+from enum import Enum, IntEnum
 
 
 class SureEnum(IntEnum):

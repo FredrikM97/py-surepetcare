@@ -1,25 +1,22 @@
 import logging
-from typing import Optional
 
-from .device import BaseControl
-from .device import BaseStatus
-from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.devices.entities import BowlState
-from surepcio.devices.entities import SurePetcareResponse
+from surepcio.devices.entities import BowlState, SurePetcareResponse
 from surepcio.enums import ProductId
+
+from .device import BaseControl, BaseStatus, DeviceBase
 
 logger = logging.getLogger(__name__)
 
 
 class Control(BaseControl):
-    learn_mode: Optional[bool] = None
-    fast_polling: Optional[bool] = None
+    learn_mode: bool | None = None
+    fast_polling: bool | None = None
 
 
 class Status(BaseStatus):
-    bowl_status: Optional[list[BowlState]] = None
+    bowl_status: list[BowlState] | None = None
 
 
 class PoseidonConnect(DeviceBase[Control, Status]):

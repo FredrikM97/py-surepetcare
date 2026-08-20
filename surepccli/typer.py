@@ -2,10 +2,9 @@ import asyncio
 import functools
 import inspect
 import os
-from functools import partial
-from functools import wraps
+from collections.abc import Callable
+from functools import partial, wraps
 from typing import Any
-from typing import Callable
 
 import typer
 

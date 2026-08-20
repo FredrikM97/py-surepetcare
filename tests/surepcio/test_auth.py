@@ -1,9 +1,10 @@
-import pytest
-import aiohttp
 from typing import cast
 
-from surepcio.const import API_ENDPOINT_PRODUCTION
+import aiohttp
+import pytest
+
 from surepcio.security.auth import AuthClient
+from surepcio.security.exceptions import AuthenticationError
 
 
 @pytest.mark.asyncio
@@ -16,8 +17,8 @@ from surepcio.security.auth import AuthClient
 )
 async def test_login_failure(aresponses, json_data, status):
     aresponses.add(
-        API_ENDPOINT_PRODUCTION,
-        "/auth/login",
+        "app-api.production.surehub.io",
+        "/api/auth/login",
         "POST",
         aresponses.Response(
             text='{"error": "invalid credentials"}',
@@ -26,9 +27,9 @@ async def test_login_failure(aresponses, json_data, status):
         ),
     )
     client = AuthClient()
-    with pytest.raises(Exception):
+    with pytest.raises(AuthenticationError):
         await client.login("user@example.com", "wrongpassword")
-    with pytest.raises(Exception):
+    with pytest.raises(AuthenticationError):
         _ = client.token
 
 
@@ -64,7 +65,7 @@ async def test_login_missing_credentials(aresponses):
         ),
     )
     client = AuthClient()
-    with pytest.raises(Exception):
+    with pytest.raises(AuthenticationError):
         await client.login()
 
 
@@ -81,7 +82,7 @@ async def test_login_success_but_token_missing(aresponses):
         ),
     )
     client = AuthClient()
-    with pytest.raises(Exception, match="Token not found in response"):
+    with pytest.raises(AuthenticationError, match="Token not found in response"):
         await client.login("user@example.com", "password")
 
 
@@ -100,8 +101,8 @@ def test_token_success():
 
 def test_token_missing():
     client = AuthClient()
-    with pytest.raises(Exception):
-        client.token
+    with pytest.raises(AuthenticationError):
+        _ = client.token
 
 
 def test_get_formatted_header():

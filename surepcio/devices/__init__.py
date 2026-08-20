@@ -1,5 +1,6 @@
 import logging
-from typing import Optional
+
+from surepcio.enums import ProductId
 
 from .dual_scan_connect import DualScanConnect
 from .dual_scan_pet_door import DualScanPetDoor
@@ -9,7 +10,6 @@ from .no_id_dog_bowl_connect import NoIdDogBowlConnect
 from .pet import Pet
 from .pet_door import PetDoor
 from .poseidon_connect import PoseidonConnect
-from surepcio.enums import ProductId
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ DEVICE_CLASS_REGISTRY = {
 }
 
 
-def load_device_class(product: ProductId | int) -> Optional[type]:
+def load_device_class(product: ProductId | int) -> type | None:
     """Load the device class based on the product ID."""
     cls = DEVICE_CLASS_REGISTRY.get(ProductId.find(product))
     if cls is None:

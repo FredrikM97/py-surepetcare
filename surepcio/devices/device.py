@@ -1,37 +1,26 @@
-from datetime import datetime
-from datetime import timezone
 import logging
-from abc import ABC
-from abc import abstractmethod
-from typing import Any
-from typing import cast
-from typing import Generic
-from typing import Optional
-from typing import TypeVar
+from abc import ABC, abstractmethod
+from datetime import UTC, datetime
+from typing import Any, cast
 
 from surepcio.command import Command
-from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.const import API_ENDPOINT_V1
-from surepcio.devices.entities import BaseControl
-from surepcio.devices.entities import BaseStatus
-from surepcio.devices.entities import EntityInfo
+from surepcio.const import API_ENDPOINT_PRODUCTION, API_ENDPOINT_V1
+from surepcio.devices.entities import BaseControl, BaseStatus, EntityInfo
 from surepcio.entities.battery_mixin import BatteryMixin
 from surepcio.entities.error_mixin import ImprovedErrorMixin
-from surepcio.enums import FlapLocking, ModifyDeviceTag
-from surepcio.enums import ProductId
+from surepcio.enums import FlapLocking, ModifyDeviceTag, ProductId
 
 logger = logging.getLogger(__name__)
 
-C = TypeVar("C", bound=ImprovedErrorMixin)
-S = TypeVar("S", bound=ImprovedErrorMixin)
 
-
-class ModelFactoryMixin(Generic[C, S]):
+class ModelFactoryMixin[C: ImprovedErrorMixin, S: ImprovedErrorMixin]:
     controlCls: type[C] = cast(type[C], BaseControl)
     statusCls: type[S] = cast(type[S], BaseStatus)
 
 
-class SurePetCareBase(ABC, ModelFactoryMixin[C, S]):
+class SurePetCareBase[C: ImprovedErrorMixin, S: ImprovedErrorMixin](
+    ABC, ModelFactoryMixin[C, S]
+):
     """Base class for Sure PetCare entities."""
 
     entity_info: EntityInfo
@@ -41,9 +30,9 @@ class SurePetCareBase(ABC, ModelFactoryMixin[C, S]):
             self.entity_info = EntityInfo(**{**data, "product_id": self.product_id})
             self.status: S = cast(S, self.statusCls(**data))
             self.control: C = cast(C, self.controlCls(**data))
-        except Exception as e:
+        except Exception:
             logger.warning("Error while storing data %s", data)
-            raise e
+            raise
         self.timezone = timezone
 
     @property
@@ -67,15 +56,17 @@ class SurePetCareBase(ABC, ModelFactoryMixin[C, S]):
         raise NotImplementedError("Subclasses must implement refresh method")
 
 
-class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
+class DeviceBase[C: ImprovedErrorMixin, S: ImprovedErrorMixin](
+    SurePetCareBase[C, S], BatteryMixin
+):
     """Representation of a Sure PetCare Device."""
 
     @property
-    def parent_device_id(self) -> Optional[int]:
+    def parent_device_id(self) -> int | None:
         return self.entity_info.parent_device_id
 
     @property
-    def available(self) -> Optional[bool]:
+    def available(self) -> bool | None:
         return getattr(self.status, "online", None) if self.status is not None else None
 
     @property
@@ -84,7 +75,7 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
         return None
 
     @property
-    def id(self) -> Optional[int]:
+    def id(self) -> int | None:
         return self.entity_info.id
 
     @property
@@ -94,7 +85,7 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
         return self.entity_info.household_id
 
     @property
-    def name(self) -> Optional[str]:
+    def name(self) -> str | None:
         return self.entity_info.name
 
     def set_tag(self, tag_id: int, action: ModifyDeviceTag) -> Command:
@@ -117,7 +108,7 @@ class DeviceBase(SurePetCareBase[C, S], BatteryMixin):
         )
 
 
-class DoorDeviceBase(DeviceBase[C, S]):
+class DoorDeviceBase[C: ImprovedErrorMixin, S: ImprovedErrorMixin](DeviceBase[C, S]):
     """Base class for door devices."""
 
     @property
@@ -130,7 +121,7 @@ class DoorDeviceBase(DeviceBase[C, S]):
         )
         # The API reports curfew lock/unlock times in UTC, so compare
         # against the current UTC time rather than the host's local time.
-        now = datetime.now(timezone.utc).time()
+        now = datetime.now(UTC).time()
         return any(
             c.enabled
             and (
@@ -152,11 +143,11 @@ class DoorDeviceBase(DeviceBase[C, S]):
         return self.set_control(fail_safe=failsafe)
 
 
-class PetBase(SurePetCareBase[C, S]):
+class PetBase[C: ImprovedErrorMixin, S: ImprovedErrorMixin](SurePetCareBase[C, S]):
     """Representation of a Sure PetCare Pet."""
 
     @property
-    def available(self) -> Optional[bool]:
+    def available(self) -> bool | None:
         return getattr(self.status, "online", None)
 
     @property
@@ -165,7 +156,7 @@ class PetBase(SurePetCareBase[C, S]):
         return None
 
     @property
-    def id(self) -> Optional[int]:
+    def id(self) -> int | None:
         return self.entity_info.id
 
     @property
@@ -173,5 +164,5 @@ class PetBase(SurePetCareBase[C, S]):
         return self.entity_info.household_id
 
     @property
-    def name(self) -> Optional[str]:
+    def name(self) -> str | None:
         return self.entity_info.name

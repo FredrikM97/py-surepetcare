@@ -1,56 +1,54 @@
 import logging
-from typing import Optional
 from warnings import deprecated
 
-from .device import BaseControl
-from .device import BaseStatus
-from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.entities import BowlState, SurePetcareResponse
 from surepcio.entities.error_mixin import ImprovedErrorMixin
-from surepcio.enums import BowlPosition
-from surepcio.enums import BowlType
-from surepcio.enums import BowlTypeOptions
-from surepcio.enums import CloseDelay
-from surepcio.enums import FeederTrainingMode
-from surepcio.enums import FoodType
-from surepcio.enums import ProductId
-from surepcio.enums import Tare
+from surepcio.enums import (
+    BowlPosition,
+    BowlType,
+    BowlTypeOptions,
+    CloseDelay,
+    FeederTrainingMode,
+    FoodType,
+    ProductId,
+    Tare,
+)
+
+from .device import BaseControl, BaseStatus, DeviceBase
 
 logger = logging.getLogger(__name__)
 
 
 class BowlSetting(ImprovedErrorMixin):
-    food_type: Optional[FoodType] = None
-    target: Optional[float] = None
+    food_type: FoodType | None = None
+    target: float | None = None
 
 
 class Bowls(ImprovedErrorMixin):
-    settings: Optional[list[Optional[BowlSetting]]] = None
-    type: Optional[BowlType] = None
+    settings: list[BowlSetting | None] | None = None
+    type: BowlType | None = None
 
 
 class Lid(ImprovedErrorMixin):
-    close_delay: Optional[CloseDelay] = None
+    close_delay: CloseDelay | None = None
 
 
 class Control(BaseControl):
-    lid: Optional[Lid] = None
-    bowls: Optional[Bowls] = None
-    tare: Optional[Tare] = None
-    training_mode: Optional[FeederTrainingMode] = None
-    fast_polling: Optional[bool] = None
+    lid: Lid | None = None
+    bowls: Bowls | None = None
+    tare: Tare | None = None
+    training_mode: FeederTrainingMode | None = None
+    fast_polling: bool | None = None
 
 
 class Status(BaseStatus):
     # pet_status: Optional[dict] = None
-    bowl_status: Optional[list[BowlState]] = None
-    bowl_type_options: Optional[str] = None
-    fill_percentages: Optional[
-        dict[str, Optional[float] | dict[int, Optional[float]]]
-    ] = None
-    tare_options: Optional[list[str]] = None
+    bowl_status: list[BowlState] | None = None
+    bowl_type_options: str | None = None
+    fill_percentages: dict[str, float | None | dict[int, float | None]] | None = None
+    tare_options: list[str] | None = None
 
 
 class FeederConnect(DeviceBase[Control, Status]):
@@ -85,12 +83,14 @@ class FeederConnect(DeviceBase[Control, Status]):
             if self.control and self.control.bowls and self.control.bowls.type:
                 bowls_type = self.control.bowls.type
 
-            if bowls_type is not None and self.status.bowl_status:
-                if bowls_type == BowlType.LARGE:
-                    if self.status.bowl_status:
-                        bowl = self.status.bowl_status[0]
-                        bowl.position = BowlPosition.BOTH
-                        self.status.bowl_status = [bowl]
+            if (
+                bowls_type is not None
+                and self.status.bowl_status
+                and bowls_type == BowlType.LARGE
+            ):
+                bowl = self.status.bowl_status[0]
+                bowl.position = BowlPosition.BOTH
+                self.status.bowl_status = [bowl]
 
             # Derive computed properties from the freshly-updated status/control
             self.status.bowl_type_options = self.get_bowl_type_option()
@@ -105,7 +105,7 @@ class FeederConnect(DeviceBase[Control, Status]):
         )
 
     @property
-    def rssi(self) -> Optional[int]:
+    def rssi(self) -> int | None:
         """Return the RSSI value."""
         return self.status.signal.device_rssi if self.status.signal else None
 
@@ -132,7 +132,7 @@ class FeederConnect(DeviceBase[Control, Status]):
         """Set the bowl type/settings on the device using BowlTypeOptions enum."""
         if not isinstance(option, BowlTypeOptions):
             return None
-        settings: list[Optional[BowlSetting]] = [
+        settings: list[BowlSetting | None] = [
             BowlSetting(food_type=ft.value, target=0) for ft in option.food_types
         ]
         return self.set_control(
@@ -173,7 +173,7 @@ class FeederConnect(DeviceBase[Control, Status]):
 
     def fill_percentages(
         self,
-    ) -> dict[str, Optional[float] | dict[int, Optional[float]]]:
+    ) -> dict[str, float | None | dict[int, float | None]]:
         """Return total and per-bowl fill percentages.
 
         Rules:
@@ -190,7 +190,7 @@ class FeederConnect(DeviceBase[Control, Status]):
 
         total_weight = 0.0
         total_target = 0.0
-        individual: dict[int, Optional[float]] = {}
+        individual: dict[int, float | None] = {}
 
         for i, (bowl, setting) in enumerate(zip(bowl_status, bowl_settings)):
             weight = getattr(bowl, "current_weight", None)
@@ -211,7 +211,7 @@ class FeederConnect(DeviceBase[Control, Status]):
             total_weight += clamped_weight
             total_target += target
 
-        total: Optional[float] = (
+        total: float | None = (
             max((total_weight / total_target) * 100, 0) if total_target > 0 else None
         )
         return {"total": total, "per_bowl": individual}

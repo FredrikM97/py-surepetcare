@@ -12,10 +12,9 @@ class CacheHeaders:
     To determine if request already provided up-to-date data.
     """
 
-    resources: dict[str, dict] = {}
-
     def __init__(self):
         self._headers = {}
+        self.resources: dict[str, dict] = {}
 
     def clear_resources(self):
         self.resources = {}

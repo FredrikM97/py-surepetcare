@@ -3,9 +3,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Optional
 
-from dotenv import load_dotenv
-from dotenv import set_key
-from dotenv import unset_key
+from dotenv import load_dotenv, set_key, unset_key
 
 from surepccli.const import Envs
 from surepcio.client import SurePetcareClient

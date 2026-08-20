@@ -1,12 +1,11 @@
 import logging
 
-from .device import BaseControl
-from .device import BaseStatus
-from .device import DeviceBase
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.entities import SurePetcareResponse
 from surepcio.enums import ProductId
+
+from .device import BaseControl, BaseStatus, DeviceBase
 
 logger = logging.getLogger(__name__)
 

@@ -20,7 +20,7 @@ class CurfewParamType(click.ParamType):
                 return [Curfew(**item) for item in data]
             else:
                 self.fail("Curfew must be a JSON object or list of objects", param, ctx)
-        except Exception as e:
+        except (ValueError, TypeError) as e:
             self.fail(f"Invalid curfew '{value}': {e}", param, ctx)
         return None
 

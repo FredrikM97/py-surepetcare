@@ -4,12 +4,8 @@ from syrupy.assertion import SnapshotAssertion
 from surepcio import Household
 from surepcio.client import SurePetcareClient
 from surepcio.devices.entities import BowlState
-from surepcio.devices.feeder_connect import Bowls
-from surepcio.devices.feeder_connect import BowlSetting
-from surepcio.devices.feeder_connect import FeederConnect
-from surepcio.enums import BowlPosition
-from surepcio.enums import BowlType
-from surepcio.enums import FoodType
+from surepcio.devices.feeder_connect import Bowls, BowlSetting, FeederConnect
+from surepcio.enums import BowlPosition, BowlType, FoodType
 from tests.conftest import object_snapshot
 
 

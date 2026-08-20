@@ -1,10 +1,6 @@
-from typing import Optional
-
 import typer
 
-from surepccli.helpers import household_option
-from surepccli.helpers import pet_id_option
-from surepccli.helpers import print_table
+from surepccli.helpers import household_option, pet_id_option, print_table
 from surepccli.session import get_session_manager
 from surepccli.typer import AsyncTyper
 from surepcio.devices.pet import Pet
@@ -23,7 +19,7 @@ async def _fetch_all_pets(household_id: str) -> list[Pet]:
 
 async def _fetch_pets(
     household_id: str,
-    pet_id: Optional[str] = None,
+    pet_id: str | None = None,
 ) -> list[Pet]:
     pets = await _fetch_all_pets(household_id)
     if pet_id:
@@ -64,7 +60,7 @@ async def last_activity(
         typer.echo("No activity recorded yet.")
         return
     typer.echo(f"Last activity for pet {pet.name} (ID: {pet.id}):")
-    typer.echo(f"device_id: {result.device_id}\ntime: {str(result.at)}")
+    typer.echo(f"device_id: {result.device_id}\ntime: {result.at!s}")
 
 
 @pet.command()

@@ -1,6 +1,5 @@
-from typing import TYPE_CHECKING
-from typing import Any
-from typing import Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from surepcio.devices.entities import SurePetcareResponse
@@ -34,12 +33,11 @@ class Command:
                 "Use parse to extract data from a response, "
                 "or chain to produce follow-up commands — not both."
             )
-        if endpoint.endswith("/async"):
-            if household_id is None:
-                raise InvalidCommandError(
-                    "Async write commands must include household_id for pending status polling. "
-                    f"Method={method!r}, endpoint={endpoint!r}"
-                )
+        if endpoint.endswith("/async") and household_id is None:
+            raise InvalidCommandError(
+                "Async write commands must include household_id for pending status polling. "
+                f"Method={method!r}, endpoint={endpoint!r}"
+            )
         self.method: str = method
         self.endpoint: str = endpoint
         self.params: dict[str, Any] = params or {}
@@ -49,6 +47,4 @@ class Command:
         self.chain: ChainFn | None = chain
 
     def __str__(self) -> str:
-        return "Command(method={!r}, endpoint={!r}, params={!r})".format(
-            self.method, self.endpoint, self.params
-        )
+        return f"Command(method={self.method!r}, endpoint={self.endpoint!r}, params={self.params!r})"

@@ -1,7 +1,6 @@
 import logging
 
-from surepcio.const import BATT_VOLTAGE_FULL
-from surepcio.const import BATT_VOLTAGE_LOW
+from surepcio.const import BATT_VOLTAGE_FULL, BATT_VOLTAGE_LOW
 
 logger: logging.Logger = logging.getLogger(__name__)
 

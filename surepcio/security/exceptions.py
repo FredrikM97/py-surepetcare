@@ -1,8 +1,6 @@
 class AuthenticationError(Exception):
     """Raised for authentication failures."""
 
-    pass
-
 
 class InvalidCommandError(ValueError):
     """Raised when a Command is constructed or used incorrectly."""

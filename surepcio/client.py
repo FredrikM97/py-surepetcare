@@ -1,16 +1,20 @@
 import asyncio
+import json
 import logging
 from typing import Any
-from typing import Union
+
+import aiohttp
 
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION
 from surepcio.devices.entities import SurePetcareResponse
 from surepcio.enums import RequestStatus
 from surepcio.security.auth import AuthClient
-from surepcio.security.exceptions import ApiError
-from surepcio.security.exceptions import InvalidCommandError
-from surepcio.security.exceptions import UnexpectedDataTypeError
+from surepcio.security.exceptions import (
+    ApiError,
+    InvalidCommandError,
+    UnexpectedDataTypeError,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +34,7 @@ class SurePetcareClient(AuthClient):
             if response.content_length != 0:
                 try:
                     data = await response.json()
-                except Exception as e:
+                except (aiohttp.ContentTypeError, json.JSONDecodeError) as e:
                     logger.warning(f"Failed to parse JSON response: {e}")
 
             if 400 <= response.status < 600:
@@ -66,7 +70,7 @@ class SurePetcareClient(AuthClient):
     ) -> SurePetcareResponse:
         return await self._request("delete", endpoint, json=params, headers=headers)
 
-    async def api(self, command: Union[Command, list[Command]]) -> Any:
+    async def api(self, command: Command | list[Command]) -> Any:
         """Execute one or more commands and normalize post-request behavior.
 
         Handles command lists, callback-only commands, and regular HTTP commands.
@@ -139,10 +143,9 @@ class SurePetcareClient(AuthClient):
             logger.debug("%d request(s) still pending", len(remaining_ids))
             if not remaining_ids:
                 return
-        else:
-            raise TimeoutError(
-                f"Watcher timed out with {len(remaining_ids)} request(s) still pending: {remaining_ids}"
-            )
+        raise TimeoutError(
+            f"Watcher timed out with {len(remaining_ids)} request(s) still pending: {remaining_ids}"
+        )
 
     @staticmethod
     def _tracked_pending_ids(response_data: dict[Any, Any] | None) -> set[str]:
@@ -159,7 +162,7 @@ class SurePetcareClient(AuthClient):
 
         def parse(response: SurePetcareResponse) -> set[str]:
             if not isinstance(response.data, dict):
-                raise RuntimeError("Expected control status payload to be a dict.")
+                raise UnexpectedDataTypeError("data", dict, type(response.data))
             data_entries = response.data.get("data")
             entries = (
                 data_entries
