@@ -1,4 +1,3 @@
-import json
 from datetime import datetime
 from typing import Optional
 
@@ -20,6 +19,30 @@ class MovementResource(ImprovedErrorMixin):
     movement_type: Optional[int] = Field(default=None, alias="type")
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
+
+
+class WeightFrame(ImprovedErrorMixin):
+    """Represents a single weight reading within a weight resource."""
+
+    id: Optional[int] = None
+    index: Optional[int] = None
+    current_weight: Optional[int] = None
+    change: Optional[int] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+
+class WeightResource(ImprovedErrorMixin):
+    """Represents a feeding/drinking weight entry within a timeline event."""
+
+    id: Optional[int] = None
+    device_id: Optional[int] = None
+    tag_id: Optional[int] = None
+    context: Optional[int] = None
+    duration: Optional[int] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    frames: list[WeightFrame] = []
 
 
 class TimelineEntityInfo(ImprovedErrorMixin):
@@ -46,24 +69,14 @@ class TimelineEvent(ImprovedErrorMixin):
     pets: list[TimelineEntityInfo] = []
     tags: list[TimelineEntityInfo] = []
     users: list[TimelineEntityInfo] = []
-    weights: list = []
-
-    @property
-    def data_parsed(self) -> dict | None:
-        """Return the JSON-parsed ``data`` field, or None if absent or null."""
-        if not self.data or self.data == "null":
-            return None
-        try:
-            return json.loads(self.data)
-        except (ValueError, TypeError):
-            return None
-
-    @property
-    def primary_movement(self) -> MovementResource | None:
-        """Return the first movement entry, or None if there are none."""
-        return self.movements[0] if self.movements else None
+    weights: list[WeightResource] = []
 
     @property
     def is_movement_event(self) -> bool:
         """Return True when this is a Movement event (type 0)."""
         return self.event_type == TimelineEventType.MOVEMENT
+
+    @property
+    def is_feeding_event(self) -> bool:
+        """Return True when this is a Feeding event (type 22)."""
+        return self.event_type == TimelineEventType.FEEDING
