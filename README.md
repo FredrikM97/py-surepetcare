@@ -70,7 +70,7 @@ Star ⭐ the repository to help others discover the integration.
 6. Start application and enable debug. The debug logs contain request data that can be provided with an issue and for snapshot testing.
 
 
-[build-shield]: https://img.shields.io/github/actions/workflow/status/FredrikM97/py-surepetcare/test-and-coverage.yml?style=for-the-badge&label=Tests
+[build-shield]: https://img.shields.io/github/actions/workflow/status/FredrikM97/py-surepetcare/ci.yml?style=for-the-badge&label=Tests
 [build]: https://github.com/FredrikM97/py-surepetcare/actions
 
 [codecov-shield]: https://img.shields.io/codecov/c/github/FredrikM97/py-surepetcare?style=for-the-badge&label=Coverage
