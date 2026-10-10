@@ -5,12 +5,22 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    allow:
+      - dependency-type: "all"
     commit-message:
       prefix: "deps(package)"
     labels:
       - "dependencies"
     groups:
-      all:
+      python-minor-patch:
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "*"
+      python-major:
+        update-types:
+          - "major"
         patterns:
           - "*"
 
@@ -24,6 +34,14 @@ updates:
     labels:
       - "dependencies"
     groups:
-      all:
+      actions-minor-patch:
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "*"
+      actions-major:
+        update-types:
+          - "major"
         patterns:
           - "*"
