@@ -7,7 +7,7 @@
 [![Tests][build-shield]][build]
 [![Coverage][codecov-shield]][codecov]
 [![Downloads][pypi-downloads-shield]][pypi]
-[![License][license-shield]](LICENSE.md)
+[![License][license-shield]](LICENSE)
 [![Dev Container][devcontainer-shield]][devcontainer]
 
 ---
