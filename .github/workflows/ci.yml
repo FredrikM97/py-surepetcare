@@ -47,7 +47,7 @@ jobs:
           uv lock --check
       - name: Audit locked dependencies
         run: |
-          uv export --frozen --all-extras --format requirements-txt --no-hashes -o requirements.lock.txt
+          uv export --frozen --all-extras --no-emit-project --format requirements-txt --no-hashes -o requirements.lock.txt
           uv tool run --from pip-audit pip-audit -r requirements.lock.txt
       - name: Run tests with coverage
         run: |
