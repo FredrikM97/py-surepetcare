@@ -48,40 +48,10 @@
       'tag': 60978,
     }),
     'status': dict({
-      'activity': dict({
-        'device_id': None,
-        'id': None,
-        'pet_id': None,
-        'since': None,
-        'tag_id': None,
-        'user_id': None,
-        'where': None,
-      }),
       'devices': dict({
         'count': 0,
         'items': list([
         ]),
-      }),
-      'drinking': dict({
-        'at': None,
-        'change': None,
-        'device_id': None,
-        'id': None,
-        'tag_id': None,
-      }),
-      'feeding': dict({
-        'at': datetime.datetime(2025, 9, 16, 19, 42, 53, tzinfo=TzInfo(0)),
-        'change': list([
-          -3.23,
-          0,
-        ]),
-        'device_id': 269654,
-        'id': 1210761432,
-        'tag_id': 2039802,
-      }),
-      'last_activity': dict({
-        'at': datetime.datetime(2025, 9, 16, 19, 42, 53, tzinfo=TzInfo(0)),
-        'device_id': 269654,
       }),
     }),
     'timezone': 'Europe/Stockholm',
@@ -136,40 +106,10 @@
       'tag': 1725049,
     }),
     'status': dict({
-      'activity': dict({
-        'device_id': None,
-        'id': 5045077041,
-        'pet_id': 629768,
-        'since': datetime.datetime(2025, 9, 11, 10, 36, 59, tzinfo=TzInfo(0)),
-        'tag_id': 1725049,
-        'user_id': 9999999,
-        'where': <PetLocation.INSIDE: 1>,
-      }),
       'devices': dict({
         'count': 0,
         'items': list([
         ]),
-      }),
-      'drinking': dict({
-        'at': None,
-        'change': None,
-        'device_id': None,
-        'id': None,
-        'tag_id': None,
-      }),
-      'feeding': dict({
-        'at': datetime.datetime(2025, 9, 16, 19, 42, 53, tzinfo=TzInfo(0)),
-        'change': list([
-          -3.23,
-          0,
-        ]),
-        'device_id': 269654,
-        'id': 1210761432,
-        'tag_id': 2039802,
-      }),
-      'last_activity': dict({
-        'at': datetime.datetime(2025, 9, 16, 19, 42, 53, tzinfo=TzInfo(0)),
-        'device_id': 269654,
       }),
     }),
     'timezone': 'Europe/Stockholm',

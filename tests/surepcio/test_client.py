@@ -10,6 +10,17 @@ from surepcio.security.exceptions import ApiError
 from tests.conftest import object_snapshot
 
 
+def test_client_exposes_api_operations_not_consumer_field_evaluation():
+    client = SurePetcareClient()
+    for name in (
+        "get_device_data",
+        "iter_device_fields",
+        "iter_device_readings",
+        "iter_timeline_readings",
+    ):
+        assert not hasattr(client, name)
+
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize("status", [204, 304])
 async def test_get_none_status(aresponses: aresponses.ResponsesMockServer, status):

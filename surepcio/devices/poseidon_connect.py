@@ -1,8 +1,6 @@
 import logging
 
-from surepcio.command import Command
-from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.devices.entities import BowlState, SurePetcareResponse
+from surepcio.devices.entities import BowlState
 from surepcio.enums import ProductId
 
 from .device import BaseControl, BaseStatus, DeviceBase
@@ -24,27 +22,6 @@ class PoseidonConnect(DeviceBase[Control, Status]):
 
     controlCls = Control
     statusCls = Status
-
-    def refresh(self):
-        """Refresh the device status and control settings from the API."""
-
-        def parse(response: SurePetcareResponse) -> "PoseidonConnect":
-            if not response.data:
-                return self
-
-            self.status = self.statusCls(
-                **{**self.status.model_dump(), **response.data["data"]}
-            )
-            self.control = self.controlCls(
-                **{**self.control.model_dump(), **response.data["data"]}
-            )
-            return self
-
-        return Command(
-            method="GET",
-            endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}",
-            parse=parse,
-        )
 
     @property
     def product(self) -> ProductId:

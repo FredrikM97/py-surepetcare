@@ -2,7 +2,7 @@ from pydantic import BaseModel, ConfigDict
 
 
 class ImprovedErrorMixin(BaseModel):
-    """A mixin class to improve error handling and serialization in Pydantic models."""
+    """API model defaults: ignore unknown keys, omit nulls and serialize aliases."""
 
     model_config = ConfigDict(extra="ignore")
 

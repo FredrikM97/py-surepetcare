@@ -1,0 +1,422 @@
+# serializer version: 1
+# name: test_authentication_propagates_without_acknowledgement[failure0-False]
+  dict({
+    'cursor': None,
+    'device_errors': list([
+    ]),
+    'seen': list([
+    ]),
+    'timeline_error': None,
+  })
+# ---
+# name: test_authentication_propagates_without_acknowledgement[failure0-True]
+  dict({
+    'cursor': None,
+    'device_errors': list([
+    ]),
+    'seen': list([
+    ]),
+    'timeline_error': None,
+  })
+# ---
+# name: test_authentication_propagates_without_acknowledgement[failure1-False]
+  dict({
+    'cursor': None,
+    'device_errors': list([
+    ]),
+    'seen': list([
+    ]),
+    'timeline_error': None,
+  })
+# ---
+# name: test_authentication_propagates_without_acknowledgement[failure1-True]
+  dict({
+    'cursor': None,
+    'device_errors': list([
+    ]),
+    'seen': list([
+    ]),
+    'timeline_error': None,
+  })
+# ---
+# name: test_endpoint_failure_skips_readings_and_recovers[failure0-False][failed]
+  dict({
+    'deliveries': list([
+    ]),
+    'device_errors': list([
+      10,
+    ]),
+    'initialized': True,
+    'logged': True,
+    'timeline_failed': False,
+  })
+# ---
+# name: test_endpoint_failure_skips_readings_and_recovers[failure0-False][recovered]
+  dict({
+    'deliveries': list([
+    ]),
+    'device_errors': list([
+    ]),
+    'initialized': True,
+    'timeline_error': None,
+  })
+# ---
+# name: test_endpoint_failure_skips_readings_and_recovers[failure0-True][failed]
+  dict({
+    'deliveries': list([
+    ]),
+    'device_errors': list([
+    ]),
+    'initialized': False,
+    'logged': True,
+    'timeline_failed': True,
+  })
+# ---
+# name: test_endpoint_failure_skips_readings_and_recovers[failure0-True][recovered]
+  dict({
+    'deliveries': list([
+    ]),
+    'device_errors': list([
+    ]),
+    'initialized': True,
+    'timeline_error': None,
+  })
+# ---
+# name: test_endpoint_failure_skips_readings_and_recovers[failure1-False][failed]
+  dict({
+    'deliveries': list([
+    ]),
+    'device_errors': list([
+      10,
+    ]),
+    'initialized': True,
+    'logged': True,
+    'timeline_failed': False,
+  })
+# ---
+# name: test_endpoint_failure_skips_readings_and_recovers[failure1-False][recovered]
+  dict({
+    'deliveries': list([
+    ]),
+    'device_errors': list([
+    ]),
+    'initialized': True,
+    'timeline_error': None,
+  })
+# ---
+# name: test_endpoint_failure_skips_readings_and_recovers[failure1-True][failed]
+  dict({
+    'deliveries': list([
+    ]),
+    'device_errors': list([
+    ]),
+    'initialized': False,
+    'logged': True,
+    'timeline_failed': True,
+  })
+# ---
+# name: test_endpoint_failure_skips_readings_and_recovers[failure1-True][recovered]
+  dict({
+    'deliveries': list([
+    ]),
+    'device_errors': list([
+    ]),
+    'initialized': True,
+    'timeline_error': None,
+  })
+# ---
+# name: test_endpoint_failure_skips_readings_and_recovers[failure2-False][failed]
+  dict({
+    'deliveries': list([
+    ]),
+    'device_errors': list([
+      10,
+    ]),
+    'initialized': True,
+    'logged': True,
+    'timeline_failed': False,
+  })
+# ---
+# name: test_endpoint_failure_skips_readings_and_recovers[failure2-False][recovered]
+  dict({
+    'deliveries': list([
+    ]),
+    'device_errors': list([
+    ]),
+    'initialized': True,
+    'timeline_error': None,
+  })
+# ---
+# name: test_endpoint_failure_skips_readings_and_recovers[failure2-True][failed]
+  dict({
+    'deliveries': list([
+    ]),
+    'device_errors': list([
+    ]),
+    'initialized': False,
+    'logged': True,
+    'timeline_failed': True,
+  })
+# ---
+# name: test_endpoint_failure_skips_readings_and_recovers[failure2-True][recovered]
+  dict({
+    'deliveries': list([
+    ]),
+    'device_errors': list([
+    ]),
+    'initialized': True,
+    'timeline_error': None,
+  })
+# ---
+# name: test_failed_publication_is_retried_before_acknowledgement[False][not-acknowledged]
+  dict({
+    'cursor': 0,
+    'deliveries': list([
+    ]),
+    'seen': list([
+    ]),
+  })
+# ---
+# name: test_failed_publication_is_retried_before_acknowledgement[False][retried]
+  dict({
+    'cursor': 1,
+    'deliveries': list([
+      dict({
+        'event': dict({
+          'created_at': '2026-01-02T12:00:00Z',
+          'devices': list([
+          ]),
+          'household_id': 1,
+          'households': list([
+          ]),
+          'id': 1,
+          'movements': list([
+            dict({
+              'device_id': 20,
+              'direction': 1,
+              'tag_id': 100,
+            }),
+          ]),
+          'pets': list([
+          ]),
+          'tags': list([
+          ]),
+          'type': 0,
+          'users': list([
+          ]),
+          'weights': list([
+          ]),
+        }),
+      }),
+    ]),
+    'seen': list([
+    ]),
+  })
+# ---
+# name: test_failed_publication_is_retried_before_acknowledgement[True][not-acknowledged]
+  dict({
+    'cursor': 0,
+    'deliveries': list([
+    ]),
+    'seen': list([
+    ]),
+  })
+# ---
+# name: test_failed_publication_is_retried_before_acknowledgement[True][retried]
+  dict({
+    'cursor': 1,
+    'deliveries': list([
+      dict({
+        'event': dict({
+          'created_at': '2026-01-02T12:00:00Z',
+          'devices': list([
+          ]),
+          'household_id': 1,
+          'households': list([
+          ]),
+          'id': 1,
+          'movements': list([
+            dict({
+              'device_id': 20,
+              'direction': 1,
+              'tag_id': 100,
+            }),
+          ]),
+          'pets': list([
+          ]),
+          'tags': list([
+          ]),
+          'type': 0,
+          'users': list([
+          ]),
+          'weights': list([
+          ]),
+        }),
+      }),
+    ]),
+    'seen': list([
+    ]),
+  })
+# ---
+# name: test_history_then_live_events_deliver_each_observation_in_order[duplicate-poll]
+  dict({
+    'cursor': 30,
+    'deliveries': list([
+    ]),
+    'seen': list([
+    ]),
+  })
+# ---
+# name: test_history_then_live_events_deliver_each_observation_in_order[initial-history]
+  list([
+  ])
+# ---
+# name: test_history_then_live_events_deliver_each_observation_in_order[two-live-events]
+  list([
+    dict({
+      'event': dict({
+        'created_at': '2026-01-02T12:00:01Z',
+        'devices': list([
+        ]),
+        'household_id': 1,
+        'households': list([
+        ]),
+        'id': 20,
+        'movements': list([
+          dict({
+            'device_id': 20,
+            'direction': 2,
+            'tag_id': 100,
+          }),
+        ]),
+        'pets': list([
+        ]),
+        'tags': list([
+        ]),
+        'type': 0,
+        'users': list([
+        ]),
+        'weights': list([
+        ]),
+      }),
+    }),
+    dict({
+      'event': dict({
+        'created_at': '2026-01-02T12:00:02Z',
+        'devices': list([
+        ]),
+        'household_id': 1,
+        'households': list([
+        ]),
+        'id': 30,
+        'movements': list([
+          dict({
+            'device_id': 20,
+            'direction': 1,
+            'tag_id': 100,
+          }),
+        ]),
+        'pets': list([
+        ]),
+        'tags': list([
+        ]),
+        'type': 0,
+        'users': list([
+        ]),
+        'weights': list([
+        ]),
+      }),
+    }),
+  ])
+# ---
+# name: test_initial_history_pages_back_without_replaying_events
+  dict({
+    'cursor': 100,
+    'events': list([
+    ]),
+    'requests': list([
+      dict({
+        'page_size': 25,
+      }),
+      dict({
+        'before_id': 76,
+        'page_size': 25,
+      }),
+    ]),
+  })
+# ---
+# name: test_processing_failure_is_not_acknowledged
+  dict({
+    'cursor': 0,
+    'seen': list([
+    ]),
+  })
+# ---
+# name: test_strict_cursor_skips_late_lower_id_and_releases_retry_ids[bounded]
+  dict({
+    'cursor': 521,
+    'seen_count': 0,
+  })
+# ---
+# name: test_strict_cursor_skips_late_lower_id_and_releases_retry_ids[strict-cursor]
+  dict({
+    'cursor': 20,
+    'events': list([
+      dict({
+        'event': dict({
+          'created_at': '2026-01-02T12:00:01Z',
+          'devices': list([
+          ]),
+          'household_id': 1,
+          'households': list([
+          ]),
+          'id': 20,
+          'movements': list([
+            dict({
+              'device_id': 20,
+              'direction': 1,
+              'tag_id': 100,
+            }),
+          ]),
+          'pets': list([
+          ]),
+          'tags': list([
+          ]),
+          'type': 0,
+          'users': list([
+          ]),
+          'weights': list([
+          ]),
+        }),
+      }),
+    ]),
+    'request': dict({
+      'page_size': 25,
+      'since_id': 20,
+    }),
+    'seen': list([
+    ]),
+  })
+# ---
+# name: test_target_refresh_delivers_only_target_and_recovers[failed]
+  dict({
+    'deliveries': list([
+    ]),
+    'errors': list([
+      10,
+    ]),
+  })
+# ---
+# name: test_target_refresh_delivers_only_target_and_recovers[recovered]
+  dict({
+    'deliveries': list([
+    ]),
+    'errors': list([
+    ]),
+    'initialized': False,
+    'requests': list([
+      'https://app-api.production.surehub.io/api/pet/10',
+      'https://app-api.production.surehub.io/api/pet/10',
+    ]),
+  })
+# ---

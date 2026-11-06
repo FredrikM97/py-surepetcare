@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 from datetime import UTC, datetime
 
@@ -20,28 +22,6 @@ from .device import PetBase
 logger = logging.getLogger(__name__)
 
 
-class PetConsumtionResource(ImprovedErrorMixin):
-    """Represents a activity resource."""
-
-    id: int | None = None
-    tag_id: int | None = None
-    device_id: int | None = None
-    change: list | None = None
-    at: datetime | None = None
-
-
-class PetPositionResource(ImprovedErrorMixin):
-    """Represents a Position resource."""
-
-    id: int | None = None
-    pet_id: int | None = None
-    tag_id: int | None = None
-    device_id: int | None = None
-    user_id: int | None = None
-    where: PetLocation | None = None
-    since: datetime | None = None
-
-
 class AssignedDevices(ImprovedErrorMixin):
     """Container for assigned devices with count."""
 
@@ -49,35 +29,20 @@ class AssignedDevices(ImprovedErrorMixin):
     count: int = 0
 
 
-class LastActivity(ImprovedErrorMixin):
-    """Last activity timestamp and device."""
-
-    at: datetime
-    device_id: int
-
-
 class Control(ImprovedErrorMixin):
     pass
 
 
 class Status(ImprovedErrorMixin):
-    activity: PetPositionResource | None = Field(default_factory=PetPositionResource)
-    feeding: PetConsumtionResource | None = Field(default_factory=PetConsumtionResource)
-    drinking: PetConsumtionResource | None = Field(
-        default_factory=PetConsumtionResource
-    )
     devices: AssignedDevices = Field(default_factory=AssignedDevices)
-    last_activity: LastActivity | None = None
 
 
 class Pet(PetBase[Control, Status]):
     """Representation of a Pet."""
 
+
     controlCls = Control
     statusCls = Status
-
-    def __init__(self, data: dict, **kwargs) -> None:
-        super().__init__(data, **kwargs)
 
     @property
     def available(self) -> bool:
@@ -91,11 +56,11 @@ class Pet(PetBase[Control, Status]):
         return self.entity_info.photo.location
 
     def refresh(self) -> Command:
-        """Refresh the pet's activity and status data."""
+        """Refresh report-owned pet status."""
         return self.fetch_report()
 
     def fetch_report(self) -> Command:
-        def parse(response: SurePetcareResponse) -> "Pet":
+        def parse(response: SurePetcareResponse) -> Pet:
             if not response.data:
                 raise NotLoadedError(
                     f"No data returned for pet {self.entity_info.id} - {self.entity_info.name}"
@@ -103,7 +68,6 @@ class Pet(PetBase[Control, Status]):
             self.status = Status(
                 **{**self.status.model_dump(), **response.data["data"]["status"]}
             )
-            self.status.last_activity = self.last_activity()
             return self
 
         return Command(
@@ -123,34 +87,10 @@ class Pet(PetBase[Control, Status]):
             return None
         return self.entity_info.tag.id
 
-    def last_activity(self) -> LastActivity | None:
-        activities = []
-
-        # Check feeding and drinking (use 'at' field)
-        for s in [self.status.feeding, self.status.drinking]:
-            if s and (at := s.at) and (device_id := s.device_id):
-                activities.append((at, device_id))
-
-        # Check activity/position (uses 'since' field)
-        if (
-            self.status.activity
-            and self.status.activity.since
-            and self.status.activity.device_id
-        ):
-            activities.append(
-                (self.status.activity.since, self.status.activity.device_id)
-            )
-
-        if not activities:
-            return None
-
-        result = max(activities, key=lambda x: x[0])
-        return LastActivity(at=result[0], device_id=result[1])
-
     def fetch_assigned_devices(self) -> Command:
         """Fetch devices assigned to this pet."""
 
-        def parse(response: SurePetcareResponse) -> "Pet":
+        def parse(response: SurePetcareResponse) -> Pet:
             if not response.data:
                 raise NotLoadedError(
                     f"No data returned for assigned devices of pet {self.id} - {self.name}"
@@ -214,7 +154,7 @@ class Pet(PetBase[Control, Status]):
         because the API can return an error when no assignments remain.
         """
 
-        def parse_remove(_response: SurePetcareResponse) -> "Pet":
+        def parse_remove(_response: SurePetcareResponse) -> Pet:
             current_items: list[DevicePetTag] = self.status.devices.items
             filtered_items: list[DevicePetTag] = [
                 item for item in current_items if item.id != device_id

@@ -1,11 +1,14 @@
 import logging
 
 from surepcio.command import Command
-from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.devices.entities import Curfew, Locking, SurePetcareResponse
+from surepcio.devices.entities import Curfew, Locking
+from surepcio.entities.door import DoorDeviceBase
 from surepcio.enums import FlapLocking, ProductId
 
-from .device import BaseControl, BaseStatus, DoorDeviceBase
+from .device import (
+    BaseControl,
+    BaseStatus,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -30,26 +33,6 @@ class DualScanConnect(DoorDeviceBase[Control, Status]):
     @property
     def product(self) -> ProductId:
         return ProductId.DUAL_SCAN_CONNECT
-
-    def refresh(self):
-        """Refresh the device status and control settings from the API."""
-
-        def parse(response: SurePetcareResponse) -> "DualScanConnect":
-            if not response.data:
-                return self
-            self.status = Status(
-                **{**self.status.model_dump(), **response.data["data"]}
-            )
-            self.control = Control(
-                **{**self.control.model_dump(), **response.data["data"]}
-            )
-            return self
-
-        return Command(
-            method="GET",
-            endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}",
-            parse=parse,
-        )
 
     def set_curfew(self, curfew: list[Curfew]) -> Command:
         """Set the flap curfew times, using the household's timezone"""

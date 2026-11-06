@@ -1,19 +1,16 @@
 """Conftest for CLI tests."""
 
+import asyncio
 import inspect
 import re
 from pathlib import Path
 
-import nest_asyncio
 import pytest
 from syrupy.assertion import SnapshotAssertion
 from typer.testing import CliRunner
 
 from surepccli import app
 from surepccli.const import Envs
-
-# Solves "RuntimeError: This event loop is already running"
-nest_asyncio.apply()
 
 runner = CliRunner()
 
@@ -31,7 +28,7 @@ async def run_cli(args: list[str], input_text: str | None = None):
     Invoke Typer CLI. If the callback is async (returns coroutine / Task) await it.
     Returns (result, awaited_return_value)
     """
-    result = runner.invoke(app, args, input=input_text)
+    result = await asyncio.to_thread(runner.invoke, app, args, input=input_text)
     rv = result.return_value
     if inspect.isawaitable(rv):
         await rv

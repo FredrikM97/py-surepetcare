@@ -22,6 +22,10 @@ logger = logging.getLogger(__name__)
 class SurePetcareClient(AuthClient):
     """SurePetcare API client. Main object to interact with the API."""
 
+    def __init__(self) -> None:
+        super().__init__()
+
+
     async def _request(
         self, method: str, endpoint: str, **kwargs
     ) -> SurePetcareResponse:

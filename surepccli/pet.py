@@ -4,6 +4,7 @@ from surepccli.helpers import household_option, pet_id_option, print_table
 from surepccli.session import get_session_manager
 from surepccli.typer import AsyncTyper
 from surepcio.devices.pet import Pet
+from surepcio.entities.pet import iter_pet_events, last_activity_reading
 from surepcio.household import Household
 
 pet = AsyncTyper(help="Pet commands", login_required=True)
@@ -53,14 +54,27 @@ async def last_activity(
     pet: Pet = await _fetch_pet(household_id, pet_id)
 
     async with get_session_manager() as sm:
-        await sm.client.api(pet.refresh())
-
-    result = pet.status.last_activity
-    if result is None:
+        events = await sm.client.api(Household({"id": household_id}).get_timeline())
+        latest = next(
+            (
+                (matched_event.created_at, last_activity_reading(matched_event))
+                for event in sorted(
+                    (event for event in events if event.created_at is not None),
+                    key=lambda event: (event.created_at, event.id),
+                    reverse=True,
+                )
+                for _, matched_event in iter_pet_events(event, [pet])
+            ),
+            None,
+        )
+    if latest is None:
         typer.echo("No activity recorded yet.")
         return
+    at, result = latest
+    if result is None:
+        raise ValueError("Timeline last activity must include a reading")
     typer.echo(f"Last activity for pet {pet.name} (ID: {pet.id}):")
-    typer.echo(f"device_id: {result.device_id}\ntime: {result.at!s}")
+    typer.echo(f"device_id: {result.attributes.get('device')}\ntime: {at!s}")
 
 
 @pet.command()

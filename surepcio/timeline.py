@@ -1,9 +1,14 @@
 from datetime import datetime
+from typing import Any
 
 from pydantic import Field
 
 from surepcio.entities.error_mixin import ImprovedErrorMixin
-from surepcio.enums import DoorDirection, DoorSide, TimelineEventType
+from surepcio.enums import (
+    DoorDirection,
+    DoorSide,
+    TimelineEventType,
+)
 
 
 class MovementResource(ImprovedErrorMixin):
@@ -25,8 +30,8 @@ class WeightFrame(ImprovedErrorMixin):
 
     id: int | None = None
     index: int | None = None
-    current_weight: int | None = None
-    change: int | None = None
+    current_weight: int | float | None = None
+    change: int | float | None = None
     created_at: datetime | None = None
     updated_at: datetime | None = None
 
@@ -70,12 +75,7 @@ class TimelineEvent(ImprovedErrorMixin):
     users: list[TimelineEntityInfo] = Field(default_factory=list)
     weights: list[WeightResource] = Field(default_factory=list)
 
-    @property
-    def is_movement_event(self) -> bool:
-        """Return True when this is a Movement event (type 0)."""
-        return self.event_type == TimelineEventType.MOVEMENT
 
-    @property
-    def is_feeding_event(self) -> bool:
-        """Return True when this is a Feeding event (type 22)."""
-        return self.event_type == TimelineEventType.FEEDING
+def build_event_payload(household_id: int, event: TimelineEvent) -> dict[str, Any]:
+    """Serialize the complete API event, adding the requesting household ID."""
+    return event.model_dump(mode="json") | {"household_id": household_id}

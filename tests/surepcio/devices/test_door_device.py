@@ -5,8 +5,8 @@ from datetime import UTC, datetime, time
 import pytest
 import time_machine
 
-from surepcio.devices.device import DoorDeviceBase
 from surepcio.devices.entities import BaseControl, BaseStatus, Curfew
+from surepcio.entities.door import DoorDeviceBase
 from surepcio.enums import ProductId
 
 
@@ -67,6 +67,16 @@ class DummyDateTime:
             datetime(2025, 1, 1, 10, 0, tzinfo=UTC),
             False,
         ),
+        (
+            [Curfew(enabled=True)],
+            datetime(2025, 1, 1, 10, 0, tzinfo=UTC),
+            False,
+        ),
+        (
+            [Curfew(enabled=True, lock_time=time(6, 0))],
+            datetime(2025, 1, 1, 10, 0, tzinfo=UTC),
+            False,
+        ),
         # Single curfew object instead of list
         (
             Curfew(enabled=True, lock_time=time(6, 0), unlock_time=time(18, 0)),
@@ -78,7 +88,7 @@ class DummyDateTime:
 def test_is_curfew_active_with_various_times(monkeypatch, curfew_values, now, expected):
     fake = FakeDoor({"id": 1, "household_id": 1})
     fake.control = type("Control", (), {"curfew": curfew_values})()
-    monkeypatch.setattr("surepcio.devices.device.datetime", DummyDateTime(now))
+    monkeypatch.setattr("surepcio.entities.door.datetime", DummyDateTime(now))
 
     assert fake.is_curfew_active is expected
 

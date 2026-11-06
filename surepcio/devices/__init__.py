@@ -2,6 +2,7 @@ import logging
 
 from surepcio.enums import ProductId
 
+from .device import SurePetCareBase
 from .dual_scan_connect import DualScanConnect
 from .dual_scan_pet_door import DualScanPetDoor
 from .feeder_connect import FeederConnect
@@ -13,7 +14,7 @@ from .poseidon_connect import PoseidonConnect
 
 logger = logging.getLogger(__name__)
 
-DEVICE_CLASS_REGISTRY = {
+DEVICE_CLASS_REGISTRY: dict[ProductId, type[SurePetCareBase]] = {
     ProductId.PET: Pet,
     ProductId.HUB: Hub,
     ProductId.PET_DOOR: PetDoor,
@@ -25,7 +26,7 @@ DEVICE_CLASS_REGISTRY = {
 }
 
 
-def load_device_class(product: ProductId | int) -> type | None:
+def load_device_class(product: ProductId | int) -> type[SurePetCareBase] | None:
     """Load the device class based on the product ID."""
     cls = DEVICE_CLASS_REGISTRY.get(ProductId.find(product))
     if cls is None:
@@ -33,3 +34,15 @@ def load_device_class(product: ProductId | int) -> type | None:
             "Unknown product id: %r (type: %s)", product, type(product).__name__
         )
     return cls
+
+
+def get_device_features(product_id: ProductId | int | str | None) -> frozenset[str]:
+    """Describe supported configuration features, including persisted product IDs."""
+    if product_id is None:
+        return frozenset()
+    try:
+        product = ProductId(int(product_id))
+    except (TypeError, ValueError):
+        return frozenset()
+    device_class = load_device_class(product)
+    return device_class.features if device_class is not None else frozenset()

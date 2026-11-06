@@ -1,4 +1,69 @@
 # serializer version: 1
+# name: test_build_movement_event_payload
+  dict({
+    'data': '{"direction": "entered"}',
+    'devices': list([
+    ]),
+    'household_id': 7777,
+    'households': list([
+    ]),
+    'id': 42,
+    'movements': list([
+      dict({
+        'device_id': 123,
+        'direction': 1,
+        'side': 1,
+      }),
+    ]),
+    'pets': list([
+    ]),
+    'tags': list([
+    ]),
+    'type': 0,
+    'users': list([
+    ]),
+    'weights': list([
+    ]),
+  })
+# ---
+# name: test_event_preserves_supplied_resources_regardless_of_type
+  dict({
+    'created_at': '2026-01-01T12:00:00Z',
+    'data': 'not-json',
+    'devices': list([
+    ]),
+    'household_id': 7777,
+    'households': list([
+    ]),
+    'id': 1,
+    'movements': list([
+      dict({
+        'device_id': 20,
+        'direction': 1,
+        'tag_id': 100,
+      }),
+    ]),
+    'pets': list([
+    ]),
+    'tags': list([
+    ]),
+    'type': 5,
+    'users': list([
+    ]),
+    'weights': list([
+    ]),
+  })
+# ---
+# name: test_get_timeline_command_no_params
+  "Command(method='GET', endpoint='https://app-api.production.surehub.io/api/timeline/household/7777', params={})"
+# ---
+# name: test_get_timeline_command_params
+  "Command(method='GET', endpoint='https://app-api.production.surehub.io/api/timeline/household/7777', params={'since_id': 42, 'before_id': 99, 'page_size': 10})"
+# ---
+# name: test_get_timeline_parse_empty_response
+  list([
+  ])
+# ---
 # name: test_timeline_snapshot[device_names0]
   dict({
     'created_at': datetime.datetime(2025, 11, 12, 13, 16, 35, tzinfo=TzInfo(0)),

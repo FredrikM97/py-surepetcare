@@ -1,14 +1,18 @@
 import logging
 from abc import ABC, abstractmethod
-from datetime import UTC, datetime
 from typing import Any, cast
 
 from surepcio.command import Command
 from surepcio.const import API_ENDPOINT_PRODUCTION, API_ENDPOINT_V1
-from surepcio.devices.entities import BaseControl, BaseStatus, EntityInfo
+from surepcio.devices.entities import (
+    BaseControl,
+    BaseStatus,
+    EntityInfo,
+    SurePetcareResponse,
+)
 from surepcio.entities.battery_mixin import BatteryMixin
 from surepcio.entities.error_mixin import ImprovedErrorMixin
-from surepcio.enums import FlapLocking, ModifyDeviceTag, ProductId
+from surepcio.enums import ModifyDeviceTag, ProductId
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +26,8 @@ class SurePetCareBase[C: ImprovedErrorMixin, S: ImprovedErrorMixin](
     ABC, ModelFactoryMixin[C, S]
 ):
     """Base class for Sure PetCare entities."""
+
+    features: frozenset[str] = frozenset()
 
     entity_info: EntityInfo
 
@@ -45,13 +51,17 @@ class SurePetCareBase[C: ImprovedErrorMixin, S: ImprovedErrorMixin](
         return self.product.value
 
     @property
+    def id(self) -> int:
+        return self.entity_info.id
+
+    @property
     def product_name(self) -> str:
         return self.product.name
 
     def __str__(self):
         return f"<{self.__class__.__name__} id={self.entity_info.id} name={self.entity_info.name}>"
 
-    def refresh(self) -> Command | list[Command]:
+    def refresh(self) -> Command:
         """Refresh the device data."""
         raise NotImplementedError("Subclasses must implement refresh method")
 
@@ -60,6 +70,27 @@ class DeviceBase[C: ImprovedErrorMixin, S: ImprovedErrorMixin](
     SurePetCareBase[C, S], BatteryMixin
 ):
     """Representation of a Sure PetCare Device."""
+
+    def refresh(self) -> Command:
+        """Refresh device status and control from the device endpoint."""
+
+        def parse(response: SurePetcareResponse) -> "DeviceBase":
+            if not response.data:
+                return self
+            data = response.data["data"]
+            self.status = self.statusCls(**{**self.status.model_dump(), **data})
+            self.control = self.controlCls(**{**self.control.model_dump(), **data})
+            self._after_refresh()
+            return self
+
+        return Command(
+            method="GET",
+            endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}",
+            parse=parse,
+        )
+
+    def _after_refresh(self) -> None:
+        """Update device-specific values derived from a refreshed report."""
 
     @property
     def parent_device_id(self) -> int | None:
@@ -73,10 +104,6 @@ class DeviceBase[C: ImprovedErrorMixin, S: ImprovedErrorMixin](
     def photo(self) -> str | None:
         """Return the url path for device photo."""
         return None
-
-    @property
-    def id(self) -> int | None:
-        return self.entity_info.id
 
     @property
     def household_id(self) -> int:
@@ -108,41 +135,6 @@ class DeviceBase[C: ImprovedErrorMixin, S: ImprovedErrorMixin](
         )
 
 
-class DoorDeviceBase[C: ImprovedErrorMixin, S: ImprovedErrorMixin](DeviceBase[C, S]):
-    """Base class for door devices."""
-
-    @property
-    def is_curfew_active(self) -> bool:
-        curfew_value = getattr(self.control, "curfew", None)
-        curfews = (
-            curfew_value
-            if isinstance(curfew_value, list)
-            else ([curfew_value] if curfew_value else [])
-        )
-        # The API reports curfew lock/unlock times in UTC, so compare
-        # against the current UTC time rather than the host's local time.
-        now = datetime.now(UTC).time()
-        return any(
-            c.enabled
-            and (
-                (c.lock_time <= c.unlock_time and c.lock_time <= now <= c.unlock_time)
-                or (
-                    c.lock_time > c.unlock_time
-                    and (now >= c.lock_time or now <= c.unlock_time)
-                )
-            )
-            for c in curfews
-        )
-
-    def set_locking(self, locking: FlapLocking) -> Command:
-        """Set locking mode"""
-        return self.set_control(locking=locking)
-
-    def set_failsafe(self, failsafe: int) -> Command:
-        """Set failsafe mode"""
-        return self.set_control(fail_safe=failsafe)
-
-
 class PetBase[C: ImprovedErrorMixin, S: ImprovedErrorMixin](SurePetCareBase[C, S]):
     """Representation of a Sure PetCare Pet."""
 
@@ -154,10 +146,6 @@ class PetBase[C: ImprovedErrorMixin, S: ImprovedErrorMixin](SurePetCareBase[C, S
     def photo(self) -> str | None:
         """Return the url path for device photo."""
         return None
-
-    @property
-    def id(self) -> int | None:
-        return self.entity_info.id
 
     @property
     def household_id(self) -> int:

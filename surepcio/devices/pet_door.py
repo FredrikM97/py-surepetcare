@@ -1,11 +1,14 @@
 import logging
 
 from surepcio.command import Command
-from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.devices.entities import Curfew, Locking, SurePetcareResponse
+from surepcio.devices.entities import Curfew, Locking
+from surepcio.entities.door import DoorDeviceBase
 from surepcio.enums import FlapLocking, ProductId
 
-from .device import BaseControl, BaseStatus, DoorDeviceBase
+from .device import (
+    BaseControl,
+    BaseStatus,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -30,26 +33,14 @@ class PetDoor(DoorDeviceBase[Control, Status]):
     def product(self) -> ProductId:
         return ProductId.PET_DOOR
 
-    def refresh(self):
-        """Refresh the device status and control settings from the API."""
-
-        def parse(response: SurePetcareResponse) -> "PetDoor":
-            if not response.data:
-                return self
-            self.status = self.statusCls(
-                **{**self.status.model_dump(), **response.data["data"]}
-            )
-            self.control = self.controlCls(
-                **{**self.control.model_dump(), **response.data["data"]}
-            )
-            return self
-
-        return Command(
-            method="GET",
-            endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}",
-            parse=parse,
-        )
-
     def set_curfew(self, curfew: Curfew) -> Command:
         """Set the flap curfew times, using the household's timezone"""
         return self.set_control(curfew=curfew)
+
+    def set_curfew_enabled(self, enabled: bool) -> Command:
+        """Toggle the existing schedule without losing its times."""
+        if self.control.curfew is None:
+            raise ValueError("Cannot enable or disable a curfew without a schedule")
+        return self.set_curfew(
+            self.control.curfew.model_copy(update={"enabled": enabled})
+        )

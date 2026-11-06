@@ -1,9 +1,9 @@
 import logging
+import math
 from warnings import deprecated
 
 from surepcio.command import Command
-from surepcio.const import API_ENDPOINT_PRODUCTION
-from surepcio.devices.entities import BowlState, SurePetcareResponse
+from surepcio.devices.entities import BowlState
 from surepcio.entities.error_mixin import ImprovedErrorMixin
 from surepcio.enums import (
     BowlPosition,
@@ -16,7 +16,11 @@ from surepcio.enums import (
     Tare,
 )
 
-from .device import BaseControl, BaseStatus, DeviceBase
+from .device import (
+    BaseControl,
+    BaseStatus,
+    DeviceBase,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -63,46 +67,16 @@ class FeederConnect(DeviceBase[Control, Status]):
     def photo(self) -> str:
         return "https://www.surepetcare.io/assets/assets/products/feeder.7ff330c9e368df01d256156b6fc797bb.png"
 
-    def refresh(self) -> Command:
-        """Refresh the device status and control settings from the API."""
-        return self._refresh_device_status()
+    def _after_refresh(self) -> None:
+        bowls_type = self.control.bowls.type if self.control.bowls else None
+        if bowls_type == BowlType.LARGE and self.status.bowl_status:
+            bowl = self.status.bowl_status[0]
+            bowl.position = BowlPosition.BOTH
+            self.status.bowl_status = [bowl]
 
-    def _refresh_device_status(self) -> Command:
-        def parse(response: SurePetcareResponse) -> "FeederConnect":
-            if not response.data:
-                return self
-            self.status = self.statusCls(
-                **{**self.status.model_dump(), **response.data["data"]}
-            )
-            self.control = self.controlCls(
-                **{**self.control.model_dump(), **response.data["data"]}
-            )
-
-            # Post-process bowl_status based on bowls.type
-            bowls_type = None
-            if self.control and self.control.bowls and self.control.bowls.type:
-                bowls_type = self.control.bowls.type
-
-            if (
-                bowls_type is not None
-                and self.status.bowl_status
-                and bowls_type == BowlType.LARGE
-            ):
-                bowl = self.status.bowl_status[0]
-                bowl.position = BowlPosition.BOTH
-                self.status.bowl_status = [bowl]
-
-            # Derive computed properties from the freshly-updated status/control
-            self.status.bowl_type_options = self.get_bowl_type_option()
-            self.status.fill_percentages = self.fill_percentages()
-            self.status.tare_options = self.get_tare_options()
-            return self
-
-        return Command(
-            method="GET",
-            endpoint=f"{API_ENDPOINT_PRODUCTION}/device/{self.id}",
-            parse=parse,
-        )
+        self.status.bowl_type_options = self.get_bowl_type_option()
+        self.status.fill_percentages = self.fill_percentages()
+        self.status.tare_options = self.get_tare_options()
 
     @property
     def rssi(self) -> int | None:
@@ -123,6 +97,36 @@ class FeederConnect(DeviceBase[Control, Status]):
     def set_tare(self, tare: Tare) -> Command:
         """Set tare settings"""
         return self.set_control(tare=tare)
+
+    def set_target_weight(self, index: int, target: float) -> Command:
+        """Update one bowl without discarding its food type or the other bowl."""
+        if not isinstance(index, int) or isinstance(index, bool) or index not in (0, 1):
+            raise ValueError(f"Invalid bowl index: {index!r}")
+        if (
+            isinstance(target, bool)
+            or not isinstance(target, (int, float))
+            or not math.isfinite(target)
+        ):
+            raise TypeError("Bowl target must be a finite number")
+        if not 0 <= target <= 300 or int(target) != target:
+            raise ValueError("Bowl target must be a whole number from 0 to 300")
+        bowls = self.control.bowls
+        settings = list(bowls.settings or ()) if bowls is not None else []
+        while len(settings) <= index:
+            settings.append(None)
+        setting = settings[index]
+        settings[index] = (
+            setting.model_copy(update={"target": target})
+            if setting is not None
+            else BowlSetting(target=target)
+        )
+        return self.set_control(
+            bowls=(
+                bowls.model_copy(update={"settings": settings})
+                if bowls is not None
+                else Bowls(settings=settings)
+            )
+        )
 
     def set_training_mode(self, training_mode: FeederTrainingMode) -> Command:
         """Set training_mode settings"""
@@ -171,9 +175,7 @@ class FeederConnect(DeviceBase[Control, Status]):
         else:
             return ["reset_left", "reset_right", "reset_both"]
 
-    def fill_percentages(
-        self,
-    ) -> dict[str, float | None | dict[int, float | None]]:
+    def fill_percentages(self) -> dict[str, float | None | dict[int, float | None]]:
         """Return total and per-bowl fill percentages.
 
         Rules:
@@ -192,8 +194,10 @@ class FeederConnect(DeviceBase[Control, Status]):
         total_target = 0.0
         individual: dict[int, float | None] = {}
 
-        for i, (bowl, setting) in enumerate(zip(bowl_status, bowl_settings)):
-            weight = getattr(bowl, "current_weight", None)
+        for i, setting in enumerate(bowl_settings):
+            if i >= len(bowl_status):
+                break
+            weight = bowl_status[i].current_weight
             target = getattr(setting, "target", None)
 
             if weight is None or target is None:
