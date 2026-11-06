@@ -60,9 +60,11 @@ def publish_device(device):
     # Evaluate the refreshed typed API model in the consuming application.
     ...
 
+
 def publish_timeline(event):
     # Evaluate the existing TimelineEvent without changing its API shape.
     ...
+
 
 await state.refresh(
     publish=publish_device,

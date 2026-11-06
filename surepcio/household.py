@@ -412,8 +412,7 @@ class HouseholdState:
             (
                 event.created_at
                 for event in page
-                if event.created_at is not None
-                and event.created_at.tzinfo is not None
+                if event.created_at is not None and event.created_at.tzinfo is not None
             ),
             default=None,
         )

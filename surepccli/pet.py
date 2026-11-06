@@ -71,10 +71,9 @@ async def last_activity(
         typer.echo("No activity recorded yet.")
         return
     at, result = latest
-    if result is None:
-        raise ValueError("Timeline last activity must include a reading")
+    device_id, _attributes = result
     typer.echo(f"Last activity for pet {pet.name} (ID: {pet.id}):")
-    typer.echo(f"device_id: {result.attributes.get('device')}\ntime: {at!s}")
+    typer.echo(f"device_id: {device_id}\ntime: {at!s}")
 
 
 @pet.command()

@@ -29,7 +29,9 @@ def test_devices_do_not_retain_timeline_state():
 def test_bowl_weights_are_scoped_to_matching_device_and_explicit_frames(
     product, event_type, make_weight_event
 ):
-    device = load_device_class(product)({"id": 20, "household_id": 1})
+    device_class = load_device_class(product)
+    assert device_class is not None
+    device = device_class({"id": 20, "household_id": 1})
     event = make_weight_event(1, event_type=event_type, current_weight=12.25)
     assert bowl_weights(event, device_id=device.id, indices=(0,)) == {0: 12.25}
     assert bowl_weights(event, device_id=21, indices=(0,)) == {}
@@ -42,9 +44,7 @@ def test_bowl_weights_are_scoped_to_matching_device_and_explicit_frames(
     ("invalid", "message"),
     [("duplicate", "duplicate"), ("non-finite", "finite")],
 )
-def test_invalid_bowl_weight_frames_are_rejected(
-    invalid, message, make_weight_event
-):
+def test_invalid_bowl_weight_frames_are_rejected(invalid, message, make_weight_event):
     event = make_weight_event(
         1, event_type=TimelineEventType.WEIGHT_CHANGED, current_weight=12.25
     )
@@ -66,7 +66,9 @@ def test_invalid_bowl_weight_frames_are_rejected(
 def test_timeline_weights_do_not_mutate_report_state(
     product, event_type, make_weight_event
 ):
-    device = load_device_class(product)({"id": 20, "household_id": 1})
+    device_class = load_device_class(product)
+    assert device_class is not None
+    device = device_class({"id": 20, "household_id": 1})
     before = device.status.model_dump()
     event = make_weight_event(1, event_type=event_type, current_weight=12.25)
     bowl_weights(event, device_id=device.id, indices=(0, 1))
@@ -74,7 +76,9 @@ def test_timeline_weights_do_not_mutate_report_state(
 
 
 def test_feeder_report_processing_still_updates_bowl_state():
-    feeder = load_device_class(ProductId.FEEDER_CONNECT)(
+    device_class = load_device_class(ProductId.FEEDER_CONNECT)
+    assert device_class is not None
+    feeder = device_class(
         {
             "id": 20,
             "household_id": 1,

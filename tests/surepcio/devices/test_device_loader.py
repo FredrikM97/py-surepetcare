@@ -1,14 +1,15 @@
-from abc import ABCMeta
-from typing import cast
-
 import pytest
 
 from surepcio.devices import DEVICE_CLASS_REGISTRY, load_device_class
+from surepcio.devices.pet import Pet
 from surepcio.enums import ProductId
 
 
 def test_load_device_class_dynamic():
-    dummy_class = cast(ABCMeta, type("DummyDevice", (), {}))
+    class DummyPet(Pet):
+        pass
+
+    dummy_class = DummyPet
     key = ProductId.PET
     original = DEVICE_CLASS_REGISTRY.get(key)
     DEVICE_CLASS_REGISTRY[key] = dummy_class

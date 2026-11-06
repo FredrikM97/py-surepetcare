@@ -10,7 +10,12 @@ from surepcio.devices.feeder_connect import FeederConnect
 from surepcio.devices.pet import Pet
 from surepcio.devices.poseidon_connect import PoseidonConnect
 from surepcio.enums import DoorDirection, PetLocation, TimelineEventType
-from surepcio.timeline import MovementResource, WeightFrame, WeightResource
+from surepcio.timeline import (
+    MovementResource,
+    TimelineEntityInfo,
+    WeightFrame,
+    WeightResource,
+)
 
 TIMELINE_AT = datetime(2026, 1, 1, 12, tzinfo=UTC)
 
@@ -186,7 +191,7 @@ def make_weight_event():
             id=event_id,
             type=event_type,
             created_at=TIMELINE_AT + timedelta(seconds=seconds),
-            households=[{"id": household_id}],
+            households=[TimelineEntityInfo(id=household_id)],
             weights=[
                 WeightResource(
                     device_id=device_id,

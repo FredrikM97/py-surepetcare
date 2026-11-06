@@ -40,7 +40,6 @@ class Status(ImprovedErrorMixin):
 class Pet(PetBase[Control, Status]):
     """Representation of a Pet."""
 
-
     controlCls = Control
     statusCls = Status
 

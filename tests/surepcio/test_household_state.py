@@ -22,7 +22,7 @@ def clock():
 
 @pytest.fixture
 def state():
-    client = SurePetcareClient()
+    client = MagicMock(spec=SurePetcareClient)
     client.api = AsyncMock(return_value=[])
     pet = Pet(
         {

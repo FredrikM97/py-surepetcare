@@ -32,9 +32,7 @@ def test_pet_matching_is_event_local_and_does_not_retain_state(
     assert not hasattr(pet, "_observations")
 
 
-def test_matching_uses_tags_and_households_without_guessing(
-    make_pet, make_movement
-):
+def test_matching_uses_tags_and_households_without_guessing(make_pet, make_movement):
     pet = make_pet()
     event = make_movement()
     assert [target.id for target, _ in iter_pet_events(event, [pet])] == [pet.id]
@@ -99,9 +97,7 @@ def test_invalid_consumption_is_unknown(make_pet, make_consumption, frames):
 
 @pytest.mark.parametrize("value", [float("nan"), float("inf"), -float("inf")])
 def test_non_finite_consumption_is_rejected(make_pet, make_consumption, value):
-    event = make_consumption(
-        frames=[WeightFrame(index=0, change=value)]
-    )
+    event = make_consumption(frames=[WeightFrame(index=0, change=value)])
     with pytest.raises(ValueError, match="finite"):
         list(iter_pet_events(event, [make_pet()]))
 
@@ -113,11 +109,14 @@ def test_matching_validates_timestamps_and_direction(
     assert list(iter_pet_events(make_movement(None), [pet])) == []
     with pytest.raises(ValueError, match="timezone"):
         list(iter_pet_events(make_movement(timeline_at.replace(tzinfo=None)), [pet]))
-    assert list(
-        iter_pet_events(
-            make_movement(direction=DoorDirection.LOOKED_THROUGH), [pet]
+    assert (
+        list(
+            iter_pet_events(
+                make_movement(direction=DoorDirection.LOOKED_THROUGH), [pet]
+            )
         )
-    ) == []
+        == []
+    )
 
 
 def test_matching_returns_timeline_event_for_the_matched_resource(
