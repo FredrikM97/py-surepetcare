@@ -43,6 +43,11 @@
 - Add regression tests for fixes and update directly affected documentation.
   Reuse shared fixtures and realistic API models rather than broad mocks; keep
   scenario-specific mutations and assertions in the test.
+- Prefer structured snapshots for model values, serialized payloads, and other
+  deterministic output instead of lists of hardcoded equality assertions.
+  Keep direct assertions for identity, type invariants, exceptions, and mock-call
+  contracts. Snapshot internal models and published payloads separately when
+  serialization changes their shape.
 - When setup or validation is requested, run commands from this project directory:
   - Initial setup or dependency changes: `uv sync --all-extras --dev`.
   - Focused tests: `uv run pytest tests/surepcio` or

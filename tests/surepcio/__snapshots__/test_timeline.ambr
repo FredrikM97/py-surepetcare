@@ -1,57 +1,406 @@
 # serializer version: 1
 # name: test_build_movement_event_payload
   dict({
-    'data': '{"direction": "entered"}',
-    'devices': list([
-    ]),
+    'data': dict({
+      'direction': 'entered',
+    }),
     'household_id': 7777,
-    'households': list([
-    ]),
     'id': 42,
     'movements': list([
       dict({
         'device_id': 123,
-        'direction': 1,
-        'side': 1,
+        'direction': <DoorDirection.ENTERED: 1>,
+        'side': <DoorSide.INSIDE: 1>,
       }),
     ]),
-    'pets': list([
-    ]),
-    'tags': list([
-    ]),
-    'type': 0,
-    'users': list([
-    ]),
-    'weights': list([
-    ]),
+    'type': <TimelineEventType.MOVEMENT: 0>,
+  })
+# ---
+# name: test_curfew_data_is_typed
+  dict({
+    'internal_model': dict({
+      'created_at': None,
+      'data': dict({
+        'lock': '10:36',
+        'locked': True,
+        'mode': None,
+        'time': '10:36',
+        'unlock': '19:16',
+      }),
+      'devices': list([
+      ]),
+      'event_type': <TimelineEventType.CURFEW_LOCK_STATUS: 20>,
+      'households': list([
+      ]),
+      'id': 42,
+      'movements': list([
+      ]),
+      'pets': list([
+      ]),
+      'tags': list([
+      ]),
+      'updated_at': None,
+      'users': list([
+      ]),
+      'weights': list([
+      ]),
+    }),
+    'published_payload': dict({
+      'data': dict({
+        'lock': '10:36',
+        'locked': True,
+        'mode': None,
+        'time': '10:36',
+        'unlock': '19:16',
+      }),
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.CURFEW_LOCK_STATUS: 20>,
+    }),
   })
 # ---
 # name: test_event_preserves_supplied_resources_regardless_of_type
   dict({
-    'created_at': '2026-01-01T12:00:00Z',
+    'created_at': datetime.datetime(2026, 1, 1, 12, 0, tzinfo=datetime.timezone.utc),
     'data': 'not-json',
-    'devices': list([
-    ]),
     'household_id': 7777,
-    'households': list([
-    ]),
     'id': 1,
     'movements': list([
       dict({
         'device_id': 20,
-        'direction': 1,
+        'direction': <DoorDirection.ENTERED: 1>,
         'tag_id': 100,
       }),
     ]),
-    'pets': list([
-    ]),
-    'tags': list([
-    ]),
-    'type': 5,
-    'users': list([
-    ]),
-    'weights': list([
-    ]),
+    'type': <TimelineEventType.LEARN_MODE: 5>,
+  })
+# ---
+# name: test_feeder_data_is_typed[False-21]
+  dict({
+    'internal_model': dict({
+      'created_at': None,
+      'data': dict({
+        'encounter_source': None,
+        'tare_type': None,
+        'weight': dict({
+          'bowl': dict({
+            'full': 57.18,
+            'half': 31.3,
+          }),
+          'count': 1,
+          'food_type': list([
+            <FoodType.DRY: 2>,
+            None,
+          ]),
+          'plate': dict({
+            'full': 54.3,
+            'half': 21.9,
+          }),
+          'tare_value': None,
+          'target': list([
+            198,
+            0,
+          ]),
+        }),
+      }),
+      'devices': list([
+      ]),
+      'event_type': <TimelineEventType.WEIGHT_CHANGED: 21>,
+      'households': list([
+      ]),
+      'id': 42,
+      'movements': list([
+      ]),
+      'pets': list([
+      ]),
+      'tags': list([
+      ]),
+      'updated_at': None,
+      'users': list([
+      ]),
+      'weights': list([
+      ]),
+    }),
+    'published_payload': dict({
+      'data': dict({
+        'encounter_source': None,
+        'tare_type': None,
+        'weight': dict({
+          'bowl': dict({
+            'full': 57.18,
+            'half': 31.3,
+          }),
+          'count': 1,
+          'food_type': list([
+            <FoodType.DRY: 2>,
+            None,
+          ]),
+          'plate': dict({
+            'full': 54.3,
+            'half': 21.9,
+          }),
+          'tare_value': None,
+          'target': list([
+            198,
+            0,
+          ]),
+        }),
+      }),
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.WEIGHT_CHANGED: 21>,
+    }),
+  })
+# ---
+# name: test_feeder_data_is_typed[False-22]
+  dict({
+    'internal_model': dict({
+      'created_at': None,
+      'data': dict({
+        'encounter_source': None,
+        'tare_type': None,
+        'weight': dict({
+          'bowl': dict({
+            'full': 57.18,
+            'half': 31.3,
+          }),
+          'count': 1,
+          'food_type': list([
+            <FoodType.DRY: 2>,
+            None,
+          ]),
+          'plate': dict({
+            'full': 54.3,
+            'half': 21.9,
+          }),
+          'tare_value': None,
+          'target': list([
+            198,
+            0,
+          ]),
+        }),
+      }),
+      'devices': list([
+      ]),
+      'event_type': <TimelineEventType.FEEDING: 22>,
+      'households': list([
+      ]),
+      'id': 42,
+      'movements': list([
+      ]),
+      'pets': list([
+      ]),
+      'tags': list([
+      ]),
+      'updated_at': None,
+      'users': list([
+      ]),
+      'weights': list([
+      ]),
+    }),
+    'published_payload': dict({
+      'data': dict({
+        'encounter_source': None,
+        'tare_type': None,
+        'weight': dict({
+          'bowl': dict({
+            'full': 57.18,
+            'half': 31.3,
+          }),
+          'count': 1,
+          'food_type': list([
+            <FoodType.DRY: 2>,
+            None,
+          ]),
+          'plate': dict({
+            'full': 54.3,
+            'half': 21.9,
+          }),
+          'tare_value': None,
+          'target': list([
+            198,
+            0,
+          ]),
+        }),
+      }),
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.FEEDING: 22>,
+    }),
+  })
+# ---
+# name: test_feeder_data_is_typed[True-21]
+  dict({
+    'internal_model': dict({
+      'created_at': None,
+      'data': dict({
+        'encounter_source': None,
+        'tare_type': None,
+        'weight': dict({
+          'bowl': dict({
+            'full': 57.18,
+            'half': 31.3,
+          }),
+          'count': 1,
+          'food_type': list([
+            <FoodType.DRY: 2>,
+            None,
+          ]),
+          'plate': dict({
+            'full': 54.3,
+            'half': 21.9,
+          }),
+          'tare_value': None,
+          'target': list([
+            198,
+            0,
+          ]),
+        }),
+      }),
+      'devices': list([
+      ]),
+      'event_type': <TimelineEventType.WEIGHT_CHANGED: 21>,
+      'households': list([
+      ]),
+      'id': 42,
+      'movements': list([
+      ]),
+      'pets': list([
+      ]),
+      'tags': list([
+      ]),
+      'updated_at': None,
+      'users': list([
+      ]),
+      'weights': list([
+      ]),
+    }),
+    'published_payload': dict({
+      'data': dict({
+        'encounter_source': None,
+        'tare_type': None,
+        'weight': dict({
+          'bowl': dict({
+            'full': 57.18,
+            'half': 31.3,
+          }),
+          'count': 1,
+          'food_type': list([
+            <FoodType.DRY: 2>,
+            None,
+          ]),
+          'plate': dict({
+            'full': 54.3,
+            'half': 21.9,
+          }),
+          'tare_value': None,
+          'target': list([
+            198,
+            0,
+          ]),
+        }),
+      }),
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.WEIGHT_CHANGED: 21>,
+    }),
+  })
+# ---
+# name: test_feeder_data_is_typed[True-22]
+  dict({
+    'internal_model': dict({
+      'created_at': None,
+      'data': dict({
+        'encounter_source': None,
+        'tare_type': None,
+        'weight': dict({
+          'bowl': dict({
+            'full': 57.18,
+            'half': 31.3,
+          }),
+          'count': 1,
+          'food_type': list([
+            <FoodType.DRY: 2>,
+            None,
+          ]),
+          'plate': dict({
+            'full': 54.3,
+            'half': 21.9,
+          }),
+          'tare_value': None,
+          'target': list([
+            198,
+            0,
+          ]),
+        }),
+      }),
+      'devices': list([
+      ]),
+      'event_type': <TimelineEventType.FEEDING: 22>,
+      'households': list([
+      ]),
+      'id': 42,
+      'movements': list([
+      ]),
+      'pets': list([
+      ]),
+      'tags': list([
+      ]),
+      'updated_at': None,
+      'users': list([
+      ]),
+      'weights': list([
+      ]),
+    }),
+    'published_payload': dict({
+      'data': dict({
+        'encounter_source': None,
+        'tare_type': None,
+        'weight': dict({
+          'bowl': dict({
+            'full': 57.18,
+            'half': 31.3,
+          }),
+          'count': 1,
+          'food_type': list([
+            <FoodType.DRY: 2>,
+            None,
+          ]),
+          'plate': dict({
+            'full': 54.3,
+            'half': 21.9,
+          }),
+          'tare_value': None,
+          'target': list([
+            198,
+            0,
+          ]),
+        }),
+      }),
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.FEEDING: 22>,
+    }),
+  })
+# ---
+# name: test_feeder_data_preserves_simulated_api_extensions
+  dict({
+    'data': dict({
+      'simulated_api_extension': 0,
+      'weight': dict({
+        'plate': dict({
+          'simulated_api_extension': None,
+        }),
+        'simulated_api_extension': dict({
+          'enabled': False,
+          'items': list([
+          ]),
+        }),
+      }),
+    }),
+    'household_id': 7777,
+    'id': 42,
+    'type': <TimelineEventType.FEEDING: 22>,
   })
 # ---
 # name: test_get_timeline_command_no_params
@@ -64,23 +413,824 @@
   list([
   ])
 # ---
-# name: test_timeline_snapshot[device_names0]
+# name: test_locking_data_preserves_additional_api_fields[False]
+  dict({
+    'data': dict({
+      'last_mode': None,
+      'mode': <FlapLocking.UNLOCKED: 0>,
+      'simulated_api_extension': dict({
+        'count': 0,
+        'enabled': False,
+        'items': list([
+        ]),
+        'value': None,
+      }),
+    }),
+    'household_id': 7777,
+    'id': 42,
+    'type': <TimelineEventType.DOOR_LOCKING_MODE: 6>,
+  })
+# ---
+# name: test_locking_data_preserves_additional_api_fields[True]
+  dict({
+    'data': dict({
+      'last_mode': None,
+      'mode': <FlapLocking.UNLOCKED: 0>,
+      'simulated_api_extension': dict({
+        'count': 0,
+        'enabled': False,
+        'items': list([
+        ]),
+        'value': None,
+      }),
+    }),
+    'household_id': 7777,
+    'id': 42,
+    'type': <TimelineEventType.DOOR_LOCKING_MODE: 6>,
+  })
+# ---
+# name: test_locking_data_preserves_missing_modes[None]
+  dict({
+    'data': None,
+    'household_id': 7777,
+    'id': 42,
+    'type': <TimelineEventType.DOOR_LOCKING_MODE: 6>,
+  })
+# ---
+# name: test_locking_data_preserves_missing_modes[data2]
+  dict({
+    'data': dict({
+    }),
+    'household_id': 7777,
+    'id': 42,
+    'type': <TimelineEventType.DOOR_LOCKING_MODE: 6>,
+  })
+# ---
+# name: test_locking_data_preserves_missing_modes[data3]
+  dict({
+    'data': dict({
+      'mode': None,
+    }),
+    'household_id': 7777,
+    'id': 42,
+    'type': <TimelineEventType.DOOR_LOCKING_MODE: 6>,
+  })
+# ---
+# name: test_locking_data_preserves_missing_modes[data4]
+  dict({
+    'data': dict({
+      'last_mode': None,
+    }),
+    'household_id': 7777,
+    'id': 42,
+    'type': <TimelineEventType.DOOR_LOCKING_MODE: 6>,
+  })
+# ---
+# name: test_locking_data_preserves_missing_modes[text]
+  dict({
+    'data': 'text',
+    'household_id': 7777,
+    'id': 42,
+    'type': <TimelineEventType.DOOR_LOCKING_MODE: 6>,
+  })
+# ---
+# name: test_locking_data_serializes_mode_names[0]
+  dict({
+    'internal_data': dict({
+      'curfew': list([
+      ]),
+      'last_mode': <FlapLocking.UNLOCKED: 0>,
+      'locked': False,
+      'mode': <FlapLocking.UNLOCKED: 0>,
+    }),
+    'published_payload': dict({
+      'data': dict({
+        'curfew': list([
+        ]),
+        'last_mode': <FlapLocking.UNLOCKED: 0>,
+        'locked': False,
+        'mode': <FlapLocking.UNLOCKED: 0>,
+      }),
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.DOOR_LOCKING_MODE: 6>,
+    }),
+  })
+# ---
+# name: test_locking_data_serializes_mode_names[1]
+  dict({
+    'internal_data': dict({
+      'curfew': list([
+      ]),
+      'last_mode': <FlapLocking.ALLOW_IN: 1>,
+      'locked': False,
+      'mode': <FlapLocking.ALLOW_IN: 1>,
+    }),
+    'published_payload': dict({
+      'data': dict({
+        'curfew': list([
+        ]),
+        'last_mode': <FlapLocking.ALLOW_IN: 1>,
+        'locked': False,
+        'mode': <FlapLocking.ALLOW_IN: 1>,
+      }),
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.DOOR_LOCKING_MODE: 6>,
+    }),
+  })
+# ---
+# name: test_locking_data_serializes_mode_names[2]
+  dict({
+    'internal_data': dict({
+      'curfew': list([
+      ]),
+      'last_mode': <FlapLocking.ALLOW_OUT: 2>,
+      'locked': False,
+      'mode': <FlapLocking.ALLOW_OUT: 2>,
+    }),
+    'published_payload': dict({
+      'data': dict({
+        'curfew': list([
+        ]),
+        'last_mode': <FlapLocking.ALLOW_OUT: 2>,
+        'locked': False,
+        'mode': <FlapLocking.ALLOW_OUT: 2>,
+      }),
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.DOOR_LOCKING_MODE: 6>,
+    }),
+  })
+# ---
+# name: test_locking_data_serializes_mode_names[3]
+  dict({
+    'internal_data': dict({
+      'curfew': list([
+      ]),
+      'last_mode': <FlapLocking.LOCKED: 3>,
+      'locked': False,
+      'mode': <FlapLocking.LOCKED: 3>,
+    }),
+    'published_payload': dict({
+      'data': dict({
+        'curfew': list([
+        ]),
+        'last_mode': <FlapLocking.LOCKED: 3>,
+        'locked': False,
+        'mode': <FlapLocking.LOCKED: 3>,
+      }),
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.DOOR_LOCKING_MODE: 6>,
+    }),
+  })
+# ---
+# name: test_locking_data_serializes_mode_names[4]
+  dict({
+    'internal_data': dict({
+      'curfew': list([
+      ]),
+      'last_mode': <FlapLocking.CURFEW_MODE: 4>,
+      'locked': False,
+      'mode': <FlapLocking.CURFEW_MODE: 4>,
+    }),
+    'published_payload': dict({
+      'data': dict({
+        'curfew': list([
+        ]),
+        'last_mode': <FlapLocking.CURFEW_MODE: 4>,
+        'locked': False,
+        'mode': <FlapLocking.CURFEW_MODE: 4>,
+      }),
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.DOOR_LOCKING_MODE: 6>,
+    }),
+  })
+# ---
+# name: test_movement_direction_serializes_as_name[0]
+  dict({
+    'direction': 'LOOKED_THROUGH',
+  })
+# ---
+# name: test_movement_direction_serializes_as_name[1]
+  dict({
+    'direction': 'ENTERED',
+  })
+# ---
+# name: test_movement_direction_serializes_as_name[2]
+  dict({
+    'direction': 'LEFT',
+  })
+# ---
+# name: test_movement_direction_serializes_as_name[3]
+  dict({
+    'direction': 'UNKNOWN',
+  })
+# ---
+# name: test_movement_side_serializes_as_name[0]
+  dict({
+    'side': 'OUTSIDE',
+  })
+# ---
+# name: test_movement_side_serializes_as_name[1]
+  dict({
+    'side': 'INSIDE',
+  })
+# ---
+# name: test_movement_side_serializes_as_name[2]
+  dict({
+    'side': 'UNKNOWN',
+  })
+# ---
+# name: test_movement_status_rejects_unknown_and_preserves_missing_codes
+  dict({
+    'including_none': dict({
+      'created_at': None,
+      'device_id': None,
+      'direction': None,
+      'id': None,
+      'side': None,
+      'tag_id': None,
+      'type': None,
+      'updated_at': None,
+      'user_id': None,
+    }),
+    'missing': dict({
+    }),
+    'unknown_error': list([
+      dict({
+        'input': 999,
+        'loc': list([
+          'type',
+        ]),
+        'type': 'enum',
+      }),
+    ]),
+  })
+# ---
+# name: test_movement_status_serializes_as_name[0]
+  dict({
+    'type': 'STATUS_0',
+  })
+# ---
+# name: test_movement_status_serializes_as_name[10]
+  dict({
+    'type': 'STATUS_10',
+  })
+# ---
+# name: test_movement_status_serializes_as_name[11]
+  dict({
+    'type': 'STATUS_11',
+  })
+# ---
+# name: test_movement_status_serializes_as_name[12]
+  dict({
+    'type': 'STATUS_12',
+  })
+# ---
+# name: test_movement_status_serializes_as_name[13]
+  dict({
+    'type': 'STATUS_13',
+  })
+# ---
+# name: test_movement_status_serializes_as_name[4]
+  dict({
+    'type': 'STATUS_4',
+  })
+# ---
+# name: test_movement_status_serializes_as_name[6]
+  dict({
+    'type': 'STATUS_6',
+  })
+# ---
+# name: test_movement_status_serializes_as_name[8]
+  dict({
+    'type': 'STATUS_8',
+  })
+# ---
+# name: test_other_event_modes_remain_numeric
+  dict({
+    'data': dict({
+      'last_mode': 0,
+      'mode': 1,
+    }),
+    'household_id': 7777,
+    'id': 42,
+    'type': <TimelineEventType.TRAINING_MODE: 28>,
+  })
+# ---
+# name: test_payload_distinguishes_absent_and_explicit_empty_values
+  dict({
+    'absent': dict({
+      'household_id': 7777,
+      'id': 42,
+    }),
+    'explicit': dict({
+      'data': None,
+      'household_id': 7777,
+      'id': 43,
+      'movements': list([
+      ]),
+      'weights': list([
+      ]),
+    }),
+  })
+# ---
+# name: test_payload_includes_both_supplied_resource_types
+  dict({
+    'created_at': datetime.datetime(2026, 1, 1, 12, 0, tzinfo=datetime.timezone.utc),
+    'household_id': 7777,
+    'id': 1,
+    'movements': list([
+      dict({
+        'device_id': 20,
+        'direction': <DoorDirection.ENTERED: 1>,
+        'tag_id': 100,
+      }),
+    ]),
+    'type': <TimelineEventType.MOVEMENT: 0>,
+    'weights': list([
+      dict({
+        'device_id': 30,
+        'frames': list([
+          dict({
+            'change': -7,
+            'index': 0,
+          }),
+        ]),
+        'tag_id': 100,
+      }),
+    ]),
+  })
+# ---
+# name: test_payload_preserves_empty_collections_inside_data
+  dict({
+    'data': dict({
+      'curfew': list([
+      ]),
+      'locked': False,
+      'mode': <FlapLocking.UNLOCKED: 0>,
+    }),
+    'household_id': 7777,
+    'id': 42,
+    'type': <TimelineEventType.CURFEW_LOCK_STATUS: 20>,
+  })
+# ---
+# name: test_payload_preserves_empty_resource_collections
+  dict({
+    'internal_model': dict({
+      'created_at': datetime.datetime(2026, 1, 1, 12, 0, tzinfo=datetime.timezone.utc),
+      'data': None,
+      'devices': list([
+      ]),
+      'event_type': <TimelineEventType.FEEDING: 22>,
+      'households': list([
+      ]),
+      'id': 2,
+      'movements': list([
+      ]),
+      'pets': list([
+      ]),
+      'tags': list([
+      ]),
+      'updated_at': None,
+      'users': list([
+      ]),
+      'weights': list([
+      ]),
+    }),
+    'published_payload': dict({
+      'created_at': datetime.datetime(2026, 1, 1, 12, 0, tzinfo=datetime.timezone.utc),
+      'household_id': 7777,
+      'id': 2,
+      'type': <TimelineEventType.FEEDING: 22>,
+      'weights': list([
+      ]),
+    }),
+  })
+# ---
+# name: test_payload_preserves_event_fields_with_readable_type
+  dict({
+    'created_at': datetime.datetime(2026, 1, 1, 12, 0, tzinfo=datetime.timezone.utc),
+    'data': dict({
+      'direction': 'entered',
+    }),
+    'household_id': 7777,
+    'id': 1,
+    'movements': list([
+      dict({
+        'device_id': 20,
+        'direction': <DoorDirection.ENTERED: 1>,
+        'tag_id': 100,
+      }),
+    ]),
+    'pets': list([
+      dict({
+        'id': 10,
+        'name': 'Cat',
+      }),
+    ]),
+    'type': <TimelineEventType.MOVEMENT: 0>,
+  })
+# ---
+# name: test_payload_preserves_unknown_event_type_and_data
+  dict({
+    'internal_model': dict({
+      'created_at': None,
+      'data': None,
+      'devices': list([
+      ]),
+      'event_type': None,
+      'households': list([
+      ]),
+      'id': 42,
+      'movements': list([
+      ]),
+      'pets': list([
+      ]),
+      'tags': list([
+      ]),
+      'updated_at': None,
+      'users': list([
+      ]),
+      'weights': list([
+      ]),
+    }),
+    'published_payload': dict({
+      'household_id': 7777,
+      'id': 42,
+    }),
+  })
+# ---
+# name: test_payload_serializes_product_ids_in_every_reference_collection[devices]
+  dict({
+    'devices': list([
+      dict({
+        'id': 100,
+        'product_id': <ProductId.HUB: 1>,
+      }),
+      dict({
+        'id': 101,
+        'product_id': <ProductId.FEEDER_CONNECT: 4>,
+      }),
+    ]),
+    'household_id': 7777,
+    'id': 42,
+    'type': <TimelineEventType.NEW_DEVICE: 3>,
+  })
+# ---
+# name: test_payload_serializes_product_ids_in_every_reference_collection[households]
+  dict({
+    'household_id': 7777,
+    'households': list([
+      dict({
+        'id': 100,
+        'product_id': <ProductId.HUB: 1>,
+      }),
+      dict({
+        'id': 101,
+        'product_id': <ProductId.FEEDER_CONNECT: 4>,
+      }),
+    ]),
+    'id': 42,
+    'type': <TimelineEventType.NEW_DEVICE: 3>,
+  })
+# ---
+# name: test_payload_serializes_product_ids_in_every_reference_collection[pets]
+  dict({
+    'household_id': 7777,
+    'id': 42,
+    'pets': list([
+      dict({
+        'id': 100,
+        'product_id': <ProductId.HUB: 1>,
+      }),
+      dict({
+        'id': 101,
+        'product_id': <ProductId.FEEDER_CONNECT: 4>,
+      }),
+    ]),
+    'type': <TimelineEventType.NEW_DEVICE: 3>,
+  })
+# ---
+# name: test_payload_serializes_product_ids_in_every_reference_collection[tags]
+  dict({
+    'household_id': 7777,
+    'id': 42,
+    'tags': list([
+      dict({
+        'id': 100,
+        'product_id': <ProductId.HUB: 1>,
+      }),
+      dict({
+        'id': 101,
+        'product_id': <ProductId.FEEDER_CONNECT: 4>,
+      }),
+    ]),
+    'type': <TimelineEventType.NEW_DEVICE: 3>,
+  })
+# ---
+# name: test_payload_serializes_product_ids_in_every_reference_collection[users]
+  dict({
+    'household_id': 7777,
+    'id': 42,
+    'type': <TimelineEventType.NEW_DEVICE: 3>,
+    'users': list([
+      dict({
+        'id': 100,
+        'product_id': <ProductId.HUB: 1>,
+      }),
+      dict({
+        'id': 101,
+        'product_id': <ProductId.FEEDER_CONNECT: 4>,
+      }),
+    ]),
+  })
+# ---
+# name: test_payload_serializes_resource_models_directly
+  dict({
+    'created_at': datetime.datetime(2026, 1, 1, 12, 0, tzinfo=datetime.timezone.utc),
+    'household_id': 7777,
+    'id': 1,
+    'movements': list([
+      dict({
+        'device_id': 20,
+        'direction': <DoorDirection.ENTERED: 1>,
+        'id': 123,
+        'tag_id': 100,
+        'type': <DoorStatus.STATUS_6: 6>,
+      }),
+    ]),
+    'type': <TimelineEventType.MOVEMENT: 0>,
+    'weights': list([
+      dict({
+        'device_id': 30,
+        'duration': 15,
+        'frames': list([
+          dict({
+            'change': -7,
+            'index': 0,
+          }),
+        ]),
+        'tag_id': 100,
+      }),
+    ]),
+  })
+# ---
+# name: test_reference_product_serializes_as_name[0]
+  dict({
+    'id': 42,
+    'product_id': 'PET',
+  })
+# ---
+# name: test_reference_product_serializes_as_name[10]
+  dict({
+    'id': 42,
+    'product_id': 'DUAL_SCAN_PET_DOOR',
+  })
+# ---
+# name: test_reference_product_serializes_as_name[1]
+  dict({
+    'id': 42,
+    'product_id': 'HUB',
+  })
+# ---
+# name: test_reference_product_serializes_as_name[32]
+  dict({
+    'id': 42,
+    'product_id': 'NO_ID_DOG_BOWL_CONNECT',
+  })
+# ---
+# name: test_reference_product_serializes_as_name[3]
+  dict({
+    'id': 42,
+    'product_id': 'PET_DOOR',
+  })
+# ---
+# name: test_reference_product_serializes_as_name[4]
+  dict({
+    'id': 42,
+    'product_id': 'FEEDER_CONNECT',
+  })
+# ---
+# name: test_reference_product_serializes_as_name[6]
+  dict({
+    'id': 42,
+    'product_id': 'DUAL_SCAN_CONNECT',
+  })
+# ---
+# name: test_reference_product_serializes_as_name[8]
+  dict({
+    'id': 42,
+    'product_id': 'POSEIDON_CONNECT',
+  })
+# ---
+# name: test_reference_rejects_unknown_and_preserves_missing_product_ids
+  dict({
+    'including_none': dict({
+      'household_id': None,
+      'id': 42,
+      'name': None,
+      'product_id': None,
+      'tag_id': None,
+    }),
+    'missing': dict({
+      'id': 42,
+    }),
+    'unknown_error': list([
+      dict({
+        'input': 999,
+        'loc': list([
+          'product_id',
+        ]),
+        'type': 'enum',
+      }),
+    ]),
+  })
+# ---
+# name: test_timeline_data_is_decoded["text"-text]
+  dict({
+    'internal_data': 'text',
+    'published_payload': dict({
+      'data': 'text',
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.LEARN_MODE: 5>,
+    }),
+  })
+# ---
+# name: test_timeline_data_is_decoded[-]
+  dict({
+    'internal_data': '',
+    'published_payload': dict({
+      'data': '',
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.LEARN_MODE: 5>,
+    }),
+  })
+# ---
+# name: test_timeline_data_is_decoded[0-0]
+  dict({
+    'internal_data': 0,
+    'published_payload': dict({
+      'data': 0,
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.LEARN_MODE: 5>,
+    }),
+  })
+# ---
+# name: test_timeline_data_is_decoded[None-None]
+  dict({
+    'internal_data': None,
+    'published_payload': dict({
+      'data': None,
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.LEARN_MODE: 5>,
+    }),
+  })
+# ---
+# name: test_timeline_data_is_decoded[[0, false, null]-expected7]
+  dict({
+    'internal_data': list([
+      0,
+      False,
+      None,
+    ]),
+    'published_payload': dict({
+      'data': list([
+        0,
+        False,
+        None,
+      ]),
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.LEARN_MODE: 5>,
+    }),
+  })
+# ---
+# name: test_timeline_data_is_decoded[data1-expected1]
+  dict({
+    'internal_data': dict({
+      'direction': 'entered',
+      'side': None,
+    }),
+    'published_payload': dict({
+      'data': dict({
+        'direction': 'entered',
+        'side': None,
+      }),
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.LEARN_MODE: 5>,
+    }),
+  })
+# ---
+# name: test_timeline_data_is_decoded[false-False]
+  dict({
+    'internal_data': False,
+    'published_payload': dict({
+      'data': False,
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.LEARN_MODE: 5>,
+    }),
+  })
+# ---
+# name: test_timeline_data_is_decoded[not-json-not-json]
+  dict({
+    'internal_data': 'not-json',
+    'published_payload': dict({
+      'data': 'not-json',
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.LEARN_MODE: 5>,
+    }),
+  })
+# ---
+# name: test_timeline_data_is_decoded[null-None]
+  dict({
+    'internal_data': None,
+    'published_payload': dict({
+      'data': None,
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.LEARN_MODE: 5>,
+    }),
+  })
+# ---
+# name: test_timeline_data_is_decoded[{"incomplete":-{"incomplete":]
+  dict({
+    'internal_data': '{"incomplete":',
+    'published_payload': dict({
+      'data': '{"incomplete":',
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.LEARN_MODE: 5>,
+    }),
+  })
+# ---
+# name: test_timeline_data_is_decoded[{"weight": {"target": [198, null]}, "tare_type": null}-expected0]
+  dict({
+    'internal_data': dict({
+      'tare_type': None,
+      'weight': dict({
+        'target': list([
+          198,
+          None,
+        ]),
+      }),
+    }),
+    'published_payload': dict({
+      'data': dict({
+        'tare_type': None,
+        'weight': dict({
+          'target': list([
+            198,
+            None,
+          ]),
+        }),
+      }),
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.LEARN_MODE: 5>,
+    }),
+  })
+# ---
+# name: test_timeline_data_is_decoded[{}-expected10]
+  dict({
+    'internal_data': dict({
+    }),
+    'published_payload': dict({
+      'data': dict({
+      }),
+      'household_id': 7777,
+      'id': 42,
+      'type': <TimelineEventType.LEARN_MODE: 5>,
+    }),
+  })
+# ---
+# name: test_timeline_snapshot[internal_model-device_names0]
   dict({
     'created_at': datetime.datetime(2025, 11, 12, 13, 16, 35, tzinfo=TzInfo(0)),
-    'data': 'null',
+    'data': None,
     'devices': list([
       dict({
         'household_id': 7777,
         'id': 555,
         'name': '***',
-        'product_id': 6,
+        'product_id': <ProductId.DUAL_SCAN_CONNECT: 6>,
         'tag_id': None,
       }),
       dict({
         'household_id': 7777,
         'id': 100,
         'name': '***',
-        'product_id': 1,
+        'product_id': <ProductId.HUB: 1>,
         'tag_id': None,
       }),
     ]),
@@ -90,7 +1240,7 @@
         'household_id': 7777,
         'id': 7777,
         'name': '***',
-        'product_id': 0,
+        'product_id': <ProductId.PET: 0>,
         'tag_id': None,
       }),
     ]),
@@ -101,7 +1251,7 @@
         'device_id': 555,
         'direction': <DoorDirection.LOOKED_THROUGH: 0>,
         'id': 9001,
-        'movement_type': 0,
+        'movement_type': <DoorStatus.STATUS_0: 0>,
         'side': <DoorSide.INSIDE: 1>,
         'tag_id': 8001,
         'updated_at': datetime.datetime(2025, 11, 12, 13, 16, 44, tzinfo=TzInfo(0)),
@@ -113,7 +1263,7 @@
         'household_id': 7777,
         'id': 3001,
         'name': '***',
-        'product_id': 0,
+        'product_id': <ProductId.PET: 0>,
         'tag_id': 8001,
       }),
     ]),
@@ -122,7 +1272,7 @@
         'household_id': 7777,
         'id': 8001,
         'name': None,
-        'product_id': 0,
+        'product_id': <ProductId.PET: 0>,
         'tag_id': None,
       }),
     ]),
@@ -133,23 +1283,23 @@
     ]),
   })
 # ---
-# name: test_timeline_snapshot[device_names0].1
+# name: test_timeline_snapshot[internal_model-device_names0].1
   dict({
     'created_at': datetime.datetime(2025, 11, 12, 10, 5, 20, tzinfo=TzInfo(0)),
-    'data': 'null',
+    'data': None,
     'devices': list([
       dict({
         'household_id': 7777,
         'id': 555,
         'name': '***',
-        'product_id': 6,
+        'product_id': <ProductId.DUAL_SCAN_CONNECT: 6>,
         'tag_id': None,
       }),
       dict({
         'household_id': 7777,
         'id': 100,
         'name': '***',
-        'product_id': 1,
+        'product_id': <ProductId.HUB: 1>,
         'tag_id': None,
       }),
     ]),
@@ -159,7 +1309,7 @@
         'household_id': 7777,
         'id': 7777,
         'name': '***',
-        'product_id': 0,
+        'product_id': <ProductId.PET: 0>,
         'tag_id': None,
       }),
     ]),
@@ -170,7 +1320,7 @@
         'device_id': 555,
         'direction': <DoorDirection.ENTERED: 1>,
         'id': 9002,
-        'movement_type': 6,
+        'movement_type': <DoorStatus.STATUS_6: 6>,
         'side': <DoorSide.OUTSIDE: 0>,
         'tag_id': 8001,
         'updated_at': datetime.datetime(2025, 11, 12, 10, 5, 29, tzinfo=TzInfo(0)),
@@ -182,7 +1332,7 @@
         'household_id': 7777,
         'id': 3001,
         'name': '***',
-        'product_id': 0,
+        'product_id': <ProductId.PET: 0>,
         'tag_id': 8001,
       }),
     ]),
@@ -191,7 +1341,7 @@
         'household_id': 7777,
         'id': 8001,
         'name': None,
-        'product_id': 0,
+        'product_id': <ProductId.PET: 0>,
         'tag_id': None,
       }),
     ]),
@@ -202,23 +1352,23 @@
     ]),
   })
 # ---
-# name: test_timeline_snapshot[device_names0].2
+# name: test_timeline_snapshot[internal_model-device_names0].2
   dict({
     'created_at': datetime.datetime(2025, 11, 12, 9, 44, 11, tzinfo=TzInfo(0)),
-    'data': 'null',
+    'data': None,
     'devices': list([
       dict({
         'household_id': 7777,
         'id': 555,
         'name': '***',
-        'product_id': 6,
+        'product_id': <ProductId.DUAL_SCAN_CONNECT: 6>,
         'tag_id': None,
       }),
       dict({
         'household_id': 7777,
         'id': 100,
         'name': '***',
-        'product_id': 1,
+        'product_id': <ProductId.HUB: 1>,
         'tag_id': None,
       }),
     ]),
@@ -228,7 +1378,7 @@
         'household_id': 7777,
         'id': 7777,
         'name': '***',
-        'product_id': 0,
+        'product_id': <ProductId.PET: 0>,
         'tag_id': None,
       }),
     ]),
@@ -239,7 +1389,7 @@
         'device_id': 555,
         'direction': <DoorDirection.LEFT: 2>,
         'id': 9003,
-        'movement_type': 6,
+        'movement_type': <DoorStatus.STATUS_6: 6>,
         'side': <DoorSide.INSIDE: 1>,
         'tag_id': 8001,
         'updated_at': datetime.datetime(2025, 11, 12, 9, 44, 20, tzinfo=TzInfo(0)),
@@ -251,7 +1401,7 @@
         'household_id': 7777,
         'id': 3001,
         'name': '***',
-        'product_id': 0,
+        'product_id': <ProductId.PET: 0>,
         'tag_id': 8001,
       }),
     ]),
@@ -260,7 +1410,7 @@
         'household_id': 7777,
         'id': 8001,
         'name': None,
-        'product_id': 0,
+        'product_id': <ProductId.PET: 0>,
         'tag_id': None,
       }),
     ]),
@@ -271,16 +1421,21 @@
     ]),
   })
 # ---
-# name: test_timeline_snapshot[device_names0].3
+# name: test_timeline_snapshot[internal_model-device_names0].3
   dict({
     'created_at': datetime.datetime(2025, 11, 11, 23, 0, tzinfo=TzInfo(0)),
-    'data': '{"curfew":[],"mode":0,"last_mode":1}',
+    'data': dict({
+      'curfew': list([
+      ]),
+      'last_mode': <FlapLocking.ALLOW_IN: 1>,
+      'mode': <FlapLocking.UNLOCKED: 0>,
+    }),
     'devices': list([
       dict({
         'household_id': 7777,
         'id': 555,
         'name': '***',
-        'product_id': 6,
+        'product_id': <ProductId.DUAL_SCAN_CONNECT: 6>,
         'tag_id': None,
       }),
     ]),
@@ -290,7 +1445,7 @@
         'household_id': 7777,
         'id': 7777,
         'name': '***',
-        'product_id': 0,
+        'product_id': <ProductId.PET: 0>,
         'tag_id': None,
       }),
     ]),
@@ -307,7 +1462,7 @@
         'household_id': 7777,
         'id': 4001,
         'name': None,
-        'product_id': 0,
+        'product_id': <ProductId.PET: 0>,
         'tag_id': None,
       }),
     ]),
@@ -315,16 +1470,39 @@
     ]),
   })
 # ---
-# name: test_timeline_snapshot[device_names0].4
+# name: test_timeline_snapshot[internal_model-device_names0].4
   dict({
     'created_at': datetime.datetime(2026, 8, 20, 16, 7, 57, tzinfo=TzInfo(0)),
-    'data': '{"encounter_source":null,"weight":{"count":1,"food_type":[2,null],"plate":{"half":21.9,"full":54.3},"bowl":{"half":31.3,"full":57.18},"target":[198,0],"tare_value":null},"tare_type":null}',
+    'data': dict({
+      'encounter_source': None,
+      'tare_type': None,
+      'weight': dict({
+        'bowl': dict({
+          'full': 57.18,
+          'half': 31.3,
+        }),
+        'count': 1,
+        'food_type': list([
+          <FoodType.DRY: 2>,
+          None,
+        ]),
+        'plate': dict({
+          'full': 54.3,
+          'half': 21.9,
+        }),
+        'tare_value': None,
+        'target': list([
+          198,
+          0,
+        ]),
+      }),
+    }),
     'devices': list([
       dict({
         'household_id': 7777,
         'id': 555,
         'name': '***',
-        'product_id': 4,
+        'product_id': <ProductId.FEEDER_CONNECT: 4>,
         'tag_id': None,
       }),
     ]),
@@ -334,7 +1512,7 @@
         'household_id': 7777,
         'id': 7777,
         'name': '***',
-        'product_id': 0,
+        'product_id': <ProductId.PET: 0>,
         'tag_id': None,
       }),
     ]),
@@ -346,7 +1524,7 @@
         'household_id': 7777,
         'id': 3001,
         'name': '***',
-        'product_id': 0,
+        'product_id': <ProductId.PET: 0>,
         'tag_id': 8001,
       }),
     ]),
@@ -355,7 +1533,7 @@
         'household_id': 7777,
         'id': 8001,
         'name': None,
-        'product_id': 0,
+        'product_id': <ProductId.PET: 0>,
         'tag_id': None,
       }),
     ]),
@@ -391,5 +1569,385 @@
         'updated_at': datetime.datetime(2026, 8, 20, 16, 8, 21, tzinfo=TzInfo(0)),
       }),
     ]),
+  })
+# ---
+# name: test_timeline_snapshot[published_payload-device_names0]
+  dict({
+    'created_at': datetime.datetime(2025, 11, 12, 13, 16, 35, tzinfo=TzInfo(0)),
+    'data': None,
+    'devices': list([
+      dict({
+        'household_id': 7777,
+        'id': 555,
+        'name': '***',
+        'product_id': <ProductId.DUAL_SCAN_CONNECT: 6>,
+      }),
+      dict({
+        'household_id': 7777,
+        'id': 100,
+        'name': '***',
+        'product_id': <ProductId.HUB: 1>,
+      }),
+    ]),
+    'household_id': 7777,
+    'households': list([
+      dict({
+        'household_id': 7777,
+        'id': 7777,
+        'name': '***',
+        'product_id': <ProductId.PET: 0>,
+      }),
+    ]),
+    'id': 100001,
+    'movements': list([
+      dict({
+        'created_at': datetime.datetime(2025, 11, 12, 13, 16, 35, tzinfo=TzInfo(0)),
+        'device_id': 555,
+        'direction': <DoorDirection.LOOKED_THROUGH: 0>,
+        'id': 9001,
+        'side': <DoorSide.INSIDE: 1>,
+        'tag_id': 8001,
+        'type': <DoorStatus.STATUS_0: 0>,
+        'updated_at': datetime.datetime(2025, 11, 12, 13, 16, 44, tzinfo=TzInfo(0)),
+      }),
+    ]),
+    'pets': list([
+      dict({
+        'household_id': 7777,
+        'id': 3001,
+        'name': '***',
+        'product_id': <ProductId.PET: 0>,
+        'tag_id': 8001,
+      }),
+    ]),
+    'tags': list([
+      dict({
+        'household_id': 7777,
+        'id': 8001,
+        'product_id': <ProductId.PET: 0>,
+      }),
+    ]),
+    'type': <TimelineEventType.MOVEMENT: 0>,
+    'updated_at': datetime.datetime(2025, 11, 12, 13, 16, 44, tzinfo=TzInfo(0)),
+    'users': list([
+    ]),
+    'weights': list([
+    ]),
+  })
+# ---
+# name: test_timeline_snapshot[published_payload-device_names0].1
+  dict({
+    'created_at': datetime.datetime(2025, 11, 12, 10, 5, 20, tzinfo=TzInfo(0)),
+    'data': None,
+    'devices': list([
+      dict({
+        'household_id': 7777,
+        'id': 555,
+        'name': '***',
+        'product_id': <ProductId.DUAL_SCAN_CONNECT: 6>,
+      }),
+      dict({
+        'household_id': 7777,
+        'id': 100,
+        'name': '***',
+        'product_id': <ProductId.HUB: 1>,
+      }),
+    ]),
+    'household_id': 7777,
+    'households': list([
+      dict({
+        'household_id': 7777,
+        'id': 7777,
+        'name': '***',
+        'product_id': <ProductId.PET: 0>,
+      }),
+    ]),
+    'id': 100002,
+    'movements': list([
+      dict({
+        'created_at': datetime.datetime(2025, 11, 12, 10, 5, 20, tzinfo=TzInfo(0)),
+        'device_id': 555,
+        'direction': <DoorDirection.ENTERED: 1>,
+        'id': 9002,
+        'side': <DoorSide.OUTSIDE: 0>,
+        'tag_id': 8001,
+        'type': <DoorStatus.STATUS_6: 6>,
+        'updated_at': datetime.datetime(2025, 11, 12, 10, 5, 29, tzinfo=TzInfo(0)),
+      }),
+    ]),
+    'pets': list([
+      dict({
+        'household_id': 7777,
+        'id': 3001,
+        'name': '***',
+        'product_id': <ProductId.PET: 0>,
+        'tag_id': 8001,
+      }),
+    ]),
+    'tags': list([
+      dict({
+        'household_id': 7777,
+        'id': 8001,
+        'product_id': <ProductId.PET: 0>,
+      }),
+    ]),
+    'type': <TimelineEventType.MOVEMENT: 0>,
+    'updated_at': datetime.datetime(2025, 11, 12, 10, 5, 29, tzinfo=TzInfo(0)),
+    'users': list([
+    ]),
+    'weights': list([
+    ]),
+  })
+# ---
+# name: test_timeline_snapshot[published_payload-device_names0].2
+  dict({
+    'created_at': datetime.datetime(2025, 11, 12, 9, 44, 11, tzinfo=TzInfo(0)),
+    'data': None,
+    'devices': list([
+      dict({
+        'household_id': 7777,
+        'id': 555,
+        'name': '***',
+        'product_id': <ProductId.DUAL_SCAN_CONNECT: 6>,
+      }),
+      dict({
+        'household_id': 7777,
+        'id': 100,
+        'name': '***',
+        'product_id': <ProductId.HUB: 1>,
+      }),
+    ]),
+    'household_id': 7777,
+    'households': list([
+      dict({
+        'household_id': 7777,
+        'id': 7777,
+        'name': '***',
+        'product_id': <ProductId.PET: 0>,
+      }),
+    ]),
+    'id': 100003,
+    'movements': list([
+      dict({
+        'created_at': datetime.datetime(2025, 11, 12, 9, 44, 11, tzinfo=TzInfo(0)),
+        'device_id': 555,
+        'direction': <DoorDirection.LEFT: 2>,
+        'id': 9003,
+        'side': <DoorSide.INSIDE: 1>,
+        'tag_id': 8001,
+        'type': <DoorStatus.STATUS_6: 6>,
+        'updated_at': datetime.datetime(2025, 11, 12, 9, 44, 20, tzinfo=TzInfo(0)),
+      }),
+    ]),
+    'pets': list([
+      dict({
+        'household_id': 7777,
+        'id': 3001,
+        'name': '***',
+        'product_id': <ProductId.PET: 0>,
+        'tag_id': 8001,
+      }),
+    ]),
+    'tags': list([
+      dict({
+        'household_id': 7777,
+        'id': 8001,
+        'product_id': <ProductId.PET: 0>,
+      }),
+    ]),
+    'type': <TimelineEventType.MOVEMENT: 0>,
+    'updated_at': datetime.datetime(2025, 11, 12, 9, 44, 20, tzinfo=TzInfo(0)),
+    'users': list([
+    ]),
+    'weights': list([
+    ]),
+  })
+# ---
+# name: test_timeline_snapshot[published_payload-device_names0].3
+  dict({
+    'created_at': datetime.datetime(2025, 11, 11, 23, 0, tzinfo=TzInfo(0)),
+    'data': dict({
+      'curfew': list([
+      ]),
+      'last_mode': <FlapLocking.ALLOW_IN: 1>,
+      'mode': <FlapLocking.UNLOCKED: 0>,
+    }),
+    'devices': list([
+      dict({
+        'household_id': 7777,
+        'id': 555,
+        'name': '***',
+        'product_id': <ProductId.DUAL_SCAN_CONNECT: 6>,
+      }),
+    ]),
+    'household_id': 7777,
+    'households': list([
+      dict({
+        'household_id': 7777,
+        'id': 7777,
+        'name': '***',
+        'product_id': <ProductId.PET: 0>,
+      }),
+    ]),
+    'id': 100004,
+    'movements': list([
+    ]),
+    'pets': list([
+    ]),
+    'tags': list([
+    ]),
+    'type': <TimelineEventType.DOOR_LOCKING_MODE: 6>,
+    'updated_at': datetime.datetime(2025, 11, 11, 23, 0, 5, tzinfo=TzInfo(0)),
+    'users': list([
+      dict({
+        'household_id': 7777,
+        'id': 4001,
+        'product_id': <ProductId.PET: 0>,
+      }),
+    ]),
+    'weights': list([
+    ]),
+  })
+# ---
+# name: test_timeline_snapshot[published_payload-device_names0].4
+  dict({
+    'created_at': datetime.datetime(2026, 8, 20, 16, 7, 57, tzinfo=TzInfo(0)),
+    'data': dict({
+      'encounter_source': None,
+      'tare_type': None,
+      'weight': dict({
+        'bowl': dict({
+          'full': 57.18,
+          'half': 31.3,
+        }),
+        'count': 1,
+        'food_type': list([
+          <FoodType.DRY: 2>,
+          None,
+        ]),
+        'plate': dict({
+          'full': 54.3,
+          'half': 21.9,
+        }),
+        'tare_value': None,
+        'target': list([
+          198,
+          0,
+        ]),
+      }),
+    }),
+    'devices': list([
+      dict({
+        'household_id': 7777,
+        'id': 555,
+        'name': '***',
+        'product_id': <ProductId.FEEDER_CONNECT: 4>,
+      }),
+    ]),
+    'household_id': 7777,
+    'households': list([
+      dict({
+        'household_id': 7777,
+        'id': 7777,
+        'name': '***',
+        'product_id': <ProductId.PET: 0>,
+      }),
+    ]),
+    'id': 100005,
+    'movements': list([
+    ]),
+    'pets': list([
+      dict({
+        'household_id': 7777,
+        'id': 3001,
+        'name': '***',
+        'product_id': <ProductId.PET: 0>,
+        'tag_id': 8001,
+      }),
+    ]),
+    'tags': list([
+      dict({
+        'household_id': 7777,
+        'id': 8001,
+        'product_id': <ProductId.PET: 0>,
+      }),
+    ]),
+    'type': <TimelineEventType.FEEDING: 22>,
+    'updated_at': datetime.datetime(2026, 8, 20, 16, 7, 57, tzinfo=TzInfo(0)),
+    'users': list([
+    ]),
+    'weights': list([
+      dict({
+        'context': 1,
+        'created_at': datetime.datetime(2026, 8, 20, 16, 7, 57, tzinfo=TzInfo(0)),
+        'device_id': 555,
+        'duration': 61,
+        'frames': list([
+          dict({
+            'change': -3,
+            'created_at': datetime.datetime(2026, 8, 20, 16, 7, 57, tzinfo=TzInfo(0)),
+            'current_weight': 47,
+            'id': 3062324823,
+            'index': 0,
+            'updated_at': datetime.datetime(2026, 8, 20, 16, 8, 21, tzinfo=TzInfo(0)),
+          }),
+          dict({
+            'change': 0,
+            'created_at': datetime.datetime(2026, 8, 20, 16, 7, 57, tzinfo=TzInfo(0)),
+            'current_weight': 0,
+            'id': 3062324825,
+            'index': 1,
+            'updated_at': datetime.datetime(2026, 8, 20, 16, 8, 21, tzinfo=TzInfo(0)),
+          }),
+        ]),
+        'id': 1563486479,
+        'tag_id': 8001,
+        'updated_at': datetime.datetime(2026, 8, 20, 16, 8, 21, tzinfo=TzInfo(0)),
+      }),
+    ]),
+  })
+# ---
+# name: test_typed_data_omits_unprovided_fields[20]
+  dict({
+    'data': dict({
+    }),
+    'household_id': 7777,
+    'id': 42,
+    'type': <TimelineEventType.CURFEW_LOCK_STATUS: 20>,
+  })
+# ---
+# name: test_typed_data_omits_unprovided_fields[21]
+  dict({
+    'data': dict({
+    }),
+    'household_id': 7777,
+    'id': 42,
+    'type': <TimelineEventType.WEIGHT_CHANGED: 21>,
+  })
+# ---
+# name: test_typed_data_omits_unprovided_fields[22]
+  dict({
+    'data': dict({
+    }),
+    'household_id': 7777,
+    'id': 42,
+    'type': <TimelineEventType.FEEDING: 22>,
+  })
+# ---
+# name: test_unknown_movement_direction_remains_none
+  dict({
+    'default': dict({
+    }),
+    'including_none': dict({
+      'created_at': None,
+      'device_id': None,
+      'direction': None,
+      'id': None,
+      'side': None,
+      'tag_id': None,
+      'type': None,
+      'updated_at': None,
+      'user_id': None,
+    }),
   })
 # ---

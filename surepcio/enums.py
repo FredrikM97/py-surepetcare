@@ -246,3 +246,16 @@ class DoorSide(SureEnum):
     OUTSIDE = 0
     INSIDE = 1
     UNKNOWN = 2
+
+
+class DoorStatus(SureEnum):
+    """Door-status codes with provisional names; API meanings are undocumented."""
+
+    STATUS_0 = 0  # Observed in timeline responses, absent from the Swagger enum.
+    STATUS_4 = 4
+    STATUS_6 = 6
+    STATUS_8 = 8
+    STATUS_10 = 10
+    STATUS_11 = 11
+    STATUS_12 = 12
+    STATUS_13 = 13
