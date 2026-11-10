@@ -19,8 +19,8 @@ from surepcio.enums import (
 )
 from surepcio.security.exceptions import UnexpectedDataTypeError
 from surepcio.timeline import (
-    DoorLockingData,
     CurfewLockData,
+    DoorLockingData,
     FeederData,
     MovementResource,
     TimelineEntityInfo,
@@ -113,7 +113,9 @@ def test_timeline_data_is_decoded(data, expected, snapshot: SnapshotAssertion) -
     assert type(event.data) is type(expected)
     if expected is not None:
         assert type(payload["data"]) is type(expected)
-    object_snapshot({"internal_data": event.data, "published_payload": payload}, snapshot)
+    object_snapshot(
+        {"internal_data": event.data, "published_payload": payload}, snapshot
+    )
 
 
 def test_payload_preserves_unknown_event_type_and_data(
@@ -162,14 +164,22 @@ def test_locking_data_serializes_mode_names(
     event = TimelineEvent(
         id=42,
         type=TimelineEventType.DOOR_LOCKING_MODE,
-        data={"mode": mode.value, "last_mode": mode.value, "curfew": [], "locked": False},
+        data={
+            "mode": mode.value,
+            "last_mode": mode.value,
+            "curfew": [],
+            "locked": False,
+        },
     )
     original_data = event.data
     assert isinstance(event.data, DoorLockingData)
     assert event.data.mode is mode
     assert event.data.last_mode is mode
     object_snapshot(
-        {"internal_data": event.data, "published_payload": build_event_payload(7777, event)},
+        {
+            "internal_data": event.data,
+            "published_payload": build_event_payload(7777, event),
+        },
         snapshot,
     )
     assert event.data is original_data
@@ -178,7 +188,9 @@ def test_locking_data_serializes_mode_names(
 @pytest.mark.parametrize(
     "data", [None, "text", {}, {"mode": None}, {"last_mode": None}]
 )
-def test_locking_data_preserves_missing_modes(data, snapshot: SnapshotAssertion) -> None:
+def test_locking_data_preserves_missing_modes(
+    data, snapshot: SnapshotAssertion
+) -> None:
     event = TimelineEvent(id=42, type=TimelineEventType.DOOR_LOCKING_MODE, data=data)
     object_snapshot(build_event_payload(7777, event), snapshot)
 
@@ -198,7 +210,12 @@ def test_locking_data_preserves_additional_api_fields(
     data: dict[str, JsonValue] = {
         "mode": 0,
         "last_mode": None,
-        "simulated_api_extension": {"enabled": False, "count": 0, "items": [], "value": None},
+        "simulated_api_extension": {
+            "enabled": False,
+            "count": 0,
+            "items": [],
+            "value": None,
+        },
     }
     event = TimelineEvent(
         id=42,
@@ -245,7 +262,10 @@ def test_feeder_data_is_typed(
     assert event.data.weight.food_type is not None
     assert event.data.weight.food_type[0] is FoodType.DRY
     object_snapshot(
-        {"internal_model": event, "published_payload": build_event_payload(7777, event)},
+        {
+            "internal_model": event,
+            "published_payload": build_event_payload(7777, event),
+        },
         snapshot,
     )
 
@@ -276,7 +296,10 @@ def test_curfew_data_is_typed(snapshot: SnapshotAssertion) -> None:
     )
     assert isinstance(event.data, CurfewLockData)
     object_snapshot(
-        {"internal_model": event, "published_payload": build_event_payload(7777, event)},
+        {
+            "internal_model": event,
+            "published_payload": build_event_payload(7777, event),
+        },
         snapshot,
     )
 
@@ -307,7 +330,8 @@ def test_typed_data_omits_unprovided_fields(
     event_type: TimelineEventType, snapshot: SnapshotAssertion
 ) -> None:
     object_snapshot(
-        build_event_payload(7777, TimelineEvent(id=42, type=event_type, data={})), snapshot
+        build_event_payload(7777, TimelineEvent(id=42, type=event_type, data={})),
+        snapshot,
     )
 
 
@@ -478,9 +502,7 @@ def test_payload_preserves_event_fields_with_readable_type(
     payload = build_event_payload(7777, movement_event)
     assert payload == movement_event.model_dump(
         exclude_none=False, exclude_unset=True
-    ) | {
-        "household_id": 7777
-    }
+    ) | {"household_id": 7777}
     assert movement_event.event_type is TimelineEventType.MOVEMENT
     assert payload["type"] is TimelineEventType.MOVEMENT
     assert movement_event.model_dump()["type"] is TimelineEventType.MOVEMENT

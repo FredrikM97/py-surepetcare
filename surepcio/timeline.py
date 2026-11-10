@@ -168,7 +168,9 @@ class TimelineEvent(ImprovedErrorMixin):
             except json.JSONDecodeError:
                 return value
         event_type = info.data.get("event_type")
-        data_model = EVENT_DATA_MODELS.get(event_type) if event_type is not None else None
+        data_model = (
+            EVENT_DATA_MODELS.get(event_type) if event_type is not None else None
+        )
         if data_model is not None and isinstance(value, dict):
             return data_model.model_validate(value)
         return value
@@ -184,6 +186,6 @@ class TimelineEvent(ImprovedErrorMixin):
 
 def build_event_payload(household_id: int, event: TimelineEvent) -> dict[str, Any]:
     """Serialize the complete API event, adding the requesting household ID."""
-    return event.model_dump(
-        exclude_none=False, exclude_unset=True
-    ) | {"household_id": household_id}
+    return event.model_dump(exclude_none=False, exclude_unset=True) | {
+        "household_id": household_id
+    }
